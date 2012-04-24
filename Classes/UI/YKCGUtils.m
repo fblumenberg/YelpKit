@@ -155,9 +155,14 @@ void _YKCGContextDrawImage(CGContextRef context, CGImageRef image, CGSize imageS
   
   CGRect imageBounds = YKCGRectConvert(rect, imageSize, contentMode);
   if (image == NULL) imageBounds = rect;
-    
+
   if (image != NULL) {
     CGContextSaveGState(context);
+    // Clip the context so the image doesn't interact with the corner rendering
+    if (strokeWidth > 0 && cornerRadius > 0) {
+      YKCGContextAddRoundedRect(context, rect, strokeWidth, cornerRadius);
+      CGContextClip(context);
+    }
     // Flip coordinate system, otherwise image will be drawn upside down
     CGContextTranslateCTM (context, 0, imageBounds.size.height);
     CGContextScaleCTM (context, 1.0, -1.0);   
