@@ -33,7 +33,15 @@
 
 @implementation YKUINavigationBar
 
-@synthesize leftButton=_leftButton, rightButton=_rightButton, contentView=_contentView;
+@synthesize leftButton=_leftButton, rightButton=_rightButton, contentView=_contentView, backgroundColor1=_backgroundColor1, backgroundColor2=_backgroundColor2, topBorderColor=_topBorderColor, bottomBorderColor=_bottomBorderColor;
+
+- (void)dealloc {
+  [_backgroundColor1 release];
+  [_backgroundColor2 release];
+  [_topBorderColor release];
+  [_bottomBorderColor release];
+  [super dealloc];
+}
 
 - (CGRect)rectForLeftButton:(CGSize)size {
   if (!_leftButton) return CGRectZero;
@@ -200,6 +208,22 @@
     [self setNeedsLayout];
     [self setNeedsDisplay];
   }
+}
+
+- (void)drawRect:(CGRect)rect {
+  CGContextRef context = UIGraphicsGetCurrentContext();
+  if (_backgroundColor1) {
+    YKCGContextDrawShading(context, _backgroundColor1.CGColor, _backgroundColor2.CGColor, NULL, NULL, CGPointZero, CGPointMake(0, self.frame.size.height), YKUIShadingTypeLinear, NO, NO);
+  }
+  if (_topBorderColor) {
+    // Border is actually 0.5px since the top half is cut off (this is on purpose).
+    YKCGContextDrawLine(context, 0, 0, self.frame.size.width, 0, _topBorderColor.CGColor, 1.0);
+  }
+  if (_bottomBorderColor) {
+    // Border is actually 0.5px since the bottom half is cut off (this is on purpose).
+    YKCGContextDrawLine(context, 0, self.frame.size.height, self.frame.size.width, self.frame.size.height, _bottomBorderColor.CGColor, 1.0);
+  }
+  [super drawRect:rect];
 }
 
 @end

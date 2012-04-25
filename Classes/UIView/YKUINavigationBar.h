@@ -32,12 +32,23 @@
   UIView *_leftButton;
   UIView *_rightButton;
   
+  UIColor *_backgroundColor1;
+  UIColor *_backgroundColor2;
+  UIColor *_topBorderColor;
+  UIColor *_bottomBorderColor;
+  
   CGSize _defaultContentViewSize;
 }
 
 @property (retain, nonatomic) UIView *leftButton;
 @property (retain, nonatomic) UIView *rightButton;
 @property (retain, nonatomic) UIView *contentView;
+
+@property (retain, nonatomic) UIColor *backgroundColor1;
+@property (retain, nonatomic) UIColor *backgroundColor2;
+@property (retain, nonatomic) UIColor *topBorderColor;
+@property (retain, nonatomic) UIColor *bottomBorderColor;
+
 
 /*!
  Set the content view to a UILabel with title.
