@@ -37,7 +37,30 @@ typedef enum {
   YKUIButtonsStyleVerticalRounded, // Vertical with rounded ends
 } YKUIButtonsStyle;
 
+typedef enum {
+  YKUIButtonsSelectionModeNone = 0, // Default
+  YKUIButtonsSelectionModeSingle,
+  YKUIButtonsSelectionModeMultiple,
+} YKUIButtonsSelectionMode;
+
 typedef void (^YKUIButtonsApplyBlock)(YKUIButton *button, NSInteger index);
+
+
+@class YKUIButtons;
+
+@protocol YKUIButtonsDelegate <NSObject>
+@optional
+/*!
+ Notified when a button is selected.
+ */
+- (void)buttons:(YKUIButtons *)buttons didSelectButton:(YKUIButton *)button previousButton:(YKUIButton *)previousButton;
+
+/*!
+ Allows the delegate to veto a selection.
+ @param button
+ */ 
+- (BOOL)buttons:(YKUIButtons *)buttons shouldSelectButton:(YKUIButton *)button;
+@end
 
 /*!
  A group of buttons (either horizontal or vertical). This is similar to a segmented control.
@@ -45,8 +68,37 @@ typedef void (^YKUIButtonsApplyBlock)(YKUIButton *button, NSInteger index);
 @interface YKUIButtons : YKUILayoutView {
   NSMutableArray *_buttons;
   
+  UIEdgeInsets _insets;
   YKUIButtonsStyle _style;
+  YKUIButtonsSelectionMode _selectionMode;
+  
+  id<YKUIButtonsDelegate> _delegate;
 }
+
+/*!
+ Selected index.
+ */
+@property (assign, nonatomic) NSInteger selectedIndex;
+
+/*!
+ Selected indices.
+ */
+@property (retain, nonatomic) NSArray *selectedIndices;
+
+/*!
+ Insets.
+ */
+@property (assign, nonatomic) UIEdgeInsets insets;
+
+/*!
+ Selection mode.
+ */
+@property (assign, nonatomic) YKUIButtonsSelectionMode selectionMode;
+
+/*!
+ Delegate.
+ */
+@property (assign, nonatomic) id<YKUIButtonsDelegate> delegate;
 
 /*!
  Create a number of buttons.
@@ -65,9 +117,24 @@ typedef void (^YKUIButtonsApplyBlock)(YKUIButton *button, NSInteger index);
 - (id)initWithButtons:(NSArray */*of YKUIButton*/)buttons style:(YKUIButtonsStyle)style apply:(YKUIButtonsApplyBlock)apply;
 
 /*!
+ Create buttons with titles.
+ @param titles Titles
+ @param style Style, use rounded style if you want the YKUIButton border style to be automatically set.
+ @param apply
+ */
+- (id)initWithTitles:(NSArray *)titles style:(YKUIButtonsStyle)style apply:(YKUIButtonsApplyBlock)apply;
+
+/*!
  @result The buttons
  */
 - (NSArray *)buttons;
+
+/*!
+ Set buttons.
+ @param buttons
+ @apram apply
+ */
+- (void)setButtons:(NSArray *)buttons apply:(YKUIButtonsApplyBlock)apply;
 
 /*!
  Set disabled at button index.
@@ -75,5 +142,82 @@ typedef void (^YKUIButtonsApplyBlock)(YKUIButton *button, NSInteger index);
  @param index
  */
 - (void)setEnabled:(BOOL)enabled index:(NSInteger)index;
+
+/*!
+ Select button.
+ @param selected
+ @param button
+ */
+- (void)setSelected:(BOOL)selected button:(YKUIButton *)button;
+
+/*!
+ @result Selected button or nil
+ */
+- (YKUIButton *)selectedButton;
+
+/*!
+ @result Number of buttons
+ */
+- (NSInteger)count;
+
+/*!
+ Set button titles. Does not create buttons.
+ @param titles Titles
+ */
+- (void)setTitles:(NSArray *)titles;
+
+/*!
+ @result Index for title, or NSNotFound
+ */
+- (NSInteger)indexOfTitle:(NSString *)title;
+
+/*!
+ Set selected for button with title.
+ @param selected
+ @param title
+ @result YES if set selected, NO if not found
+ */
+- (BOOL)setSelected:(BOOL)selected title:(NSString *)title;
+
+/*!
+ @result Currently selected title, or nil
+ */
+- (NSString *)selectedTitle;
+
+/*!
+ Clear selected.
+ */
+- (void)clearSelected;
+
+/*!
+ Set selected.
+ @param selected
+ @param index
+ */
+- (void)setSelected:(BOOL)selected index:(NSInteger)index;
+
+/*!
+ @result YES if selected at index
+ */
+- (BOOL)isSelectedAtIndex:(NSInteger)index;
+
+/*!
+ Add button.
+ @param button
+ */
+- (void)addButton:(YKUIButton *)button;
+
+/*!
+ Remove button with title.
+ @param title
+ */
+- (BOOL)removeButtonWithTitle:(NSString *)title;
+
+/*!
+ Find button with title.
+ @param title
+ @result Button or nil if not found
+ */
+- (YKUIButton *)buttonWithTitle:(NSString *)title;
 
 @end

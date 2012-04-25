@@ -33,10 +33,13 @@
 
 @implementation YKUIButtons
 
+@synthesize selectionMode=_selectionMode, insets=_insets, delegate=_delegate;
+
 - (id)initWithFrame:(CGRect)frame {
   if ((self = [super initWithFrame:frame])) {
     self.backgroundColor = [UIColor whiteColor];
     self.layout = [YKLayout layoutForView:self];
+    _insets = UIEdgeInsetsZero;
   }
   return self;
 }
@@ -49,65 +52,21 @@
   return [self initWithButtons:buttons style:style apply:apply];
 }
 
+- (id)initWithTitles:(NSArray *)titles style:(YKUIButtonsStyle)style apply:(YKUIButtonsApplyBlock)apply {
+  NSMutableArray *buttons = [NSMutableArray arrayWithCapacity:[titles count]];
+  for (NSString *title in titles) {
+    YKUIButton *button = [[YKUIButton alloc] init];
+    button.title = title;
+    [buttons addObject:button];
+    [button release];
+  }
+  return [self initWithButtons:buttons style:style apply:apply];
+}
+
 - (id)initWithButtons:(NSArray *)buttons style:(YKUIButtonsStyle)style apply:(YKUIButtonsApplyBlock)apply {
   if ((self = [self initWithFrame:CGRectZero])) {
     _style = style;
-    _buttons = [buttons mutableCopy];
-    for (NSInteger i = 0, count = [_buttons count]; i < count; i++) {
-      YKUIButton *button = [_buttons objectAtIndex:i];
-
-      if (count == 1) {
-        switch (style) {
-          case YKUIButtonsStyleHorizontalRounded:
-          case YKUIButtonsStyleVerticalRounded:
-            button.borderStyle = YKUIBorderStyleRounded;
-            break;
-          default:
-            break;
-        }
-      } else {
-        if (i == 0) {
-          switch (style) {
-            case YKUIButtonsStyleHorizontalRounded:
-              button.borderStyle = YKUIBorderStyleRoundedLeftCap;
-              break;
-            case YKUIButtonsStyleVerticalRounded:
-              button.borderStyle = YKUIBorderStyleRoundedTop;
-              break;
-            default:
-              break;
-          }
-        } else if (i == count - 1) {
-          switch (style) {
-            case YKUIButtonsStyleHorizontalRounded:
-              button.borderStyle = YKUIBorderStyleRoundedRightCap;
-              break;
-            case YKUIButtonsStyleVerticalRounded:
-              button.borderStyle = YKUIBorderStyleRoundedBottomWithAlternateTop;
-              break;
-            default:
-              break;
-          }
-        } else {
-          switch (style) {
-            case YKUIButtonsStyleHorizontalRounded:
-              button.borderStyle = YKUIBorderStyleNormal;
-              break;
-            case YKUIButtonsStyleVerticalRounded:
-              button.borderStyle = YKUIBorderStyleLeftRightWithAlternateTop;
-              break;
-            default:
-              break;
-          }          
-        }
-      }
-      
-      if (apply != NULL) {
-        apply(button, i);
-      }
-
-      [self addSubview:button];
-    }
+    [self setButtons:buttons apply:apply];
   }
   return self;
 }
@@ -118,17 +77,19 @@
 }
 
 - (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size {
-  CGFloat y = 0;
+  CGFloat y = _insets.top;
+  
+  CGSize sizeInset = CGSizeMake(size.width - _insets.left - _insets.right, size.height - _insets.top - _insets.bottom);
 
   switch (_style) {
     case YKUIButtonsStyleHorizontal:
     case YKUIButtonsStyleHorizontalRounded:{
-      CGFloat x = 0;
-      CGFloat buttonWidth = roundf(size.width / (CGFloat)[_buttons count]);
+      CGFloat x = _insets.left;
+      CGFloat buttonWidth = roundf(sizeInset.width / (CGFloat)[_buttons count]);
       NSInteger i = 0;
       for (YKUIButton *button in _buttons) {
         CGFloat padding = (i == [_buttons count] - 1 ? 0 : 1);
-        [layout setFrame:CGRectMake(x, 0, buttonWidth + padding, size.height) view:button];
+        [layout setFrame:CGRectMake(x, y, buttonWidth + padding, sizeInset.height) view:button];
         x += buttonWidth;
         i++;
       }
@@ -138,9 +99,10 @@
     case YKUIButtonsStyleVertical:
     case YKUIButtonsStyleVerticalRounded: {
       for (YKUIButton *button in _buttons) {
-        CGRect buttonFrame = [layout setFrame:CGRectMake(0, y, size.width, button.frame.size.height) view:button sizeToFit:YES];
+        CGRect buttonFrame = [layout setFrame:CGRectMake(_insets.left, y, sizeInset.width, button.frame.size.height) view:button sizeToFit:YES];
         y += buttonFrame.size.height;
       }
+      y += _insets.bottom;
       break;
     }
   }
@@ -148,9 +110,220 @@
   return CGSizeMake(size.width, y);
 }
 
+- (void)_applyButton {
+  for (NSInteger i = 0, count = [_buttons count]; i < count; i++) {
+    YKUIButton *button = [_buttons objectAtIndex:i];
+    [button removeTarget:self action:@selector(_didSelect:) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(_didSelect:) forControlEvents:UIControlEventTouchUpInside];
+    
+    if (count == 1) {
+      switch (_style) {
+        case YKUIButtonsStyleHorizontalRounded:
+        case YKUIButtonsStyleVerticalRounded:
+          button.borderStyle = YKUIBorderStyleRounded;
+          break;
+        default:
+          break;
+      }
+    } else {
+      if (i == 0) {
+        switch (_style) {
+          case YKUIButtonsStyleHorizontalRounded:
+            button.borderStyle = YKUIBorderStyleRoundedLeftCap;
+            break;
+          case YKUIButtonsStyleVerticalRounded:
+            button.borderStyle = YKUIBorderStyleRoundedTop;
+            break;
+          default:
+            break;
+        }
+      } else if (i == count - 1) {
+        switch (_style) {
+          case YKUIButtonsStyleHorizontalRounded:
+            button.borderStyle = YKUIBorderStyleRoundedRightCap;
+            break;
+          case YKUIButtonsStyleVerticalRounded:
+            button.borderStyle = YKUIBorderStyleRoundedBottomWithAlternateTop;
+            break;
+          default:
+            break;
+        }
+      } else {
+        switch (_style) {
+          case YKUIButtonsStyleHorizontalRounded:
+            button.borderStyle = YKUIBorderStyleNormal;
+            break;
+          case YKUIButtonsStyleVerticalRounded:
+            button.borderStyle = YKUIBorderStyleLeftRightWithAlternateTop;
+            break;
+          default:
+            break;
+        }          
+      }
+      [button setNeedsDisplay];
+    }
+  }
+}
+
+- (void)addButton:(YKUIButton *)button {
+  if (!_buttons) _buttons = [[NSMutableArray alloc] init];
+  [_buttons addObject:button];
+  [self addSubview:button];
+  [self _applyButton];
+  [self setNeedsDisplay];
+  [self setNeedsLayout];
+}
+
+- (BOOL)removeButtonWithTitle:(NSString *)title {
+  YKUIButton *button = [self buttonWithTitle:title];
+  if (!button) return NO;
+  
+  [_buttons removeObject:button];
+  [self _applyButton];
+  [self setNeedsDisplay];
+  [self setNeedsLayout];
+  return YES;
+}
+
+- (NSInteger)count {
+  return [_buttons count];
+}
+
+- (void)setButtons:(NSArray *)buttons apply:(YKUIButtonsApplyBlock)apply {
+  for (UIView *button in _buttons) {
+    [button removeFromSuperview];
+  }
+  [_buttons release];
+  _buttons = [buttons mutableCopy];
+  [self _applyButton];
+  NSInteger index = 0;
+  for (YKUIButton *button in _buttons) {  
+    [self addSubview:button];
+    if (apply != NULL) {
+      apply(button, index);
+    }
+    index++;    
+  }
+  [self setNeedsDisplay];
+  [self setNeedsLayout];
+}
+
 - (void)setEnabled:(BOOL)enabled index:(NSInteger)index {
   YKUIButton *button = [_buttons objectAtIndex:index];
   [button setEnabled:enabled];
+}
+
+- (void)setSelectedIndex:(NSInteger)selectedIndex {
+  YKUIButton *button = [_buttons objectAtIndex:selectedIndex];
+  [self setSelected:YES button:button];
+}
+
+- (void)setSelected:(BOOL)selected button:(YKUIButton *)button {
+  if (_selectionMode == YKUIButtonsSelectionModeSingle) {
+    for (YKUIButton *b in _buttons) {
+      if (b != button) [b setSelected:NO];
+    }
+  }
+  [button setSelected:selected];
+}
+
+- (YKUIButton *)selectedButton {
+  for (YKUIButton *button in _buttons) {
+    if (button.isSelected) return button;
+  }
+  return nil;
+}
+
+- (void)setSelected:(BOOL)selected index:(NSInteger)index {
+  YKUIButton *button = [_buttons objectAtIndex:index];
+  [button setSelected:selected];
+}
+
+- (BOOL)setSelected:(BOOL)selected title:(NSString *)title {
+  NSInteger index = [self indexOfTitle:title];
+  if (index == NSNotFound) return NO;
+  [self setSelected:selected index:index];
+  return YES;
+}
+
+- (BOOL)isSelectedAtIndex:(NSInteger)index {
+  YKUIButton *button = [_buttons objectAtIndex:index];
+  return button.isSelected;
+}
+
+- (NSInteger)selectedIndex {
+  NSInteger index = 0;
+  for (YKUIButton *button in _buttons) {
+    if (button.isSelected) return index;
+    index++;
+  }
+  return NSNotFound;
+}
+
+- (NSString *)selectedTitle {
+  return [self selectedButton].title;
+}
+
+- (NSArray *)selectedIndices {
+  NSMutableArray *selectedIndices = [NSMutableArray array];
+  NSInteger index = 0;
+  for (YKUIButton *button in _buttons) {
+    if (button.isSelected) [selectedIndices addObject:[NSNumber numberWithInteger:index]];
+    index++;
+  }
+  return selectedIndices;
+}
+
+- (void)setSelectedIndices:(NSArray *)selectedIndices {
+  for (NSNumber *index in selectedIndices) {
+    [self setSelectedIndex:[index integerValue]];
+  }
+}
+
+- (void)setTitles:(NSArray *)titles {
+  NSInteger index = 0;
+  for (NSString *title in titles) {
+    YKUIButton *button = [_buttons objectAtIndex:index++];
+    button.title = title;
+  }
+}
+
+- (YKUIButton *)buttonWithTitle:(NSString *)title {
+  for (YKUIButton *button in _buttons) {
+    if ([[button title] isEqualToString:title]) return button;
+  }
+  return nil;
+}
+
+- (NSInteger)indexOfTitle:(NSString *)title {
+  NSInteger index = 0;
+  for (YKUIButton *button in _buttons) {
+    if ([[button title] isEqualToString:title]) return index;
+    index++;
+  }
+  return NSNotFound;
+}
+
+- (void)_didSelect:(id)sender {
+  if ([_delegate respondsToSelector:@selector(buttons:shouldSelectButton:)]) {
+    if (![_delegate buttons:self shouldSelectButton:sender]) return;
+  }
+  
+  YKUIButton *previousButton = [self selectedButton];
+  
+  if (_selectionMode != YKUIButtonsSelectionModeNone) {
+    [self setSelected:![sender isSelected] button:sender];
+  }
+  
+  if ([_delegate respondsToSelector:@selector(buttons:didSelectButton:previousButton:)]) {
+    [_delegate buttons:self didSelectButton:sender previousButton:previousButton];
+  }
+}
+
+- (void)clearSelected {
+  for (YKUIButton *button in _buttons) {
+    [button setSelected:NO];
+  }
 }
 
 - (NSArray *)buttons {
