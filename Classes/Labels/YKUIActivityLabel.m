@@ -62,19 +62,17 @@
 }
 
 - (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size {
-  CGFloat width = size.width - 10;
-  
   CGSize lineSize = CGSizeZero;
   CGSize textLabelSize = CGSizeZero;
   if (![NSString gh_isBlank:_textLabel.text]) {
-    textLabelSize = [_textLabel.text sizeWithFont:_textLabel.font constrainedToSize:CGSizeMake(width, size.height) lineBreakMode:UILineBreakModeTailTruncation];    
+    textLabelSize = [_textLabel.text sizeWithFont:_textLabel.font constrainedToSize:size lineBreakMode:UILineBreakModeTailTruncation];    
     lineSize.width += textLabelSize.width;
     lineSize.height += textLabelSize.height;
   }
   
   CGSize detailLabelSize = CGSizeZero;
   if (![NSString gh_isBlank:_detailLabel.text]) {
-    detailLabelSize = [_detailLabel.text sizeWithFont:_detailLabel.font constrainedToSize:CGSizeMake(width, size.height) lineBreakMode:UILineBreakModeTailTruncation];    
+    detailLabelSize = [_detailLabel.text sizeWithFont:_detailLabel.font constrainedToSize:size lineBreakMode:UILineBreakModeTailTruncation];    
     lineSize.height += detailLabelSize.height + 2;
   }
   
@@ -90,7 +88,7 @@
   
   if (lineSize.height == 0) return CGSizeMake(size.width, self.frame.size.height);
   
-  CGFloat x = YKCGFloatToCenter(lineSize.width, width, 0);
+  CGFloat x = YKCGFloatToCenter(lineSize.width, size.width, 0);
   CGFloat centerY = YKCGFloatToCenter(lineSize.height, size.height, 0);
   CGFloat height = lineSize.height;
   
