@@ -115,7 +115,7 @@
     CGPathRef path = YKCGPathCreateStyledRect(insetRect, _style, _strokeWidth, _alternateStrokeWidth, _cornerRadius);
     CGContextAddPath(context, path);
     CGContextClip(context);
-    YKCGContextDrawBorderWithShadow(context, insetRect, _style, (self.highlighted ? _highlightedColor.CGColor : _fillColor.CGColor), _color.CGColor, _strokeWidth, _alternateStrokeWidth, _cornerRadius, _shadowColor.CGColor, _shadowBlur);
+    YKCGContextDrawBorderWithShadow(context, insetRect, _style, (self.highlighted ? _highlightedColor.CGColor : _fillColor.CGColor), _color.CGColor, _strokeWidth, _alternateStrokeWidth, _cornerRadius, _shadowColor.CGColor, _shadowBlur, YES);
     CGPathRelease(path);
   } else {
     YKCGContextDrawBorder(context, insetRect, _style, (self.highlighted ? _highlightedColor.CGColor : _fillColor.CGColor), _color.CGColor, _strokeWidth, _alternateStrokeWidth, _cornerRadius);

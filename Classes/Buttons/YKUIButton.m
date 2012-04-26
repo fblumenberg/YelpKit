@@ -33,7 +33,7 @@
 
 @implementation YKUIButton
 
-@synthesize title=_title, titleColor=_titleColor, titleFont=_titleFont, borderWidth=_borderWidth, borderAlternateWidth=_borderAlternateWidth, color=_color, color2=_color2, color3=_color3, color4=_color4, highlightedTitleColor=_highlightedTitleColor, highlightedColor=_highlightedColor, highlightedColor2=_highlightedColor2, highlightedShadingType=_highlightedShadingType, disabledTitleColor=_disabledTitleColor, disabledColor=_disabledColor, disabledColor2=_disabledColor2, disabledShadingType=_disabledShadingType, shadingType=_shadingType, borderColor=_borderColor, borderStyle=_borderStyle, titleShadowColor=_titleShadowColor, accessoryImageView=_accessoryImageView, titleAlignment=_titleAlignment, titleHidden=_titleHidden, titleInsets=_titleInsets, titleShadowOffset=_titleShadowOffset, selectedTitleColor=_selectedTitleColor, selectedColor=_selectedColor, selectedColor2=_selectedColor2, selectedShadingType=_selectedShadingType, cornerRadius=_cornerRadius, highlightedTitleShadowColor=_highlightedTitleShadowColor, highlightedTitleShadowOffset=_highlightedTitleShadowOffset, disabledBorderColor=_disabledBorderColor, insets=_insets, borderShadowColor=_borderShadowColor, borderShadowBlur=_borderShadowBlur, iconImageSize=_iconImageSize, iconImageView=_iconImageView, highlightedImage=_highlightedImage, image=_image, selectedBorderShadowColor=_selectedBorderShadowColor, selectedBorderShadowBlur=_selectedBorderShadowBlur, disabledImage=_disabledImage, iconPosition=_iconPosition, highlightedBorderShadowColor=_highlightedBorderShadowColor, highlightedBorderShadowBlur=_highlightedBorderShadowBlur, secondaryTitle=_secondaryTitle, secondaryTitleColor=_secondaryTitleColor, secondaryTitleFont=_secondaryTitleFont, iconOrigin=_iconOrigin, contentView=_contentView, maxLineCount=_maxLineCount, highlightedBorderColor=_highlightedBorderColor, disabledIconImage=_disabledIconImage, margin=_margin;
+@synthesize title=_title, titleColor=_titleColor, titleFont=_titleFont, borderWidth=_borderWidth, borderAlternateWidth=_borderAlternateWidth, color=_color, color2=_color2, color3=_color3, color4=_color4, highlightedTitleColor=_highlightedTitleColor, highlightedColor=_highlightedColor, highlightedColor2=_highlightedColor2, highlightedShadingType=_highlightedShadingType, disabledTitleColor=_disabledTitleColor, disabledColor=_disabledColor, disabledColor2=_disabledColor2, disabledShadingType=_disabledShadingType, shadingType=_shadingType, borderColor=_borderColor, borderStyle=_borderStyle, titleShadowColor=_titleShadowColor, accessoryImageView=_accessoryImageView, titleAlignment=_titleAlignment, titleHidden=_titleHidden, titleInsets=_titleInsets, titleShadowOffset=_titleShadowOffset, selectedTitleColor=_selectedTitleColor, selectedColor=_selectedColor, selectedColor2=_selectedColor2, selectedShadingType=_selectedShadingType, cornerRadius=_cornerRadius, highlightedTitleShadowColor=_highlightedTitleShadowColor, highlightedTitleShadowOffset=_highlightedTitleShadowOffset, disabledBorderColor=_disabledBorderColor, insets=_insets, borderShadowColor=_borderShadowColor, borderShadowBlur=_borderShadowBlur, iconImageSize=_iconImageSize, iconImageView=_iconImageView, highlightedImage=_highlightedImage, image=_image, selectedBorderShadowColor=_selectedBorderShadowColor, selectedBorderShadowBlur=_selectedBorderShadowBlur, disabledImage=_disabledImage, iconPosition=_iconPosition, highlightedBorderShadowColor=_highlightedBorderShadowColor, highlightedBorderShadowBlur=_highlightedBorderShadowBlur, secondaryTitle=_secondaryTitle, secondaryTitleColor=_secondaryTitleColor, secondaryTitleFont=_secondaryTitleFont, iconOrigin=_iconOrigin, contentView=_contentView, maxLineCount=_maxLineCount, highlightedBorderColor=_highlightedBorderColor, disabledIconImage=_disabledIconImage, margin=_margin, cornerRadiusRatio=_cornerRadiusRatio;
 ;
 
 
@@ -282,13 +282,23 @@
   [self didChangeValueForKey:@"contentView"];
 }
 
-- (void)setCornerRadius:(CGFloat)cornerRadius {
-  _cornerRadius = cornerRadius;
-  if (_borderStyle == YKUIBorderStyleNone && _cornerRadius > 0) {
+- (void)_cornerRadiusChanged {
+  if (_borderStyle == YKUIBorderStyleNone && (_cornerRadius > 0 || _cornerRadiusRatio > 0)) {
     _borderStyle = YKUIBorderStyleRounded;
     [self didChangeValueForKey:@"borderStyle"];
   }
   [self didChangeValueForKey:@"cornerRadius"];
+}
+
+- (void)setCornerRadius:(CGFloat)cornerRadius {
+  _cornerRadius = cornerRadius;
+  [self _cornerRadiusChanged];
+}
+
+- (void)setCornerRadiusRatio:(CGFloat)cornerRadiusRatio {
+  _cornerRadiusRatio = cornerRadiusRatio;
+  [self didChangeValueForKey:@"cornerRadiusRatio"];
+  [self _cornerRadiusChanged];
 }
 
 + (YKUIButton *)button {
@@ -381,6 +391,11 @@
   UIColor *borderShadowColor = _borderShadowColor;
   CGFloat borderShadowBlur = _borderShadowBlur;
 
+  CGFloat cornerRadius = _cornerRadius;
+  if (_cornerRadiusRatio > 0) {
+    cornerRadius = roundf(bounds.size.height/2.0f) * _cornerRadiusRatio;
+  }
+  
   if (isDisabled) {
     if (_disabledShadingType != YKUIShadingTypeUnknown) shadingType = _disabledShadingType;
     if (_disabledColor) color = _disabledColor;
@@ -428,27 +443,40 @@
   CGFloat borderAlternateWidth = _borderAlternateWidth;
   if (borderAlternateWidth == 0) borderAlternateWidth = borderWidth;
 
-  if (color && shadingType != YKUIShadingTypeNone) {
-    // Clip for border styles that support it (that form a cohesive path)
-    BOOL clip = (_borderStyle != YKUIBorderStyleTopOnly && _borderStyle != YKUIBorderStyleBottomOnly && _borderStyle != YKUIBorderStyleTopBottom);
-    if (clip) CGContextSaveGState(context);
+  // Clip for border styles that support it (that form a cohesive path)
+  BOOL clip = (_borderStyle != YKUIBorderStyleTopOnly && _borderStyle != YKUIBorderStyleBottomOnly && _borderStyle != YKUIBorderStyleTopBottom && _borderStyle != YKUIBorderStyleNone && _borderStyle != YKUIBorderStyleNormal);
+
+  if (color && shadingType != YKUIShadingTypeNone) {    
+    if (clip) {
+      CGContextSaveGState(context);
+    }
     
-    YKCGContextAddStyledRect(context, bounds, _borderStyle, _borderWidth, _borderAlternateWidth, _cornerRadius);  
-    if (clip) CGContextClip(context);
-
-    YKCGContextDrawShading(context, color.CGColor, color2.CGColor, color3.CGColor, color4.CGColor, bounds.origin, CGPointMake(bounds.origin.x, CGRectBottom(bounds)), shadingType, YES, YES);
-
-    fillColor = nil;
+    YKCGContextAddStyledRect(context, bounds, _borderStyle, _borderWidth, _borderAlternateWidth, cornerRadius);  
+    if (clip) {
+      CGContextClip(context);
+    }
+    
+    YKCGContextDrawShading(context, color.CGColor, color2.CGColor, color3.CGColor, color4.CGColor, bounds.origin, CGPointMake(bounds.origin.x, CGRectBottom(bounds)), shadingType, NO, NO);
+    fillColor = nil;    
+    
     if (clip) {
       CGContextRestoreGState(context);
     }
   }
-   
-  if (_borderWidth > 0 || _cornerRadius > 0) {
+  
+  if (_borderWidth > 0 || cornerRadius > 0) {
     if (borderShadowColor) {
-      YKCGContextDrawBorderWithShadow(context, bounds, _borderStyle, fillColor.CGColor, borderColor.CGColor, borderWidth, borderAlternateWidth, _cornerRadius, borderShadowColor.CGColor, borderShadowBlur);
+      CGContextSaveGState(context);
+      // Need to clip without border width adjustment
+      if (clip) {
+        YKCGContextAddStyledRect(context, bounds, _borderStyle, 0, 0, cornerRadius);  
+        CGContextClip(context);
+      }
+      
+      YKCGContextDrawBorderWithShadow(context, bounds, _borderStyle, fillColor.CGColor, borderColor.CGColor, borderWidth, borderAlternateWidth, cornerRadius, borderShadowColor.CGColor, borderShadowBlur, NO);
+      CGContextRestoreGState(context);
     } else {
-      YKCGContextDrawBorder(context, bounds, _borderStyle, fillColor.CGColor, borderColor.CGColor, borderWidth, borderAlternateWidth, _cornerRadius);
+      YKCGContextDrawBorder(context, bounds, _borderStyle, fillColor.CGColor, borderColor.CGColor, borderWidth, borderAlternateWidth, cornerRadius);
     }
   } else if (fillColor) {
     [fillColor setFill];

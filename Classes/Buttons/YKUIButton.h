@@ -94,6 +94,7 @@ typedef enum {
   CGFloat _borderAlternateWidth;
   YKUIBorderStyle _borderStyle;
   CGFloat _cornerRadius;
+  CGFloat _cornerRadiusRatio;
   UIColor *_borderShadowColor;
   CGFloat _borderShadowBlur;
   
@@ -195,6 +196,11 @@ typedef enum {
  Border corner radius.
  */
 @property (assign, nonatomic) CGFloat cornerRadius;
+
+/*!
+ Border corner radius ratio. For example 1.0 will be the most corner radius (half the height).
+ */
+@property (assign, nonatomic) CGFloat cornerRadiusRatio;
 
 /*!
  Border shadow color (for inner glow).

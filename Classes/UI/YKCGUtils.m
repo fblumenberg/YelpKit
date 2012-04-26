@@ -172,7 +172,7 @@ void _YKCGContextDrawImage(CGContextRef context, CGImageRef image, CGSize imageS
   }
   
   if (shadowColor != NULL) {
-    YKCGContextDrawBorderWithShadow(context, rect, YKUIBorderStyleRounded, NULL, strokeColor, strokeWidth, 0, cornerRadius, shadowColor, shadowBlur);
+    YKCGContextDrawBorderWithShadow(context, rect, YKUIBorderStyleRounded, NULL, strokeColor, strokeWidth, 0, cornerRadius, shadowColor, shadowBlur, YES);
   } else if (strokeColor != NULL && strokeWidth > 0) {    
     YKCGContextDrawRoundedRect(context, rect, NULL, strokeColor, strokeWidth, cornerRadius);
   }
@@ -378,14 +378,18 @@ CGRect YKCGRectWithInsets(CGSize size, UIEdgeInsets insets) {
 
 void YKCGContextAddStyledRect(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius) {  
   CGPathRef path = YKCGPathCreateStyledRect(rect, style, strokeWidth, alternateStrokeWidth, cornerRadius);
-  CGContextAddPath(context, path);  
+  if (path != NULL) {
+    CGContextAddPath(context, path);  
+  }
   CGPathRelease(path);
 }
 
 CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius) {  
   
   CGFloat fw, fh;
-  CGFloat cornerWidth = cornerRadius, cornerHeight = cornerRadius;  
+  CGFloat cornerWidth = cornerRadius, cornerHeight = cornerRadius;
+  
+  if (style == YKUIBorderStyleNone) return NULL;
 
   // Handle case where we have 0 corner radius
   if (cornerRadius == 0 && style == YKUIBorderStyleRounded) {
@@ -600,11 +604,11 @@ void YKCGContextDrawBorder(CGContextRef context, CGRect rect, YKUIBorderStyle st
   }
 }
 
-void YKCGContextDrawBorderWithShadow(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius, CGColorRef shadowColor, CGFloat shadowBlur) {
-  CGContextSaveGState(context);
+void YKCGContextDrawBorderWithShadow(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius, CGColorRef shadowColor, CGFloat shadowBlur, BOOL saveRestore) {
+  if (saveRestore) CGContextSaveGState(context);
   CGContextSetShadowWithColor(context, CGSizeZero, shadowBlur, shadowColor);
   YKCGContextDrawBorder(context, rect, style, fillColor, strokeColor, strokeWidth, alternateStrokeWidth, cornerRadius);
-  CGContextRestoreGState(context);
+  if (saveRestore) CGContextRestoreGState(context);
 }
 
 void YKCGContextDrawRect(CGContextRef context, CGRect rect, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth) {
