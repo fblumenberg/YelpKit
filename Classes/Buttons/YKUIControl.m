@@ -7,10 +7,11 @@
 //
 
 #import "YKUIControl.h"
+#import <GHKitIOS/GHNSObject+Invocation.h>
 
 @implementation YKUIControl 
 
-@synthesize target=_target, action=_action, highlightedEnabled=_highlightedEnabled, selectedEnabled=_selectedEnabled, layout=_layout, context=_context, targetBlock=_targetBlock;
+@synthesize target=_target, action=_action, highlightedEnabled=_highlightedEnabled, selectedEnabled=_selectedEnabled, delayActionEnabled=_delayActionEnabled, layout=_layout, context=_context, targetBlock=_targetBlock;
 
 + (void)removeAllTargets:(UIControl *)control {
   for (id target in [control allTargets]) {
@@ -125,9 +126,10 @@
     [self setNeedsDisplay];
   } 
   [super touchesBegan:touches withEvent:event];
-  if (_highlightedEnabled && self.userInteractionEnabled) {
+  
+  if (_delayActionEnabled && _highlightedEnabled && self.userInteractionEnabled) {
     // Force runloop to redraw so highlighted control appears instantly; must come after call to super
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.05]];
   }
 }
 
@@ -139,8 +141,9 @@
   [super touchesEnded:touches withEvent:event];
   
   if (_highlightedEnabled && self.userInteractionEnabled) {
-    self.highlighted = NO;
-    [self setNeedsDisplay];
+    // Unhighlight the control in a short while to give it a chance to be drawn highlighted
+    [[self gh_proxyAfterDelay:.05] setHighlighted:NO];
+    [[self gh_proxyAfterDelay:.05] setNeedsDisplay];
   }
 }
 

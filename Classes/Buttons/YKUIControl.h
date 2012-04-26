@@ -21,7 +21,9 @@ typedef void (^UIControlTargetBlock)(UIControl *control, id context);
   
   BOOL _highlightedEnabled;
   BOOL _selectedEnabled;
-  
+
+  BOOL _delayActionEnabled;
+
   id _context;
   
   UIControlTargetBlock _targetBlock;
@@ -33,6 +35,7 @@ typedef void (^UIControlTargetBlock)(UIControl *control, id context);
 @property (readonly, nonatomic) SEL action;
 @property (assign, nonatomic, getter=isHighlightedEnabled) BOOL highlightedEnabled; // If YES, will set highlighted state while in between touch begin/end (or cancel); Default is NO
 @property (assign, nonatomic, getter=isSelectedEnabled) BOOL selectedEnabled; // If YES, will set selected state when touch (ended); Default is NO
+@property (assign, nonatomic, getter=isDelayActionEnabled) BOOL delayActionEnabled; // If YES, the action on the control is delayed in order to display the highlighted state
 @property (retain, nonatomic) id<YKLayout> layout;
 @property (assign, nonatomic) id context;
 @property (copy, nonatomic) UIControlTargetBlock targetBlock;
