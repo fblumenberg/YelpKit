@@ -208,7 +208,11 @@ static NSMutableDictionary *gDebugStats = NULL;
   if ((options & YKLayoutOptionsCenterVertical) == YKLayoutOptionsCenterVertical) {
     frame = YKCGRectToCenterY(CGRectMake(frame.origin.x, frame.origin.y, sizeForAlign.width, sizeForAlign.height), originalFrame);
   }
-    
+
+  if ((options & YKLayoutOptionsRightAlign) == YKLayoutOptionsRightAlign) {
+    frame = YKCGRectRightAlignWithRect(frame, originalFrame);
+  }
+
   [self setFrame:frame view:view];
   return frame;  
 }

@@ -38,7 +38,8 @@ typedef enum {
   // Center the view in the specified size (horizontal + vertical). If you use this with YKLayoutOptionsSizeToFit then the origin width is maintained.
   YKLayoutOptionsCenter = 1 << 2, 
   YKLayoutOptionsCenterVertical = 1 << 3, // Center vertically
-  
+  YKLayoutOptionsRightAlign = 1 << 4, // After sizing, aligns the view with the right of the passed in rect
+
   // Whether sizeToFit is constrained to the width specified.
   // For example UILabel sizeToFit may return a larger width than was specified,
   // and this will constrain it.

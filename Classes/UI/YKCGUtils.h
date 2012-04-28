@@ -241,6 +241,12 @@ CGRect YKCGRectAdd(CGRect rect1, CGRect rect2);
 CGRect YKCGRectRightAlign(CGFloat y, CGFloat width, CGFloat inWidth, CGFloat maxWidth, CGFloat padRight, CGFloat height);
 
 /*!
+ Right-align rect with inRect.
+ If rect's width is larger than withRect, rect.origin.x will be smaller than withRect.origin.x.
+ */
+CGRect YKCGRectRightAlignWithRect(CGRect rect, CGRect withRect);
+
+/*!
  Copy of CGRect with (x, y) origin set to 0.
  */
 CGRect YKCGRectZeroOrigin(CGRect rect);

@@ -288,6 +288,11 @@ CGRect YKCGRectRightAlign(CGFloat y, CGFloat width, CGFloat inWidth, CGFloat max
   return CGRectMake(x, y, width, height);
 }
 
+CGRect YKCGRectRightAlignWithRect(CGRect rect, CGRect inRect) {
+  CGFloat x = inRect.origin.x + inRect.size.width - rect.size.width;
+  return CGRectMake(x, rect.origin.y, rect.size.width, rect.size.height);
+}
+
 CGRect YKCGRectZeroOrigin(CGRect rect) {
   return CGRectMake(0, 0, rect.size.width, rect.size.height);
 }
