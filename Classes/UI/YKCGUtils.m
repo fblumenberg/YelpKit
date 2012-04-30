@@ -440,6 +440,7 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
     case YKUIBorderStyleRounded:
     case YKUIBorderStyleRoundedLeftCap:
     case YKUIBorderStyleRoundedRightCap:
+    case YKUIBorderStyleRoundedBack:
       insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y + strokeInset, rect.size.width - (strokeInset * 2), rect.size.height - (strokeInset * 2));
       break;  
           
@@ -541,6 +542,20 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
       CGPathAddLineToPoint(path, &transform, 0, fh);
       break;
 
+    case YKUIBorderStyleRoundedBack: {
+      CGFloat px = 2.5; // TODO(gabe): Magic pixel math
+        
+      CGPathMoveToPoint(path, &transform, fw/2.0f, fh);
+      CGPathAddArcToPoint(path, &transform, px, fh, 0, fh/2.0f, 1);
+      CGPathAddLineToPoint(path, &transform, 0, fh/2.0f);
+      //CGPathAddArcToPoint(path, &transform, 0, fh/2.0f + 1, 0, fh/2.0f - 1, 1);
+      CGPathAddArcToPoint(path, &transform, px, 0, fw/2.0f, 0, 1);
+      CGPathAddArcToPoint(path, &transform, fw, 0, fw, fh/2.0f, 1);
+      CGPathAddArcToPoint(path, &transform, fw, fh, fw/2.0f, fh, 1);
+      CGPathCloseSubpath(path);
+      }
+      break;
+      
     case YKUIBorderStyleRounded:
       // Drawn in different method
       break;

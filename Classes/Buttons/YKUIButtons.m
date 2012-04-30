@@ -236,7 +236,7 @@
 
 - (void)setSelected:(BOOL)selected index:(NSInteger)index {
   YKUIButton *button = [_buttons objectAtIndex:index];
-  [button setSelected:selected];
+  [self setSelected:selected button:button];
 }
 
 - (BOOL)setSelected:(BOOL)selected title:(NSString *)title {

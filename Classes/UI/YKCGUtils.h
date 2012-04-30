@@ -340,8 +340,9 @@ typedef enum {
   YKUIBorderStyleRoundedBottomWithAlternateTop, // Rounded bottom with left and right sides in strokeWidth; Top in alternateStrokeWidth  
   //YKUIBorderStyleTopBottomRight, // Top bottom and right sides in strokeWidth
   YKUIBorderStyleRoundedTopOnly, // Rounded top with no sides
-  YKUIBorderStyleRoundedLeftCap,
-  YKUIBorderStyleRoundedRightCap,
+  YKUIBorderStyleRoundedLeftCap, // Rounded left segment
+  YKUIBorderStyleRoundedRightCap, // Rounded right segment
+  YKUIBorderStyleRoundedBack, // Rounded back button
 } YKUIBorderStyle;
 
 CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius);

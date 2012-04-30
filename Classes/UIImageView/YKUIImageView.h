@@ -85,6 +85,10 @@ typedef void (^YKUIImageViewStatusBlock)(id<YKUIImageView> imageView, YKUIImageV
 
 - (id)initWithURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage;
 
+/*!
+ @result Loading image
+ */
+- (UIImage *)loadingImage;
 
 // For subclasses to notify when image was loaded asynchronously
 - (void)didLoadImage:(UIImage *)image;

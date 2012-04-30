@@ -115,6 +115,10 @@
   [self setNeedsLayout];
 }
 
+- (UIImage *)loadingImage {
+  return _imageLoader.loadingImage;
+}
+
 - (void)_setImage:(UIImage *)image {
   [image retain];
   [_image release];
