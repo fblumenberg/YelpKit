@@ -64,7 +64,7 @@ CGPathRef YKCGPathCreateRoundedRect(CGRect rect, CGFloat strokeWidth, CGFloat co
   
   // TODO: Switch to UIBezierPath?
   // UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:cornerRadius];
-  // return path.CGPath;
+  // return CGPathRetain(path.CGPath);
   
   CGMutablePathRef path = CGPathCreateMutable();
   
