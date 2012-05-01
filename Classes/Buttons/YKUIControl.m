@@ -22,10 +22,15 @@
   }
 }
 
+- (void)_sharedInit {
+  [self addTarget:self action:@selector(_didTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
+}
+
 - (void)sharedInit { }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
   if ((self = [super initWithCoder:aDecoder])) {
+    [self _sharedInit];
     [self sharedInit];
   }
   return self;
@@ -33,6 +38,7 @@
 
 - (id)initWithFrame:(CGRect)frame {
   if ((self = [super initWithFrame:frame])) {
+    [self _sharedInit];
     [self sharedInit];
   }
   return self;
@@ -66,8 +72,6 @@
 }
 
 - (void)setTarget:(id)target action:(SEL)action context:(id)context {
-  [self removeTarget:self action:@selector(_didTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
-  [self addTarget:self action:@selector(_didTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
   _target = target;
   _action = action;
   [context retain];
