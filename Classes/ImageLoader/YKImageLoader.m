@@ -37,13 +37,13 @@
 @interface YKImageLoader ()
 @property (retain, nonatomic) YKURL *URL;
 @property (retain, nonatomic) UIImage *loadingImage;
-- (UIImage *)_cachedImage:(YKURL *)URL;
 - (void)setImage:(UIImage *)image status:(YKImageLoaderStatus)status;
 @end
 
 #define kExpiresAge YKTimeIntervalWeek
 
 static UIImage *gYKImageLoaderMockImage = NULL;
+static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
 
 @implementation YKImageLoader
 
@@ -59,6 +59,15 @@ static UIImage *gYKImageLoaderMockImage = NULL;
   [mockImage retain];
   [gYKImageLoaderMockImage release];
   gYKImageLoaderMockImage = mockImage;
+}
+
++ (dispatch_queue_t)diskCacheQueue {
+  // We assert main thread as a way to ensure this is thread safe
+  YKAssertMainThread();
+  if (!gYKImageLoaderDiskCacheQueue) {
+    gYKImageLoaderDiskCacheQueue = dispatch_queue_create("com.YelpKit.YKImageLoader.diskCacheQueue", 0);
+  }
+  return gYKImageLoaderDiskCacheQueue;
 }
 
 - (id)initWithLoadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage delegate:(id<YKImageLoaderDelegate>)delegate {
@@ -117,20 +126,48 @@ static UIImage *gYKImageLoaderMockImage = NULL;
     return;
   }
 
-  // Check for cached image, and set immediately if available
-  UIImage *cachedImage = [self _cachedImage:self.URL];  
-  if (cachedImage) {
-    [self setImage:cachedImage status:YKImageLoaderStatusLoaded];
+  // Check for cached image in memory, and set immediately if available
+  UIImage *memoryCachedImage = [[YKURLCache sharedCache] memoryCachedImageForURLString:URL.cacheableURLString];
+  if (memoryCachedImage) {
+    [self setImage:memoryCachedImage status:YKImageLoaderStatusLoaded];
     return;
-  }    
-  
-  // Check resource URL
+  }
+
+  // Check for resource in bundle
   NSString *resourceName = [YKResource pathForBundleURL:[NSURL URLWithString:URL.URLString]];
   if (resourceName) {
     [self setImage:[UIImage imageNamed:resourceName] status:YKImageLoaderStatusLoaded];
     return;
   }
-  
+
+  // Check for cached image on disk, load asynchronously if available
+  // NOTE(johnb): Checking if the URL is in the disk cache takes around 0.4 ms
+  //NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
+  BOOL inDiskCache = [[YKURLCache sharedCache] hasDataForURLString:URL.cacheableURLString];
+  //YKDebug(@"Checking if URL is in disk cache took: %0.5f", ([NSDate timeIntervalSinceReferenceDate] - start));
+  if (inDiskCache) {
+    // Notify the delegate that we're loading the image
+    if ([_delegate respondsToSelector:@selector(imageLoaderDidStart:)])
+      [[(NSObject *)_delegate gh_proxyOnMainThread] imageLoaderDidStart:self];
+    dispatch_async([YKImageLoader diskCacheQueue], ^{
+      UIImage *cachedImage = [[YKURLCache sharedCache] diskCachedImageForURLString:URL.cacheableURLString expires:kExpiresAge];
+      if (cachedImage) {
+        [[self gh_proxyOnMainThread] setImage:cachedImage status:YKImageLoaderStatusLoaded];
+      } else {
+        // Load from the URL
+        YKErr(@"We thought we had cached image data but it was invalid!");
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [self _loadImageForURL:URL];
+        });
+      }
+    });
+    return;
+  }
+
+  [self _loadImageForURL:URL];
+}
+
+- (void)_loadImageForURL:(YKURL *)URL {
   // Put the loading image in place while waiting for the request to load
   [self setImage:_loadingImage status:YKImageLoaderStatusLoading];
   
@@ -139,12 +176,6 @@ static UIImage *gYKImageLoaderMockImage = NULL;
   } else {
     [self load];
   }
-}
-
-- (UIImage *)_cachedImage:(YKURL *)URL {
-  UIImage *image = [[YKURLCache sharedCache] cachedImageForURLString:_URL.cacheableURLString expires:kExpiresAge];
-  //if (image) YKDebug(@"Cache hit for: %@", _URL);
-  return image;
 }
 
 - (void)load {
@@ -168,6 +199,7 @@ static UIImage *gYKImageLoaderMockImage = NULL;
   [_image release];
   _image = image;  
   //YKDebug(@"Update image for %@", _URL);
+  YKAssertMainThread();
   [_delegate imageLoader:self didUpdateStatus:status image:image];
 }
 

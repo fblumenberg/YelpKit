@@ -237,6 +237,8 @@
  */
 - (BOOL)cacheImage:(UIImage *)image forURLString:(NSString *)URLString;
 
-- (UIImage *)cachedImageForURLString:(NSString *)URLString expires:(NSTimeInterval)expires;
+- (UIImage *)memoryCachedImageForURLString:(NSString *)URLString;
+
+- (UIImage *)diskCachedImageForURLString:(NSString *)URLString expires:(NSTimeInterval)expires;
 
 @end

@@ -74,7 +74,7 @@ static NSMutableDictionary *gNamedCaches = NULL;
     _cachePath = [[YKURLCache _cachePathWithName:name] retain];
     _invalidationAge = YKTimeIntervalDay;
     _maxPixelCount = 262144; // ~1 MB
-    
+
     if ([YKURLCache totalMemory] > (220 * 1000 * 1000)) { // 256 MB Device
       _maxPixelCount *= 4; // ~4 MB
     }
@@ -121,8 +121,8 @@ static NSMutableDictionary *gNamedCaches = NULL;
   @synchronized([YKURLCache class]) {
     if (gNamedCaches == NULL)
       gNamedCaches = [[NSMutableDictionary alloc] init];
-    
-    cache = [gNamedCaches objectForKey:name];  
+
+    cache = [gNamedCaches objectForKey:name];
     if (!cache) {
       cache = [[[YKURLCache alloc] initWithName:name] autorelease];
       [gNamedCaches setObject:cache forKey:name];
@@ -135,11 +135,11 @@ static NSMutableDictionary *gNamedCaches = NULL;
   NSString *cachesPath = [YKResource cacheDirectory];
   NSString *cachePath = [cachesPath stringByAppendingPathComponent:name];
   NSString *ETagCachePath = [cachePath stringByAppendingPathComponent:kEtagCacheDirectoryName];
-  
+
   [NSFileManager gh_ensureDirectoryExists:cachesPath created:nil error:nil];
   [NSFileManager gh_ensureDirectoryExists:cachePath created:nil error:nil];
   [NSFileManager gh_ensureDirectoryExists:ETagCachePath created:nil error:nil];
-  
+
   return cachePath;
 }
 
@@ -199,9 +199,9 @@ static NSMutableDictionary *gNamedCaches = NULL;
     NSDate *modified = [attrs objectForKey:NSFileModificationDate];
     if ([modified timeIntervalSinceNow] < -expirationAge) {
       return NO;
-    }    
+    }
     return YES;
-  }  
+  }
   return NO;
 }
 
@@ -216,9 +216,9 @@ static NSMutableDictionary *gNamedCaches = NULL;
     }
     if (timestamp) {
       *timestamp = modified;
-    }    
+    }
     return [NSData dataWithContentsOfFile:filePath];
-  }  
+  }
   return nil;
 }
 
@@ -314,7 +314,7 @@ static NSMutableDictionary *gNamedCaches = NULL;
   if (filePath && [fm fileExistsAtPath:filePath]) {
     NSDate *invalidDate = [NSDate dateWithTimeIntervalSinceNow:-_invalidationAge];
     NSDictionary *attrs = [NSDictionary dictionaryWithObject:invalidDate forKey:NSFileModificationDate];
-    
+
 #if __IPHONE_4_0 <= __IPHONE_OS_VERSION_MAX_ALLOWED
     [fm setAttributes:attrs ofItemAtPath:filePath error:nil];
 #else
@@ -326,7 +326,7 @@ static NSMutableDictionary *gNamedCaches = NULL;
 - (void)invalidateAll {
   NSDate *invalidDate = [NSDate dateWithTimeIntervalSinceNow:-_invalidationAge];
   NSDictionary *attrs = [NSDictionary dictionaryWithObject:invalidDate forKey:NSFileModificationDate];
-  
+
   NSFileManager *fm = [NSFileManager defaultManager];
   NSDirectoryEnumerator *enumerator = [fm enumeratorAtPath:_cachePath];
   for (NSString *fileName in enumerator) {
@@ -345,12 +345,12 @@ static NSMutableDictionary *gNamedCaches = NULL;
   while (_imageSortedList.count) {
     NSString *key = [_imageSortedList objectAtIndex:0];
     UIImage *image = [_imageCache objectForKey:key];
-    
+
     YKDebug(@"Expiring image, key=%@, pixels=%.0f", key, (image.size.width * image.size.height));
     _totalPixelCount -= image.size.width * image.size.height;
     [_imageCache removeObjectForKey:key];
     [_imageSortedList removeObjectAtIndex:0];
-    
+
     if (_totalPixelCount <= _maxPixelCount) {
       break;
     }
@@ -362,56 +362,58 @@ static NSMutableDictionary *gNamedCaches = NULL;
   YKParameterAssert(image);
   YKParameterAssert(URLString);
   if (!image || !URLString) return NO;
-  
+
   // Already in cache (We don't bump it forward)
   if ([_imageCache objectForKey:URLString]) return NO;
-  
+
   int pixelCount = image.size.width * image.size.height;
-  
+
   static const CGFloat kLargeImageSize = 600 * 400;
-  
+
   if (pixelCount >= kLargeImageSize) {
     YKDebug(@"NOT caching image in in memory (too large, pixelCount=%d > %.0f)", pixelCount, kLargeImageSize);
     return NO;
   }
-  
+
   _totalPixelCount += pixelCount;
-  
+
   if (_totalPixelCount > _maxPixelCount && _maxPixelCount) {
     [self _expireImagesFromMemory];
   }
-  
+
   if (!_imageCache) {
     _imageCache = [[NSMutableDictionary alloc] init];
   }
-  
+
   if (!_imageSortedList) {
     _imageSortedList = [[NSMutableArray alloc] init];
   }
-  
+
   [_imageSortedList addObject:URLString];
   [_imageCache setObject:image forKey:URLString];
   return YES;
 }
 
-- (UIImage *)cachedImageForURLString:(NSString *)URLString expires:(NSTimeInterval)expires {
+- (UIImage *)memoryCachedImageForURLString:(NSString *)URLString {
   if (!URLString) return nil;
   UIImage *image = [_imageCache objectForKey:URLString];
-  if (!image) {
-    //NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
-    NSData *cachedData = [self dataForURLString:URLString expires:expires timestamp:nil];
-    if (cachedData) {      
-      image = [UIImage imageWithData:cachedData];
-      // If the image was invalid, remove it from the cache
-      if (image) {
-        [self cacheImage:image forURLString:URLString];
-      } else {
-        [self removeURLString:URLString fromDisk:YES];
-      }
+  return image;
+}
+
+- (UIImage *)diskCachedImageForURLString:(NSString *)URLString expires:(NSTimeInterval)expires {
+  if (!URLString) return nil;
+  NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
+  UIImage *image = nil;
+  NSData *cachedData = [self dataForURLString:URLString expires:expires timestamp:nil];
+  if (cachedData) {
+    image = [UIImage imageWithData:cachedData];
+    // If the image was invalid, remove it from the cache
+    if (image) {
+      [self cacheImage:image forURLString:URLString];
+      YKDebug(@"Image disk cache HIT: %@ (length=%d), Loading image took: %0.3f", URLString, [cachedData length], ([NSDate timeIntervalSinceReferenceDate] - start));
+    } else {
+      [self removeURLString:URLString fromDisk:YES];
     }
-    //YKDebug(@"Image memory cache MISS: %@ (length=%d), Loading image took: %0.3f", URLString, [cachedData length], ([NSDate timeIntervalSinceReferenceDate] - start));
-  } else {
-    //YKDebug(@"Image memory cache HIT: %@", URLString);
   }
   return image;
 }
