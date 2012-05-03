@@ -27,9 +27,9 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "YKLView.h"
+#import "YKLBaseView.h"
 
-@interface YKLImage : YKLView {
+@interface YKLImage : YKLBaseView {
   UIImage *_image;
 }
 

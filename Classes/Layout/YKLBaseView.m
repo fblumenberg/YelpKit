@@ -1,5 +1,5 @@
 //
-//  YKLView.h
+//  YKLBaseView.m
 //  YelpKit
 //
 //  Created by Gabriel Handford on 4/11/12.
@@ -27,45 +27,46 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-/*!
- Base class for YKLayout subviews.
- */
-@interface YKLView : NSObject {
-  CGRect _frame;
+#import "YKLBaseView.h"
+#import "YKCGUtils.h"
+
+@implementation YKLBaseView
+
+@synthesize frame=_frame;
+
+- (CGSize)sizeThatFits:(CGSize)size {
+  return _frame.size;
 }
 
-@property (assign, nonatomic) CGRect frame;
-@property (assign, nonatomic) CGPoint origin;
+- (CGRect)sizeThatFitsInRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode {
+  CGSize sizeThatFits = [self sizeThatFits:rect.size];
+  CGRect frame;
+  if (contentMode == UIViewContentModeCenter) {
+    frame = YKCGRectToCenter(sizeThatFits, rect.size);
+    frame.origin.x += rect.origin.x;
+    frame.origin.y += rect.origin.y;
+  } else {
+    [NSException raise:NSInvalidArgumentException format:@"Only contentMode UIViewContentModeCenter is supported"];
+  }
+  return frame;
+}
 
-/*!
- Size that fits for this view.
- */
-- (CGSize)sizeThatFits:(CGSize)size;
+- (CGPoint)origin {
+  return _frame.origin;
+}
 
-/*!
- Returns rect for this view in the superview frame based on content mode.
- @param rect Superview frame
- @param contentMode Where to place view in rect
- */
-- (CGRect)sizeThatFitsInRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode;
+- (void)setOrigin:(CGPoint)origin {
+  _frame = CGRectMake(origin.x, origin.y, _frame.size.width, _frame.size.height);
+}
 
-/*!
- Draw view in rect.
- @param rect Rect to draw at/in.
- */
-- (void)drawInRect:(CGRect)rect;
+- (void)drawInRect:(CGRect)rect { }
 
-/*!
- Draw this view at the current frame.
- Defaults to [self drawInRect:self.frame];.
- @param rect Dirty rect
- */
-- (void)drawRect:(CGRect)rect;
+- (void)drawRect:(CGRect)rect { 
+  [self drawInRect:self.frame];
+}
 
-/*!
- Draw this view.
- Defaults to [self drawRect:self.frame];.
- */
-- (void)draw;
+- (void)draw {
+  [self drawRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.width)];
+}
 
 @end

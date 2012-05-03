@@ -27,13 +27,14 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "YKLView.h"
+#import "YKLBaseView.h"
 
-@interface YKLText : YKLView {
+@interface YKLText : YKLBaseView {
   NSString *_text;
   UIFont *_font;
   UIColor *_color;
   UILineBreakMode _lineBreakMode;
+  UITextAlignment _textAlignment;
   
   UIColor *_shadowColor;
   CGSize _shadowOffset;
@@ -45,10 +46,11 @@
 @property (retain, nonatomic) UIColor *shadowColor;
 @property (assign, nonatomic) CGSize shadowOffset;
 
-- (id)initWithText:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode;
+- (id)initWithText:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode textAligment:(UITextAlignment)textAlignment;
 
 + (YKLText *)text:(NSString *)text font:(UIFont *)font;
 + (YKLText *)text:(NSString *)text font:(UIFont *)font color:(UIColor *)color;
 + (YKLText *)text:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode;
++ (YKLText *)text:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode textAligment:(UITextAlignment)textAlignment;
 
 @end

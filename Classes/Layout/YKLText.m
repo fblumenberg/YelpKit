@@ -34,12 +34,13 @@
 
 @synthesize shadowColor=_shadowColor, shadowOffset=_shadowOffset;
 
-- (id)initWithText:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode {
+- (id)initWithText:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode textAligment:(UITextAlignment)textAlignment {
   if ((self = [super init])) {
     _text = [text retain];
     _font = [font retain];
     _color = [color retain];
     _lineBreakMode = lineBreakMode;
+    _textAlignment = textAlignment;
     _sizeThatFits = YKCGSizeNull;
     _sizeForSizeThatFits = YKCGSizeNull;
   }
@@ -63,7 +64,11 @@
 }
 
 + (YKLText *)text:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode {
-  return [[[YKLText alloc] initWithText:text font:font color:color lineBreakMode:lineBreakMode] autorelease];
+  return [[[YKLText alloc] initWithText:text font:font color:color lineBreakMode:lineBreakMode textAligment:UITextAlignmentLeft] autorelease];
+}
+
++ (YKLText *)text:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode textAligment:(UITextAlignment)textAlignment {
+  return [[[YKLText alloc] initWithText:text font:font color:color lineBreakMode:lineBreakMode textAligment:textAlignment] autorelease];
 }
 
 - (NSString *)description {
@@ -90,7 +95,9 @@
     CGContextRef context = UIGraphicsGetCurrentContext();	
     CGContextSetShadowWithColor(context, _shadowOffset, 0, _shadowColor.CGColor);
   }
-  if (_lineBreakMode == -1 || _frame.size.width > 0) {
+  if (_textAlignment != UITextAlignmentLeft) {
+    [_text drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
+  } else if (_lineBreakMode == -1 || _frame.size.width > 0) {
     [_text drawAtPoint:rect.origin withFont:_font];
   } else {
     [_text drawAtPoint:rect.origin forWidth:rect.size.width withFont:_font lineBreakMode:_lineBreakMode];

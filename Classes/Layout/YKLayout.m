@@ -29,9 +29,8 @@
 
 #import "YKLayout.h"
 #import "YKCGUtils.h"
-#import "YKUILayoutView.h"
 #import "YKDefines.h"
-
+#import "YKUILayoutView.h"
 
 @interface YKLayout ()
 - (CGSize)_layout:(CGSize)size apply:(BOOL)apply;
@@ -86,6 +85,7 @@ static NSMutableDictionary *gDebugStats = NULL;
 }
 
 - (CGSize)_layout:(CGSize)size apply:(BOOL)apply {
+  if (!_view) return size;
 #if DEBUG
   YKLayoutStats *stats = [YKLayout statsForView:_view];
 #endif
@@ -130,7 +130,7 @@ static NSMutableDictionary *gDebugStats = NULL;
 - (CGSize)layoutSubviews:(CGSize)size {
   CGSize layoutSize = [self _layout:size apply:YES];  
   for (id view in _subviews) {
-    [view layoutIfNeeded];
+    if ([view respondsToSelector:@selector(layoutIfNeeded)]) [view layoutIfNeeded];
   }
   return layoutSize;
 }
@@ -261,7 +261,7 @@ static NSMutableDictionary *gDebugStats = NULL;
   return !_apply;
 }
 
-- (void)addSubview:(UIView *)view {
+- (void)addSubview:(id)view {
 #if YP_DEBUG
   if (![view respondsToSelector:@selector(drawInRect:)]) {
     [NSException raise:NSInvalidArgumentException format:@"Subview should implement the method - (void)drawInRect:(CGRect)rect;"];
@@ -269,10 +269,6 @@ static NSMutableDictionary *gDebugStats = NULL;
   }
   if (![view respondsToSelector:@selector(frame)]) {
     [NSException raise:NSInvalidArgumentException format:@"Subview should implement the method - (CGRect)frame;"];
-    return;
-  }
-  if (![view respondsToSelector:@selector(isHidden)]) {
-    [NSException raise:NSInvalidArgumentException format:@"Subview should implement the method - (BOOL)isHidden;"];
     return;
   }
 #endif
@@ -285,13 +281,18 @@ static NSMutableDictionary *gDebugStats = NULL;
   [_subviews removeAllObjects];
 }
 
-- (void)removeSubview:(UIView *)view {
+- (void)removeSubview:(id)view {
   [_subviews removeObject:view];
 }
 
 - (void)drawSubviewsInRect:(CGRect)rect {
   for (id view in _subviews) {
-    if (![view isHidden]) {
+    BOOL isHidden = NO;
+    if ([view respondsToSelector:@selector(isHidden)]) {
+      isHidden = [view isHidden];
+    }
+    
+    if (!isHidden) {
       [view drawInRect:CGRectOffset([view frame], rect.origin.x, rect.origin.y)];
     }
   }

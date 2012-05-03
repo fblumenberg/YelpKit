@@ -273,7 +273,7 @@ typedef enum {
   
   BOOL _apply;
   
-  NSMutableArray */*of UIView*/_subviews; // For manual subview handling
+  NSMutableArray *_subviews; // For manual subview handling
   
   CGSize _sizeThatFits;
 }
@@ -313,20 +313,22 @@ typedef enum {
  or views in table view cells that need better scrolling performance.
  For resizing you may need to adjust the contentMode.
 
- @param view View to add
+ @param view View to add. Must respond to:
+      drawInRect:(CGRect)rect
+      (CGRect)frame
  */
-- (void)addSubview:(UIView *)view;
+- (void)addSubview:(id)view;
 
 /*!
  Remove subview.
 
  @param view View to remove
  */
-- (void)removeSubview:(UIView *)view;
+- (void)removeSubview:(id)view;
 
 /*!
  Draw subviews that were added.
- Each view is draw at their view frame.
+ Each view is drawn at their view frame.
 
  @param rect Offset to draw in; TODO(gabe): Use rect.size?
  */
