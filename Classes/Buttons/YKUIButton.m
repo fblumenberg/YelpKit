@@ -437,11 +437,7 @@
   
   UIImage *accessoryIcon = _accessoryImageView.image;
   if (isHighlighted && _accessoryImageView.highlightedImage) accessoryIcon = _accessoryImageView.highlightedImage;
-  
-  if (image) {    
-    [image drawInRect:bounds];
-  }
-  
+    
   CGFloat borderWidth = _borderWidth;
   CGFloat borderAlternateWidth = _borderAlternateWidth;
   if (borderAlternateWidth == 0) borderAlternateWidth = borderWidth;
@@ -485,10 +481,18 @@
     [fillColor setFill];
     CGContextFillRect(context, bounds);
   }
+
+  if (image) {
+    [image drawInRect:bounds];
+  }
   
   UIColor *textColor = [self textColorForState:state];
   
   UIFont *font = self.titleFont;
+  
+  if (YKCGSizeIsZero(_titleSize)) {
+    _titleSize = [self _sizeForTitle:size];
+  }
   
   CGFloat y = bounds.origin.y + roundf(YKCGPointToCenter(_titleSize, size).y) + _insets.top;
 

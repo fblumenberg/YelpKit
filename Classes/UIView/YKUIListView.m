@@ -62,6 +62,7 @@
     }
   }
   y += _insets.bottom;
+  if (![layout isSizing]) [self setNeedsDisplay];
   return CGSizeMake(size.width, y);
 }
 
