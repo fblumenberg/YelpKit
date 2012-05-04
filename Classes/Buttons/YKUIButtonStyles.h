@@ -39,6 +39,7 @@ typedef enum {
   YKUIButtonStyleDarkBlue, //! Button with white (etched) text on dark blue linear shaded background
   YKUIButtonStyleGray, //! Gray background with linear shaded background and etched text
   YKUIButtonStyleDarkGray, //! Dark gray background with linear shaded background and etched text
+  YKUIButtonStyleLightGray, //! Light gray backround with metal-edge shaded background and flat text
   YKUIButtonStyleBlack,
   YKUIButtonStyleLink, //! Button with blue text on clear background
   YKUIButtonStyleBlackToolbar, //! Black translucent button with white text
