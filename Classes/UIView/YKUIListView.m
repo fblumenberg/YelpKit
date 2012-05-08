@@ -119,6 +119,10 @@
   [self setNeedsLayout];
 }
 
+- (NSArray *)views {
+  return _views;
+}
+
 - (void)removeAllViews {
   for (UIView *view in _views) {
     [view removeFromSuperview];

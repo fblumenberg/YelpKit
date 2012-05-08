@@ -80,6 +80,11 @@
   _highlightedEnabled = YES;
 }
 
+- (void)addTarget:(id)target action:(SEL)action {
+  [self removeTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+  [self addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
+}
+
 - (void)_didTouchUpInside {
   [_target performSelector:_action withObject:(_context ? _context : self)];
   if (_targetBlock != NULL) _targetBlock(self, _context);

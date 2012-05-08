@@ -96,6 +96,13 @@ typedef void (^UIControlTargetBlock)(UIControl *control, id context);
 - (void)setTarget:(id)target action:(SEL)action context:(id)context;
 
 /*!
+ Add a target.
+ @param target
+ @param action
+ */
+- (void)addTarget:(id)target action:(SEL)action;
+
+/*!
  Force the layout, if using YKLayout.
  You can use this instead of setNeedsLayout + layoutIfNeeded.
  This is also useful when using animations and setNeedsLayout + layoutIfNeeded don't work as expected.

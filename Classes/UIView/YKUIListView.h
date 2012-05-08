@@ -87,6 +87,12 @@
 - (void)setViewsHidden:(BOOL)hidden tag:(NSInteger)tag animationDuration:(NSTimeInterval)animationDuration;
 
 /*!
+ @result Views.
+ */
+- (NSArray *)views;
+
+/*!
+ Remove all views.
  */
 - (void)removeAllViews;
 
