@@ -67,27 +67,26 @@
     
   } else {
     CGFloat x = _insets.left;
-    NSInteger i = 0;
     for (UIView *view in _views) {
-      BOOL lastView = (++i == [_views count]);
       CGFloat width = self.frame.size.width - _peekWidth;
       
       view.frame = CGRectMake(x, _insets.top, width, self.frame.size.height - _insets.top - _insets.bottom);
-      x += width;
-      
-      if (!lastView) {
-        x += _insets.right;
-      }
+      x += width + _insets.right;
     }
 
     _scrollView.alwaysBounceHorizontal = YES;
     _scrollView.frame = CGRectMake(0, 0, self.frame.size.width - _peekWidth + _insets.right, self.frame.size.height);
-    _scrollView.contentSize = CGSizeMake(x, self.frame.size.height);
+    _scrollView.contentSize = CGSizeMake(x - _peekWidth + _insets.right, self.frame.size.height);
   }
 }
 
-- (UIView *)hitTest:(CGPoint) point withEvent:(UIEvent *)event {
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+  // Because the scroll view frame is smaller than the view frame we need to adjust the point and call hitTest again,
+  // so the swipe works from the far right side.
   if ([self pointInside:point withEvent:event]) {
+    if (point.x > CGRectGetMaxX(_scrollView.frame)) {
+      point.x = CGRectGetMaxX(_scrollView.frame) - 1;
+    }
     return [_scrollView hitTest:[_scrollView convertPoint:point fromView:self] withEvent:event];
   }
   return nil;

@@ -311,7 +311,9 @@
   
   YKUIButton *previousButton = [self selectedButton];
   
-  if (_selectionMode != YKUIButtonsSelectionModeNone) {
+  if (_selectionMode == YKUIButtonsSelectionModeSingle) {
+    [self setSelected:YES button:sender];
+  } else if (_selectionMode != YKUIButtonsSelectionModeNone) {
     [self setSelected:![sender isSelected] button:sender];
   }
   

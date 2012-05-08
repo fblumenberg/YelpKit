@@ -62,6 +62,11 @@
   [_activityView stop];
 }
 
+- (void)setText:(NSString *)text {
+  [_activityView setText:text];
+  [self setNeedsLayout];
+}
+
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
   [super setBackgroundColor:backgroundColor];
   [_activityView setBackgroundColor:backgroundColor];

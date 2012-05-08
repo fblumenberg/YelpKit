@@ -57,6 +57,8 @@
  */
 @property (assign, nonatomic, getter=isAutoActivityDisabled) BOOL autoActivityDisabled;
 
+- (void)setText:(NSString *)text;
+
 - (void)startActivity;
 - (void)stopActivity;
 
