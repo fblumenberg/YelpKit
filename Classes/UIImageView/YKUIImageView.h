@@ -66,6 +66,8 @@ typedef void (^YKUIImageViewStatusBlock)(id<YKUIImageView> imageView, YKUIImageV
   UIImage *_image;  
   YKUIImageViewStatusBlock _statusBlock;
   id<YKUIImageViewDelegate> _delegate;
+
+  BOOL _renderInBackground;
 }
 
 @property (readonly, nonatomic) YKUIImageViewStatus status;
@@ -73,6 +75,13 @@ typedef void (^YKUIImageViewStatusBlock)(id<YKUIImageView> imageView, YKUIImageV
 @property (readonly, nonatomic) YKImageLoader *imageLoader;
 @property (copy, nonatomic) YKUIImageViewStatusBlock statusBlock;
 
+/*!
+ Experimental. If YES, the view will render to an image in the background then call setNeedsDisplay.
+ Note: If this view is drawn directly using drawInRect:, self.frame.size must be set to the same size
+ that will be used with drawInRect:. Otherwise the background rendered image may render with an
+ incorrect size.
+ */
+@property (assign, nonatomic) BOOL renderInBackground;
 
 /*!
  Image size.
@@ -133,6 +142,9 @@ typedef void (^YKUIImageViewStatusBlock)(id<YKUIImageView> imageView, YKUIImageV
   CGFloat _shadowBlur;
 
   UIViewContentMode _imageContentMode;
+
+  UIImage *_renderedContents;
+  UIImage *_renderedBlankContents;
 }
 
 @property (retain, nonatomic) UIColor *strokeColor;

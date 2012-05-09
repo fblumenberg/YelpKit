@@ -30,11 +30,11 @@
 #import "YKUIImageView.h"
 #import "YKCGUtils.h"
 #import "YKLocalized.h"
-
+#import "YKDefines.h"
 
 @implementation YKUIImageBaseView
 
-@synthesize image=_image, status=_status, delegate=_delegate, imageLoader=_imageLoader, statusBlock=_statusBlock;
+@synthesize image=_image, status=_status, delegate=_delegate, imageLoader=_imageLoader, statusBlock=_statusBlock, renderInBackground=_renderInBackground;
 
 - (void)sharedInit {
   self.opaque = NO;
@@ -72,19 +72,20 @@
 }
 
 - (void)reset {
-  [_image release];
-  _image = nil;
-  _status = YKUIImageViewStatusNone;
+  [_imageLoader cancel];
   _imageLoader.delegate = nil;
   [_imageLoader release];
   _imageLoader = nil;
+  [_image release];
+  _image = nil;
+  _status = YKUIImageViewStatusNone;
   [self setNeedsDisplay];
   [self setNeedsLayout];
 }
 
 - (void)setURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage {
   if ([URLString isEqual:[NSNull null]]) URLString = nil;
-  
+
   [self reset];
   if (URLString) {
     _imageLoader = [[YKImageLoader alloc] initWithLoadingImage:loadingImage defaultImage:defaultImage delegate:self];
@@ -110,7 +111,7 @@
   [self reset];
   [image retain];
   [_image release];
-  _image = image;  
+  _image = image;
   [self setNeedsDisplay];
   [self setNeedsLayout];
 }
@@ -119,26 +120,18 @@
   return _imageLoader.loadingImage;
 }
 
-- (void)_setImage:(UIImage *)image {
-  [image retain];
-  [_image release];
-  _image = image;
-  [self setNeedsDisplay];
-  [self setNeedsLayout];
-}
-
 - (CGSize)size {
   if (!_image) return CGSizeZero;
   return _image.size;
 }
 
-- (CGSize)sizeThatFits:(CGSize)size {  
+- (CGSize)sizeThatFits:(CGSize)size {
   CGSize sizeThatFits = [self size];
-  if (sizeThatFits.width > size.width || sizeThatFits.height > size.height) {    
-    CGRect scale = YKCGRectScaleAspectAndCenter(sizeThatFits, size, YES);    
+  if (sizeThatFits.width > size.width || sizeThatFits.height > size.height) {
+    CGRect scale = YKCGRectScaleAspectAndCenter(sizeThatFits, size, YES);
     sizeThatFits.width = scale.size.width;
     sizeThatFits.height = scale.size.height;
-  }  
+  }
   return sizeThatFits;
 }
 
@@ -148,14 +141,16 @@
 
 - (void)didLoadImage:(UIImage *)image { }
 
+- (void)renderInBackgroundWithCompletion:(void (^)())completion { }
+
 #pragma mark Delegates (YKImageLoader)
 
-- (void)imageLoaderDidStart:(YKImageLoader *)imageLoader { 
+- (void)imageLoaderDidStart:(YKImageLoader *)imageLoader {
   if ([self.delegate respondsToSelector:@selector(imageViewDidStart:)])
     [self.delegate imageViewDidStart:self];
 }
 
-- (void)imageLoader:(YKImageLoader *)imageLoader didUpdateStatus:(YKImageLoaderStatus)status image:(UIImage *)image { 
+- (void)imageLoader:(YKImageLoader *)imageLoader didUpdateStatus:(YKImageLoaderStatus)status image:(UIImage *)image {
   switch (status) {
     case YKImageLoaderStatusNone: _status = YKUIImageViewStatusNone; break;
     case YKImageLoaderStatusLoading: _status = YKUIImageViewStatusLoading; break;
@@ -163,26 +158,42 @@
     default:
       break;
   }
-  
-  [self _setImage:image];
-  if (image) {
-    [self didLoadImage:image];
-    if ([self.delegate respondsToSelector:@selector(imageView:didLoadImage:)])
-      [self.delegate imageView:self didLoadImage:self.image];
+
+  [image retain];
+  [_image release];
+  _image = image;
+  if (_renderInBackground) {
+    if (image) {
+      [self renderInBackgroundWithCompletion:^{
+        [self didLoadImage:image];
+        if ([self.delegate respondsToSelector:@selector(imageView:didLoadImage:)])
+          [self.delegate imageView:self didLoadImage:image];
+        if (_statusBlock) _statusBlock(self, _status, image);
+        [self setNeedsDisplay];
+      }];
+    }
+  } else {
+    if (image) {
+      [self didLoadImage:image];
+      if ([self.delegate respondsToSelector:@selector(imageView:didLoadImage:)])
+        [self.delegate imageView:self didLoadImage:self.image];
+    }
+    if (_statusBlock) _statusBlock(self, _status, image);
+    [self setNeedsLayout];
+    [self setNeedsDisplay];
   }
-  if (_statusBlock) _statusBlock(self, _status, image); 
 }
 
 - (void)imageLoader:(YKImageLoader *)imageLoader didError:(YKError *)error {
   _status = YKUIImageViewStatusErrored;
   [self setNeedsDisplay];
-  
+
   if ([self.delegate respondsToSelector:@selector(imageView:didError:)])
     [self.delegate imageView:self didError:error];
-  if (_statusBlock) _statusBlock(self, _status, nil); 
+  if (_statusBlock) _statusBlock(self, _status, nil);
 }
 
-- (void)imageLoaderDidCancel:(YKImageLoader *)imageLoader { 
+- (void)imageLoaderDidCancel:(YKImageLoader *)imageLoader {
   _status = YKUIImageViewStatusNone;
   if ([self.delegate respondsToSelector:@selector(imageViewDidCancel:)])
     [self.delegate imageViewDidCancel:self];
@@ -196,6 +207,14 @@
 
 @synthesize strokeColor=_strokeColor, strokeWidth=_strokeWidth, cornerRadius=_cornerRadius, color=_color, overlayColor=_overlayColor, imageContentMode=_imageContentMode, shadowColor=_shadowColor, shadowBlur=_shadowBlur;
 
++ (dispatch_queue_t)backgroundRenderQueue {
+  static dispatch_queue_t BackgroundRenderQueue = NULL;
+  if (!BackgroundRenderQueue) {
+    BackgroundRenderQueue = dispatch_queue_create("com.YelpKit.YKUIImageBaseView.backgroundRenderQueue", 0);
+  }
+  return BackgroundRenderQueue;
+}
+
 - (void)sharedInit {
   [super sharedInit];
   _imageContentMode = -1;
@@ -206,6 +225,8 @@
   [_color release];
   [_overlayColor release];
   [_shadowColor release];
+  [_renderedContents release];
+  [_renderedBlankContents release];
   [super dealloc];
 }
 
@@ -214,24 +235,65 @@
   return _imageContentMode;
 }
 
-- (void)drawInRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode {
+#pragma mark Overrides
+
+- (void)reset {
+  [super reset];
+  [_renderedContents release];
+  _renderedContents = nil;
+}
+
+- (void)renderInBackgroundWithCompletion:(void (^)())completion {
+  [self backgroundRenderForRect:self.bounds contentMode:self.contentMode completion:completion];
+}
+
+#pragma mark Drawing
+
+- (void)drawImage:(UIImage *)image inRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode {
   CGContextRef context = UIGraphicsGetCurrentContext();
 
   if (self.backgroundColor) {
     YKCGContextDrawRect(context, rect, self.backgroundColor.CGColor, NULL, 0);
   }
-  
+
   if (_color) {
     YKCGContextDrawRoundedRect(context, rect, _color.CGColor, NULL, _strokeWidth, _cornerRadius);
   }
-  
+
   UIColor *color = _color;
   if (!color) color = self.backgroundColor;
-  
-  YKCGContextDrawRoundedRectImageWithShadow(context, self.image.CGImage, self.image.size, rect, _strokeColor.CGColor, _strokeWidth, _cornerRadius, contentMode, color.CGColor, _shadowColor.CGColor, _shadowBlur);
-  
+
+  YKCGContextDrawRoundedRectImageWithShadow(context, image.CGImage, image.size, rect, _strokeColor.CGColor, _strokeWidth, _cornerRadius, contentMode, color.CGColor, _shadowColor.CGColor, _shadowBlur);
+
   if (_overlayColor) {
     YKCGContextDrawRoundedRect(context, rect, _overlayColor.CGColor, NULL, _strokeWidth, _cornerRadius);
+  }
+}
+
+- (void)drawInRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode {
+  CGContextRef context = UIGraphicsGetCurrentContext();
+  // Size has changed since _renderedContents was last created
+  if (_renderedContents && !CGSizeEqualToSize(rect.size, [_renderedContents size])) {
+    YKAssert(NO, @"Rendered YKUIImageView content size has changed");
+    [_renderedContents release];
+    _renderedContents = nil;
+  }
+
+  if (_renderedContents) {
+    // If we have a rendered version of ourself, draw that
+    CGContextDrawImage(context, rect, _renderedContents.CGImage);
+  } else if (_renderedBlankContents) {
+    // If we have a rendered blank version of ourself, draw that
+    CGContextDrawImage(context, rect, _renderedBlankContents.CGImage);
+  } else if (_renderInBackground) {
+    // Render, save, and draw a blank version of ourself
+    UIImage *renderedImage = [self cachedImageViewForImage:nil inRect:rect contentMode:contentMode];
+    [renderedImage retain];
+    [_renderedBlankContents release];
+    _renderedBlankContents = renderedImage;
+    CGContextDrawImage(context, rect, _renderedBlankContents.CGImage);
+  } else {
+    [self drawImage:self.image inRect:rect contentMode:contentMode];
   }
 }
 
@@ -242,6 +304,42 @@
 - (void)drawRect:(CGRect)rect {
   [super drawRect:rect];
   [self drawInRect:self.bounds];
+}
+
+- (UIImage *)cachedImageViewForImage:(UIImage *)image inRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode {
+  UIGraphicsBeginImageContextWithOptions(rect.size, NO, [[UIScreen mainScreen] scale]);
+  CGContextRef context = UIGraphicsGetCurrentContext();
+  // Flip coordinate system, otherwise image will be drawn upside down
+  CGContextTranslateCTM(context, 0, rect.size.height);
+  CGContextScaleCTM (context, 1.0, -1.0);
+  [self drawImage:image inRect:YKCGRectZeroOrigin(rect) contentMode:contentMode];
+  UIImage *renderedImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  return renderedImage;
+}
+
+- (void)backgroundRenderForRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode completion:(void (^)())completion {
+  UIImage *image = _image;
+  dispatch_async([YKUIImageView backgroundRenderQueue], ^{
+    // If the image has changed since this block was created, bail out
+    if (!_image || image != _image) {
+      YKDebug(@"Image has changed since block was created. image=%@ _image=%@ _renderedContents=%@", image, _image, _renderedContents);
+      return;
+    }
+    UIImage *renderedImage = [self cachedImageViewForImage:_image inRect:rect contentMode:contentMode];
+    // Because image rendering is slow, we might thread switch back to the main thread while the view was background rendering.
+    // That means renderedImage is now incorrect. Let's just check again and bail out if the image has changed since render.
+    dispatch_async(dispatch_get_main_queue(), ^{
+      if (!_image || image != _image) {
+        YKDebug(@"Image has changed since render. image=%@ _image=%@ _renderedContents=%@", image, _image, _renderedContents);
+        return;
+      }
+      [renderedImage retain];
+      [_renderedContents release];
+      _renderedContents = renderedImage;
+      completion();
+    });
+  });
 }
 
 @end
