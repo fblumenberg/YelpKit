@@ -397,7 +397,8 @@
   }
   
   UIColor *titleShadowColor = _titleShadowColor;
-  
+  CGSize titleShadowOffset = _titleShadowOffset;
+
   if (isDisabled) {
     if (_disabledShadingType != YKUIShadingTypeUnknown) shadingType = _disabledShadingType;
     if (_disabledColor) color = _disabledColor;
@@ -413,6 +414,7 @@
     if (_highlightedBorderShadowColor) borderShadowColor = _highlightedBorderShadowColor;
     if (_highlightedBorderShadowBlur) borderShadowBlur = _highlightedBorderShadowBlur;
     if (_highlightedTitleShadowColor) titleShadowColor = _highlightedTitleShadowColor;
+    if (!CGSizeEqualToSize(_highlightedTitleShadowOffset, CGSizeZero)) titleShadowOffset = _highlightedTitleShadowOffset;
   } else if (isSelected) {
     // Set from selected properties; Fall back to highlighted properties
     if (_selectedShadingType != YKUIShadingTypeUnknown) shadingType = _selectedShadingType;
@@ -545,7 +547,7 @@
     y += _titleInsets.top;
 
     [textColor setFill];
-    CGContextSetShadowWithColor(context, _titleShadowOffset, 0.0, _titleShadowColor.CGColor);
+    CGContextSetShadowWithColor(context, titleShadowOffset, 0.0, titleShadowColor.CGColor);
 
     x += _titleInsets.left;
     if (!_secondaryTitle) {
