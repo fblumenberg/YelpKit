@@ -62,8 +62,8 @@
   } else {
     if (!_activityIndicator) {
       _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:_activityStyle];
+      _activityIndicator.frame = YKCGRectToCenter(_activityIndicator.frame.size, self.frame.size);
       [self addSubview:_activityIndicator];
-      [self setNeedsLayout];
     } 
     [_activityIndicator startAnimating];
     _activityIndicator.hidden = NO;
