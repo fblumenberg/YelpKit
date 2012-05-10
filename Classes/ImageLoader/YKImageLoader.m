@@ -103,6 +103,7 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
 }
 
 - (void)setURL:(YKURL *)URL queue:(YKImageLoaderQueue *)queue {  
+  YKAssertMainThread();
   [self cancel];
   [URL retain];
   [_URL release];
@@ -148,11 +149,13 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
   if (inDiskCache) {
     // Notify the delegate that we're loading the image
     if ([_delegate respondsToSelector:@selector(imageLoaderDidStart:)])
-      [[(NSObject *)_delegate gh_proxyOnMainThread] imageLoaderDidStart:self];
+      [_delegate imageLoaderDidStart:self];
     dispatch_async([YKImageLoader diskCacheQueue], ^{
       UIImage *cachedImage = [[YKURLCache sharedCache] diskCachedImageForURLString:URL.cacheableURLString expires:kExpiresAge];
       if (cachedImage) {
-        [[self gh_proxyOnMainThread] setImage:cachedImage status:YKImageLoaderStatusLoaded];
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [self setImage:cachedImage status:YKImageLoaderStatusLoaded];
+        });
       } else {
         // Load from the URL
         YKErr(@"We thought we had cached image data but it was invalid!");
