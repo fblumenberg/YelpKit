@@ -30,6 +30,7 @@
 #import "YKUIActionSheet.h"
 
 #import <GHKitIOS/GHNSArray+Utils.h>
+#import "YKUtils.h"
 
 @implementation YKUIActionSheet
 
@@ -51,6 +52,7 @@
 
     _titles = [[NSMutableArray alloc] initWithCapacity:10];
     _actions = [[NSMutableArray alloc] initWithCapacity:10];
+    _contexts = YKCreateNonRetainingArray();
   }
   return self;
 }
@@ -64,6 +66,7 @@
   [_actionSheet release];
   [_titles release];
   [_actions release];
+  [_contexts release];
   [super dealloc];
 }
 
@@ -80,8 +83,13 @@
 }
 
 - (void)addButtonWithTitle:(NSString *)title action:(SEL)action {
+  [self addButtonWithTitle:title action:action context:nil];
+}
+
+- (void)addButtonWithTitle:(NSString *)title action:(SEL)action context:(id)context {
   [_titles addObject:title];
   [_actions addObject:[NSValue valueWithPointer:action]];
+  [_contexts addObject:(context ? context : [NSNull null])];
 }
 
 - (void)showFromToolbar:(UIToolbar *)view {   
@@ -126,8 +134,11 @@
     NSValue *actionValue = (NSValue *)obj;
     SEL selector = [actionValue pointerValue];
     // Handle nil selectors
-    if (selector != nil)
-      [_target performSelector:selector withObject:self];
+    if (selector != nil) {
+      id context = [_contexts objectAtIndex:buttonIndex];
+      if ([context isEqual:[NSNull null]]) context = nil;
+      [_target performSelector:selector withObject:(context ? context : self)];
+    }
   }
   // Release for the retain from show
   _actionSheet.delegate = nil;

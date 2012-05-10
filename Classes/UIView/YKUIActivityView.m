@@ -52,6 +52,7 @@
   [super layoutSubviews];
   _activityIndicator.frame = YKCGRectToCenter(_activityIndicator.frame.size, self.frame.size);
   _label.frame = CGRectMake(10, 0, self.frame.size.width - 20, self.frame.size.height);
+  [_label setNeedsDisplay];
 }
 
 - (void)_setActivityEnabled:(BOOL)activityEnabled {  
@@ -84,7 +85,6 @@
     _label.numberOfLines = 0;
     _label.font = [UIFont boldSystemFontOfSize:16.0];
     _label.textColor = [UIColor whiteColor];      
-    [self setNeedsLayout];
   }
   return _label;
 }
@@ -95,13 +95,13 @@
       _label.hidden = YES;
     }
   } else {
+    self.hidden = NO;
     UILabel *label = self.label;
+    label.hidden = NO;   
     if (![label superview]) {
       [self addSubview:label];
     }
     label.text = text;
-    label.hidden = NO;   
-    [label setNeedsLayout];
   }
   [self setNeedsDisplay];
   [self setNeedsLayout];
@@ -125,7 +125,6 @@
 }
 
 - (void)setErrorWithDescription:(NSString *)description {
-  self.hidden = NO;
   [self _setActivityEnabled:NO];
   [self setText:description];
 }

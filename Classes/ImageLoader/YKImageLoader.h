@@ -61,6 +61,7 @@ typedef enum {
   UIImage *_image;
   UIImage *_defaultImage;
   UIImage *_loadingImage;
+  UIImage *_errorImage;
   id<YKImageLoaderDelegate> _delegate; // weak
   
   YKImageLoaderQueue *_queue; // weak
@@ -69,7 +70,8 @@ typedef enum {
 @property (readonly, retain, nonatomic) YKURL *URL;
 @property (readonly, nonatomic) UIImage *image;
 @property (retain, nonatomic) UIImage *defaultImage;
-@property (readonly, retain, nonatomic) UIImage *loadingImage;
+@property (retain, nonatomic) UIImage *loadingImage;
+@property (retain, nonatomic) UIImage *errorImage;
 @property (assign, nonatomic) id<YKImageLoaderDelegate> delegate;
 @property (assign, nonatomic) YKImageLoaderQueue *queue;
 

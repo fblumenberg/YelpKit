@@ -50,6 +50,7 @@
   
   NSMutableArray *_titles;
   NSMutableArray *_actions;
+  NSMutableArray *_contexts;
   
   NSString *_cancelButtonTitle;
   NSValue *_cancelAction;
@@ -78,6 +79,14 @@
  @param action
  */
 - (void)addButtonWithTitle:(NSString *)title action:(SEL)action;
+
+/*!
+ Add button to action sheet with context. Will call action with context if available otherwise self.
+ @param title
+ @param action
+ @param context
+ */
+- (void)addButtonWithTitle:(NSString *)title action:(SEL)action context:(id)context;
 
 /*!
  Show action sheet from toolbar.

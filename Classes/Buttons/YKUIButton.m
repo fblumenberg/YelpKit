@@ -457,7 +457,7 @@
       CGContextClip(context);
     }
     
-    YKCGContextDrawShading(context, color.CGColor, color2.CGColor, color3.CGColor, color4.CGColor, bounds.origin, CGPointMake(bounds.origin.x, CGRectBottom(bounds)), shadingType, NO, NO);
+    YKCGContextDrawShading(context, color.CGColor, color2.CGColor, color3.CGColor, color4.CGColor, bounds.origin, CGPointMake(bounds.origin.x, CGRectGetMaxY(bounds)), shadingType, NO, NO);
     fillColor = nil;    
     
     if (clip) {

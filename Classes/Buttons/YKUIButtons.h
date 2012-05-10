@@ -208,10 +208,24 @@ typedef void (^YKUIButtonsApplyBlock)(YKUIButton *button, NSInteger index);
 - (void)addButton:(YKUIButton *)button;
 
 /*!
+ Remove button.
+ @param button
+ */
+- (void)removeButton:(YKUIButton *)button;
+
+/*!
  Remove button with title.
  @param title
  */
 - (BOOL)removeButtonWithTitle:(NSString *)title;
+
+/*!
+ Set button at index.
+ @param button
+ @param index
+ @param animated
+ */
+- (void)setButton:(YKUIButton *)button index:(NSInteger)index animated:(BOOL)animated;
 
 /*!
  Find button with title.

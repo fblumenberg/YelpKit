@@ -36,7 +36,6 @@
 
 @interface YKImageLoader ()
 @property (retain, nonatomic) YKURL *URL;
-@property (retain, nonatomic) UIImage *loadingImage;
 - (void)setImage:(UIImage *)image status:(YKImageLoaderStatus)status;
 @end
 
@@ -47,7 +46,7 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
 
 @implementation YKImageLoader
 
-@synthesize URL=_URL, image=_image, loadingImage=_loadingImage, defaultImage=_defaultImage, delegate=_delegate, queue=_queue;
+@synthesize URL=_URL, image=_image, loadingImage=_loadingImage, defaultImage=_defaultImage, errorImage=_errorImage, delegate=_delegate, queue=_queue;
 
 + (YKImageLoader *)imageLoaderWithURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage delegate:(id<YKImageLoaderDelegate>)delegate {
   YKImageLoader *imageLoader = [[YKImageLoader alloc] initWithLoadingImage:loadingImage defaultImage:defaultImage delegate:delegate];
@@ -85,6 +84,7 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
   [_image release];
   [_defaultImage release];
   [_loadingImage release];
+  [_errorImage release];
   [super dealloc];
 }
 
@@ -212,7 +212,7 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
 }
 
 - (void)setError:(YKError *)error {
-  [self setImage:_defaultImage status:YKImageLoaderStatusErrored];
+  [self setImage:_errorImage status:YKImageLoaderStatusErrored];
   if ([_delegate respondsToSelector:@selector(imageLoader:didError:)])
     [_delegate imageLoader:self didError:error];  
 }
@@ -235,7 +235,7 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
 }
 
 - (void)request:(YKURLRequest *)request failedWithError:(NSError *)error {
-  [self setImage:_defaultImage status:YKImageLoaderStatusErrored];
+  [self setImage:_errorImage status:YKImageLoaderStatusErrored];
   if ([_delegate respondsToSelector:@selector(imageLoader:didError:)])
     [_delegate imageLoader:self didError:[YKError errorWithKey:YKErrorRequest error:error]];
   [_queue imageLoaderDidEnd:self];

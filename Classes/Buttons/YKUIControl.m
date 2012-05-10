@@ -128,6 +128,14 @@
 
 - (void)didTouchUpInside { }
 
+- (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
+  BOOL continueTracking = ([self pointInside:[touch locationInView:self] withEvent:event]);
+  if (!continueTracking) {
+    [self touchesCancelled:[NSSet setWithObject:touch] withEvent:event];
+  }
+  return continueTracking;
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {    
   if (_highlightedEnabled && self.userInteractionEnabled) {
     if (![self touchesAllInView:touches withEvent:event]) return; 
@@ -165,3 +173,5 @@
 }
 
 @end
+
+

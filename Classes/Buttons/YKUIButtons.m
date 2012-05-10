@@ -174,15 +174,43 @@
   [self setNeedsLayout];
 }
 
-- (BOOL)removeButtonWithTitle:(NSString *)title {
-  YKUIButton *button = [self buttonWithTitle:title];
-  if (!button) return NO;
-  
+- (void)removeButton:(YKUIButton *)button {
   [_buttons removeObject:button];
   [self _applyButton];
   [self setNeedsDisplay];
   [self setNeedsLayout];
+}
+
+- (BOOL)removeButtonWithTitle:(NSString *)title {
+  YKUIButton *button = [self buttonWithTitle:title];
+  if (!button) return NO;
+  [self removeButton:button];
   return YES;
+}
+
+- (void)setButton:(YKUIButton *)button index:(NSInteger)index animated:(BOOL)animated {
+  YKUIButton *buttonToRemove = [_buttons objectAtIndex:index];
+  if (index == [_buttons count]) {
+    [_buttons addObject:button];
+  } else {
+    [_buttons replaceObjectAtIndex:index withObject:button];
+  }
+  [self addSubview:button];
+  [self _applyButton];
+
+  if (animated) {
+    button.alpha = 0.0;
+    [UIView animateWithDuration:0.25 animations:^(void) {
+      buttonToRemove.alpha = 0.0;
+      button.alpha = 1.0;
+    } completion:^(BOOL finished) {
+      [self removeButton:buttonToRemove];
+      buttonToRemove.alpha = 1.0;
+    }];
+  } else {
+    [self setNeedsDisplay];
+    [self setNeedsLayout];
+  }
 }
 
 - (NSInteger)count {

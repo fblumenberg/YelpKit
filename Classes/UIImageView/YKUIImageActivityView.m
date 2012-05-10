@@ -64,6 +64,7 @@
 
 - (void)setText:(NSString *)text {
   [_activityView setText:text];
+  [self setNeedsDisplay];
   [self setNeedsLayout];
 }
 

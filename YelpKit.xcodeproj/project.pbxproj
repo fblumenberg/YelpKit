@@ -48,6 +48,8 @@
 		00559349140B00F6001E9C43 /* YKLocalized.h in Headers */ = {isa = PBXBuildFile; fileRef = 00559327140B00F6001E9C43 /* YKLocalized.h */; settings = {ATTRIBUTES = (); }; };
 		0055934A140B00F6001E9C43 /* YKLocalized.m in Sources */ = {isa = PBXBuildFile; fileRef = 00559328140B00F6001E9C43 /* YKLocalized.m */; };
 		00559353140B0102001E9C43 /* GHKitIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00559352140B0102001E9C43 /* GHKitIOS.framework */; };
+		005F5C78155B206E001D8517 /* YKUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 005F5C76155B206E001D8517 /* YKUtils.h */; };
+		005F5C79155B206E001D8517 /* YKUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 005F5C77155B206E001D8517 /* YKUtils.m */; };
 		006E7DAD151FF2DE005FD9D3 /* YKUIBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 006E7DAB151FF2DE005FD9D3 /* YKUIBorder.h */; };
 		006E7DAE151FF2DE005FD9D3 /* YKUIBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 006E7DAC151FF2DE005FD9D3 /* YKUIBorder.m */; };
 		0072E459151E74D2006EAC84 /* YKUIListView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0072E457151E74D2006EAC84 /* YKUIListView.h */; };
@@ -138,6 +140,8 @@
 		00559327140B00F6001E9C43 /* YKLocalized.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKLocalized.h; sourceTree = "<group>"; };
 		00559328140B00F6001E9C43 /* YKLocalized.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKLocalized.m; sourceTree = "<group>"; };
 		00559352140B0102001E9C43 /* GHKitIOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GHKitIOS.framework; sourceTree = "<group>"; };
+		005F5C76155B206E001D8517 /* YKUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUtils.h; sourceTree = "<group>"; };
+		005F5C77155B206E001D8517 /* YKUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKUtils.m; sourceTree = "<group>"; };
 		006E7DAB151FF2DE005FD9D3 /* YKUIBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUIBorder.h; sourceTree = "<group>"; };
 		006E7DAC151FF2DE005FD9D3 /* YKUIBorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKUIBorder.m; sourceTree = "<group>"; };
 		0072E457151E74D2006EAC84 /* YKUIListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUIListView.h; sourceTree = "<group>"; };
@@ -269,6 +273,8 @@
 				00559326140B00F6001E9C43 /* YKError.m */,
 				00559327140B00F6001E9C43 /* YKLocalized.h */,
 				00559328140B00F6001E9C43 /* YKLocalized.m */,
+				005F5C76155B206E001D8517 /* YKUtils.h */,
+				005F5C77155B206E001D8517 /* YKUtils.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -479,6 +485,7 @@
 				42DF28231540F6B200EA955F /* YKValidationException.h in Headers */,
 				009E44A51551FF5400CACDEE /* YKLUIView.h in Headers */,
 				428B755F155B4A1B0010864A /* UIImage+YKUtils.h in Headers */,
+				005F5C78155B206E001D8517 /* YKUtils.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -573,6 +580,7 @@
 				42DF28241540F6B200EA955F /* YKValidationException.m in Sources */,
 				009E44A61551FF5400CACDEE /* YKLUIView.m in Sources */,
 				428B7560155B4A1B0010864A /* UIImage+YKUtils.m in Sources */,
+				005F5C79155B206E001D8517 /* YKUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
