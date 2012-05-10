@@ -85,6 +85,8 @@
 		420E62B8153F44FF00F114DC /* NSDictionary+YKValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 420E62B6153F44FF00F114DC /* NSDictionary+YKValidation.m */; };
 		4227623E150FFDC1002E177D /* UIColor+YKUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 4227623C150FFDC1002E177D /* UIColor+YKUtils.h */; };
 		4227623F150FFDC1002E177D /* UIColor+YKUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4227623D150FFDC1002E177D /* UIColor+YKUtils.m */; };
+		428B755F155B4A1B0010864A /* UIImage+YKUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 428B755D155B4A1B0010864A /* UIImage+YKUtils.h */; };
+		428B7560155B4A1B0010864A /* UIImage+YKUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 428B755E155B4A1B0010864A /* UIImage+YKUtils.m */; };
 		42DF281F1540F53300EA955F /* NSArray+YKValidation.h in Headers */ = {isa = PBXBuildFile; fileRef = 42DF281D1540F53300EA955F /* NSArray+YKValidation.h */; };
 		42DF28201540F53300EA955F /* NSArray+YKValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 42DF281E1540F53300EA955F /* NSArray+YKValidation.m */; };
 		42DF28231540F6B200EA955F /* YKValidationException.h in Headers */ = {isa = PBXBuildFile; fileRef = 42DF28211540F6B200EA955F /* YKValidationException.h */; };
@@ -175,6 +177,8 @@
 		420E62B6153F44FF00F114DC /* NSDictionary+YKValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+YKValidation.m"; sourceTree = "<group>"; };
 		4227623C150FFDC1002E177D /* UIColor+YKUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+YKUtils.h"; sourceTree = "<group>"; };
 		4227623D150FFDC1002E177D /* UIColor+YKUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+YKUtils.m"; sourceTree = "<group>"; };
+		428B755D155B4A1B0010864A /* UIImage+YKUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+YKUtils.h"; sourceTree = "<group>"; };
+		428B755E155B4A1B0010864A /* UIImage+YKUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+YKUtils.m"; sourceTree = "<group>"; };
 		42DF281D1540F53300EA955F /* NSArray+YKValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+YKValidation.h"; sourceTree = "<group>"; };
 		42DF281E1540F53300EA955F /* NSArray+YKValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+YKValidation.m"; sourceTree = "<group>"; };
 		42DF28211540F6B200EA955F /* YKValidationException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKValidationException.h; sourceTree = "<group>"; };
@@ -247,6 +251,7 @@
 		005592FE140B00F6001E9C43 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				428B755B155B4A000010864A /* UIImage */,
 				4227623A150FFDAE002E177D /* UIColor */,
 				00BE005414A148A8006B733B /* Location */,
 				00D575641457C35C00DE6487 /* Buttons */,
@@ -416,6 +421,15 @@
 			path = UIColor;
 			sourceTree = "<group>";
 		};
+		428B755B155B4A000010864A /* UIImage */ = {
+			isa = PBXGroup;
+			children = (
+				428B755D155B4A1B0010864A /* UIImage+YKUtils.h */,
+				428B755E155B4A1B0010864A /* UIImage+YKUtils.m */,
+			);
+			path = UIImage;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -464,6 +478,7 @@
 				42DF281F1540F53300EA955F /* NSArray+YKValidation.h in Headers */,
 				42DF28231540F6B200EA955F /* YKValidationException.h in Headers */,
 				009E44A51551FF5400CACDEE /* YKLUIView.h in Headers */,
+				428B755F155B4A1B0010864A /* UIImage+YKUtils.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,6 +572,7 @@
 				42DF28201540F53300EA955F /* NSArray+YKValidation.m in Sources */,
 				42DF28241540F6B200EA955F /* YKValidationException.m in Sources */,
 				009E44A61551FF5400CACDEE /* YKLUIView.m in Sources */,
+				428B7560155B4A1B0010864A /* UIImage+YKUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

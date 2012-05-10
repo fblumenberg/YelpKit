@@ -31,6 +31,7 @@
 #import "YKCGUtils.h"
 #import "YKLocalized.h"
 #import "YKDefines.h"
+#import "UIImage+YKUtils.h"
 
 @implementation YKUIImageBaseView
 
@@ -287,7 +288,9 @@
     CGContextDrawImage(context, rect, _renderedBlankContents.CGImage);
   } else if (_renderInBackground) {
     // Render, save, and draw a blank version of ourself
-    UIImage *renderedImage = [self cachedImageViewForImage:nil inRect:rect contentMode:contentMode];
+    UIImage *renderedImage = [UIImage imageFromDrawOperations:^(CGContextRef context) {
+      [self drawImage:nil inRect:YKCGRectZeroOrigin(rect) contentMode:contentMode];
+    } size:rect.size opaque:self.opaque];
     [renderedImage retain];
     [_renderedBlankContents release];
     _renderedBlankContents = renderedImage;
@@ -306,18 +309,6 @@
   [self drawInRect:self.bounds];
 }
 
-- (UIImage *)cachedImageViewForImage:(UIImage *)image inRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode {
-  UIGraphicsBeginImageContextWithOptions(rect.size, NO, [[UIScreen mainScreen] scale]);
-  CGContextRef context = UIGraphicsGetCurrentContext();
-  // Flip coordinate system, otherwise image will be drawn upside down
-  CGContextTranslateCTM(context, 0, rect.size.height);
-  CGContextScaleCTM (context, 1.0, -1.0);
-  [self drawImage:image inRect:YKCGRectZeroOrigin(rect) contentMode:contentMode];
-  UIImage *renderedImage = UIGraphicsGetImageFromCurrentImageContext();
-  UIGraphicsEndImageContext();
-  return renderedImage;
-}
-
 - (void)backgroundRenderForRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode completion:(void (^)())completion {
   UIImage *image = _image;
   dispatch_async([YKUIImageView backgroundRenderQueue], ^{
@@ -326,7 +317,9 @@
       YKDebug(@"Image has changed since block was created. image=%@ _image=%@ _renderedContents=%@", image, _image, _renderedContents);
       return;
     }
-    UIImage *renderedImage = [self cachedImageViewForImage:_image inRect:rect contentMode:contentMode];
+    UIImage *renderedImage = [UIImage imageFromDrawOperations:^(CGContextRef context) {
+      [self drawImage:image inRect:YKCGRectZeroOrigin(rect) contentMode:contentMode];
+    } size:rect.size opaque:self.opaque];
     // Because image rendering is slow, we might thread switch back to the main thread while the view was background rendering.
     // That means renderedImage is now incorrect. Let's just check again and bail out if the image has changed since render.
     dispatch_async(dispatch_get_main_queue(), ^{
