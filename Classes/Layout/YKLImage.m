@@ -31,11 +31,12 @@
 
 @implementation YKLImage
 
-@synthesize image=_image;
+@synthesize image=_image, insets=_insets;
 
 - (id)initWithImage:(UIImage *)image {
   if ((self = [super init])) {
     _image = [image retain];
+    _insets = UIEdgeInsetsZero;
   }
   return self;
 }
@@ -50,11 +51,18 @@
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-  return _image.size;
+  return CGSizeMake(_image.size.width + _insets.left + _insets.right, _image.size.height + _insets.top + _insets.bottom);
 }
 
-- (void)drawInRect:(CGRect)rect {
-  [_image drawAtPoint:rect.origin];
+- (CGPoint)drawInRect:(CGRect)rect {
+  if (rect.size.width == 0) rect.size.width = _image.size.width;
+  if (rect.size.height == 0) rect.size.height = _image.size.height;
+  rect.origin.x += _insets.left;
+  rect.origin.y += _insets.top;
+  rect.size.width += _insets.left + _insets.right;
+  rect.size.height += _insets.bottom + _insets.top;
+  [_image drawAtPoint:CGPointMake(rect.origin.x, rect.origin.y)];
+  return CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
 }
 
 @end

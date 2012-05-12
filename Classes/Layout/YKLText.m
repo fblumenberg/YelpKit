@@ -29,6 +29,7 @@
 
 #import "YKLText.h"
 #import "YKCGUtils.h"
+#import "YKLImage.h"
 
 @implementation YKLText
 
@@ -52,6 +53,7 @@
   [_font release];
   [_color release];
   [_shadowColor release];
+  [_image release];
   [super dealloc];
 }
 
@@ -71,6 +73,18 @@
   return [[[YKLText alloc] initWithText:text font:font color:color lineBreakMode:lineBreakMode textAligment:textAlignment] autorelease];
 }
 
+- (void)_reset {
+  _sizeThatFits = YKCGSizeNull;
+  _sizeForSizeThatFits = YKCGSizeNull;
+}
+
+- (void)setImage:(UIImage *)image insets:(UIEdgeInsets)insets {
+  [_image release];
+  _image = [[YKLImage imageWithImage:image] retain];
+  _image.insets = insets;
+  [self _reset];
+}
+
 - (NSString *)description {
   return _text;
 }
@@ -85,11 +99,23 @@
   } else {
     _sizeThatFits = [_text sizeWithFont:_font forWidth:size.width lineBreakMode:_lineBreakMode];
   }
+  
+  if (_image) {
+    CGSize imageSize = [_image sizeThatFits:size];
+    _sizeThatFits.width += imageSize.width;
+    _sizeThatFits.height = MAX(_sizeThatFits.height, imageSize.height);
+  }
+  
   _sizeForSizeThatFits = size;
   return _sizeThatFits;
 }
 
-- (void)drawInRect:(CGRect)rect {
+- (CGPoint)drawInRect:(CGRect)rect {
+  if (_image) {
+    CGPoint p = [_image drawInRect:rect];
+    rect.origin.x = p.x;
+  }
+  
   if (_color) [_color setFill];
   if (_shadowColor) {
     CGContextRef context = UIGraphicsGetCurrentContext();	
@@ -97,11 +123,12 @@
   }
   if (_textAlignment != UITextAlignmentLeft) {
     [_text drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
-  } else if (_lineBreakMode == -1 || _frame.size.width > 0) {
+  } else if (_lineBreakMode == -1) {
     [_text drawAtPoint:rect.origin withFont:_font];
   } else {
     [_text drawAtPoint:rect.origin forWidth:rect.size.width withFont:_font lineBreakMode:_lineBreakMode];
   }
+  return CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
 }
 
 @end

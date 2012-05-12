@@ -59,14 +59,16 @@
   _frame = CGRectMake(origin.x, origin.y, _frame.size.width, _frame.size.height);
 }
 
-- (void)drawInRect:(CGRect)rect { }
-
-- (void)drawRect:(CGRect)rect { 
-  [self drawInRect:self.frame];
+- (CGPoint)drawInRect:(CGRect)rect { 
+  return CGPointZero;
 }
 
-- (void)draw {
-  [self drawRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.width)];
+- (CGPoint)drawRect:(CGRect)rect { 
+  return [self drawInRect:self.frame];
+}
+
+- (CGPoint)draw {
+  return [self drawRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.width)];
 }
 
 @end

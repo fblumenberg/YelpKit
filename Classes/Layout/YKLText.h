@@ -28,6 +28,7 @@
 //
 
 #import "YKLBaseView.h"
+@class YKLImage;
 
 @interface YKLText : YKLBaseView {
   NSString *_text;
@@ -39,6 +40,9 @@
   UIColor *_shadowColor;
   CGSize _shadowOffset;
   
+  YKLImage *_image;
+  
+  // Cached sizing
   CGSize _sizeThatFits;
   CGSize _sizeForSizeThatFits;
 }
@@ -52,5 +56,12 @@
 + (YKLText *)text:(NSString *)text font:(UIFont *)font color:(UIColor *)color;
 + (YKLText *)text:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode;
 + (YKLText *)text:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode textAligment:(UITextAlignment)textAlignment;
+
+/*!
+ Set image. The image is drawn on the left side of the text by default.
+ @param image
+ @param insets
+ */
+- (void)setImage:(UIImage *)image insets:(UIEdgeInsets)insets;
 
 @end

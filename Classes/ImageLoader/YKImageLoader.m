@@ -48,8 +48,8 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
 
 @synthesize URL=_URL, image=_image, loadingImage=_loadingImage, defaultImage=_defaultImage, errorImage=_errorImage, delegate=_delegate, queue=_queue;
 
-+ (YKImageLoader *)imageLoaderWithURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage delegate:(id<YKImageLoaderDelegate>)delegate {
-  YKImageLoader *imageLoader = [[YKImageLoader alloc] initWithLoadingImage:loadingImage defaultImage:defaultImage delegate:delegate];
++ (YKImageLoader *)imageLoaderWithURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage errorImage:(UIImage *)errorImage delegate:(id<YKImageLoaderDelegate>)delegate {
+  YKImageLoader *imageLoader = [[YKImageLoader alloc] initWithLoadingImage:loadingImage defaultImage:defaultImage errorImage:errorImage delegate:delegate];
   [imageLoader setURLString:URLString];
   return [imageLoader autorelease]; 
 }
@@ -70,10 +70,15 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
 }
 
 - (id)initWithLoadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage delegate:(id<YKImageLoaderDelegate>)delegate {
+  return [self initWithLoadingImage:loadingImage defaultImage:defaultImage errorImage:nil delegate:delegate];
+}
+
+- (id)initWithLoadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage errorImage:(UIImage *)errorImage delegate:(id<YKImageLoaderDelegate>)delegate {
   if ((self = [self init])) {
-    self.loadingImage = loadingImage;
-    self.defaultImage = defaultImage;
-    self.delegate = delegate;
+    _loadingImage = [loadingImage retain];
+    _defaultImage = [defaultImage retain];
+    _errorImage = [errorImage retain];
+    _delegate = delegate;
   }
   return self;
 }
