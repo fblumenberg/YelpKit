@@ -9,7 +9,7 @@
 #import "YKUILayoutView.h"
 
 @interface YKLUIView : YKUILayoutView {
-  NSMutableArray *_subviews;
+  NSMutableArray *subviews_;
 }
 
 - (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size;

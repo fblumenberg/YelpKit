@@ -31,7 +31,7 @@
 
 @implementation YKLImage
 
-@synthesize image=_image, insets=_insets;
+@synthesize insets=_insets;
 
 - (id)initWithImage:(UIImage *)image {
   if ((self = [super init])) {
@@ -46,15 +46,13 @@
   [super dealloc];
 }
 
-+ (YKLImage *)imageWithImage:(UIImage *)image {
-  return [[[YKLImage alloc] initWithImage:image] autorelease];
-}
-
 - (CGSize)sizeThatFits:(CGSize)size {
+  if (!_image) return CGSizeZero;
   return CGSizeMake(_image.size.width + _insets.left + _insets.right, _image.size.height + _insets.top + _insets.bottom);
 }
 
-- (CGPoint)drawInRect:(CGRect)rect {
+- (void)drawInRect:(CGRect)rect {
+  if (!_image) return;
   if (rect.size.width == 0) rect.size.width = _image.size.width;
   if (rect.size.height == 0) rect.size.height = _image.size.height;
   rect.origin.x += _insets.left;
@@ -62,7 +60,6 @@
   rect.size.width += _insets.left + _insets.right;
   rect.size.height += _insets.bottom + _insets.top;
   [_image drawAtPoint:CGPointMake(rect.origin.x, rect.origin.y)];
-  return CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
 }
 
 @end

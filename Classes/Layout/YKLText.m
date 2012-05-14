@@ -36,7 +36,7 @@
 @synthesize shadowColor=_shadowColor, shadowOffset=_shadowOffset;
 
 - (id)initWithText:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode textAligment:(UITextAlignment)textAlignment {
-  if ((self = [super init])) {
+  if ((self = [self init])) {
     _text = [text retain];
     _font = [font retain];
     _color = [color retain];
@@ -53,7 +53,7 @@
   [_font release];
   [_color release];
   [_shadowColor release];
-  [_image release];
+  [_imageView release];
   [super dealloc];
 }
 
@@ -79,9 +79,9 @@
 }
 
 - (void)setImage:(UIImage *)image insets:(UIEdgeInsets)insets {
-  [_image release];
-  _image = [[YKLImage imageWithImage:image] retain];
-  _image.insets = insets;
+  [_imageView release];
+  _imageView = [[YKLImage alloc] initWithImage:image];
+  _imageView.insets = insets;
   [self _reset];
 }
 
@@ -100,8 +100,8 @@
     _sizeThatFits = [_text sizeWithFont:_font forWidth:size.width lineBreakMode:_lineBreakMode];
   }
   
-  if (_image) {
-    CGSize imageSize = [_image sizeThatFits:size];
+  if (_imageView) {
+    CGSize imageSize = [_imageView sizeThatFits:size];
     _sizeThatFits.width += imageSize.width;
     _sizeThatFits.height = MAX(_sizeThatFits.height, imageSize.height);
   }
@@ -110,12 +110,13 @@
   return _sizeThatFits;
 }
 
-- (CGPoint)drawInRect:(CGRect)rect {
-  if (_image) {
-    CGPoint p = [_image drawInRect:rect];
-    rect.origin.x = p.x;
+- (void)drawInRect:(CGRect)rect {
+  if (_imageView) {
+    CGSize imageViewSize = [_imageView sizeThatFits:rect.size];
+    [_imageView drawInRect:rect];
+    rect.origin.x += imageViewSize.width;
   }
-  
+
   if (_color) [_color setFill];
   if (_shadowColor) {
     CGContextRef context = UIGraphicsGetCurrentContext();	
@@ -128,7 +129,6 @@
   } else {
     [_text drawAtPoint:rect.origin forWidth:rect.size.width withFont:_font lineBreakMode:_lineBreakMode];
   }
-  return CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
 }
 
 @end

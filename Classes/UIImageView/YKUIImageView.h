@@ -110,13 +110,17 @@ typedef void (^YKUIImageViewStatusBlock)(id<YKUIImageView> imageView, YKUIImageV
 - (void)reload;
 
 /*!
- Set URLString to load with loading image and default image (if loading fails).
+ Set URLString to load with loading image and default image (if URL is nil).
  
  @param URLString URL as a string
  @param loadingImage Image to use while loading
  @param defaultImage Default image to use if image is nil
+ @param errorImage Error image to use on error
  */
+- (void)setURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage errorImage:(UIImage *)errorImage;
+
 - (void)setURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage;
+
 - (void)setURLString:(NSString *)URLString defaultImage:(UIImage *)defaultImage;
 
 
@@ -129,30 +133,62 @@ typedef void (^YKUIImageViewStatusBlock)(id<YKUIImageView> imageView, YKUIImageV
  Defaults to non-opaque with white background and fill aspect fit content mode.
  */
 @interface YKUIImageView : YKUIImageBaseView { 
-
-  // For manual rounded border style (non CALayer)
+  
   UIColor *_strokeColor;
   CGFloat _strokeWidth;
   CGFloat _cornerRadius;
     
-  UIColor *_color; // Fill (background) color
-  UIColor *_overlayColor; // Fill overlay color
+  UIColor *_color;
+  UIColor *_overlayColor;
   
   UIColor *_shadowColor;
   CGFloat _shadowBlur;
+  UIColor *_backgroundColor2;
 
   UIViewContentMode _imageContentMode;
-
+  
   UIImage *_renderedContents;
   UIImage *_renderedBlankContents;
 }
 
+/*!
+ Stroke (border) color.
+ */
 @property (retain, nonatomic) UIColor *strokeColor;
+
+/*!
+ Stroke (border) width.
+ */
 @property (assign, nonatomic) CGFloat strokeWidth;
+
+/*!
+ Corner radius.
+ */
 @property (assign, nonatomic) CGFloat cornerRadius;
+
+/*!
+ Fill background color.
+ */
 @property (retain, nonatomic) UIColor *color;
+
+/*!
+ Fill background color (2) for shading.
+ */
+@property (retain, nonatomic) UIColor *color2;
+
+/*!
+ Overlay color. Will draw after image.
+ */
 @property (retain, nonatomic) UIColor *overlayColor;
+
+/*!
+ Shadow color.
+ */
 @property (retain, nonatomic) UIColor *shadowColor;
+
+/*!
+ Shadow blur amount.
+ */
 @property (assign, nonatomic) CGFloat shadowBlur;
 
 /*!

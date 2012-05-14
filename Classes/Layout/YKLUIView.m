@@ -33,7 +33,7 @@
 }
 
 - (void)dealloc {
-  [_subviews release];
+  [subviews_ release];
   [super dealloc];
 }
 
@@ -42,26 +42,27 @@
 }
 
 - (void)addView:(id)view {
-  if (!_subviews) _subviews = [[NSMutableArray alloc] init];
-  [_subviews addObject:view];
+  if (!subviews_) subviews_ = [[NSMutableArray alloc] init];
+  [subviews_ addObject:view];
   [self setNeedsLayout];
   [self setNeedsDisplay];
 }
 
 - (void)removeView:(id)view {
-  [_subviews removeObject:view];
+  if (!view) return;
+  [subviews_ removeObject:view];
   [self setNeedsLayout];
   [self setNeedsDisplay];
 }
 
 - (void)removeAllViews {
-  [_subviews removeAllObjects];
+  [subviews_ removeAllObjects];
   [self setNeedsLayout];
   [self setNeedsDisplay];
 }
 
 - (void)drawRect:(CGRect)rect {
-  for (id view in _subviews) {
+  for (id view in subviews_) {
     BOOL isHidden = NO;
     if ([view respondsToSelector:@selector(isHidden)]) {
       isHidden = [view isHidden];

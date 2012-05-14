@@ -34,10 +34,7 @@
   UIEdgeInsets _insets;
 }
 
-@property (readonly, nonatomic) UIImage *image;
 @property (assign, nonatomic) UIEdgeInsets insets;
-
-+ (YKLImage *)imageWithImage:(UIImage *)image;
 
 - (id)initWithImage:(UIImage *)image;
 

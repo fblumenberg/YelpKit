@@ -56,21 +56,20 @@
  @param rect Rect to draw at/in.
  @result Position after drawing
  */
-- (CGPoint)drawInRect:(CGRect)rect;
+- (void)drawInRect:(CGRect)rect;
 
 /*!
  Draw this view at the current frame.
  Defaults to [self drawInRect:self.frame];.
  @param rect Dirty rect
- @result Position after drawing
  */
-- (CGPoint)drawRect:(CGRect)rect;
+- (void)drawRect:(CGRect)rect;
 
 /*!
  Draw this view.
  Defaults to [self drawRect:self.frame];.
  @result Position after drawing
  */
-- (CGPoint)draw;
+- (void)draw;
 
 @end

@@ -40,7 +40,7 @@
   UIColor *_shadowColor;
   CGSize _shadowOffset;
   
-  YKLImage *_image;
+  YKLImage *_imageView;
   
   // Cached sizing
   CGSize _sizeThatFits;

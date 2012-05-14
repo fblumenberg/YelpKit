@@ -84,16 +84,20 @@
   [self setNeedsLayout];
 }
 
-- (void)setURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage {
+- (void)setURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage errorImage:(UIImage *)errorImage {
   if ([URLString isEqual:[NSNull null]]) URLString = nil;
 
   [self reset];
   if (URLString) {
-    _imageLoader = [[YKImageLoader alloc] initWithLoadingImage:loadingImage defaultImage:defaultImage delegate:self];
+    _imageLoader = [[YKImageLoader alloc] initWithLoadingImage:loadingImage defaultImage:defaultImage errorImage:errorImage delegate:self];
     [_imageLoader setURL:[YKURL URLString:URLString]];
   } else if (defaultImage) {
     self.image = defaultImage;
   }
+}
+
+- (void)setURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage {
+  [self setURLString:URLString loadingImage:loadingImage defaultImage:defaultImage errorImage:nil];
 }
 
 - (void)setURLString:(NSString *)URLString defaultImage:(UIImage *)defaultImage {
@@ -206,7 +210,7 @@
 
 @implementation YKUIImageView
 
-@synthesize strokeColor=_strokeColor, strokeWidth=_strokeWidth, cornerRadius=_cornerRadius, color=_color, overlayColor=_overlayColor, imageContentMode=_imageContentMode, shadowColor=_shadowColor, shadowBlur=_shadowBlur;
+@synthesize strokeColor=_strokeColor, strokeWidth=_strokeWidth, cornerRadius=_cornerRadius, color=_color, color2=_color2, overlayColor=_overlayColor, imageContentMode=_imageContentMode, shadowColor=_shadowColor, shadowBlur=_shadowBlur;
 
 + (dispatch_queue_t)backgroundRenderQueue {
   static dispatch_queue_t BackgroundRenderQueue = NULL;
@@ -224,6 +228,7 @@
 - (void)dealloc {
   [_strokeColor release];
   [_color release];
+  [_color2 release];
   [_overlayColor release];
   [_shadowColor release];
   [_renderedContents release];
@@ -257,12 +262,17 @@
     YKCGContextDrawRect(context, rect, self.backgroundColor.CGColor, NULL, 0);
   }
 
-  if (_color) {
-    YKCGContextDrawRoundedRect(context, rect, _color.CGColor, NULL, _strokeWidth, _cornerRadius);
-  }
-
   UIColor *color = _color;
   if (!color) color = self.backgroundColor;
+  
+  if (_color && _color2) {
+    CGContextSaveGState(context);
+    YKCGContextAddStyledRect(context, rect, YKUIBorderStyleRounded, _strokeWidth, _strokeWidth, _cornerRadius);  
+    CGContextClip(context);
+    YKCGContextDrawShading(context, _color.CGColor, _color2.CGColor, NULL, NULL, rect.origin, CGPointMake(rect.origin.x, CGRectGetMaxY(rect)), YKUIShadingTypeLinear, NO, NO);
+    CGContextRestoreGState(context);
+    color = nil;
+  }
 
   YKCGContextDrawRoundedRectImageWithShadow(context, image.CGImage, image.size, rect, _strokeColor.CGColor, _strokeWidth, _cornerRadius, contentMode, color.CGColor, _shadowColor.CGColor, _shadowBlur);
 
