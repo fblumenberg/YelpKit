@@ -27,12 +27,12 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "YKUIRefreshTableHeaderView.h"
+#import "YKUIRefreshHeaderView.h"
 
 @class YKUIRefreshTableView;
 
 @protocol YKUIRefreshTableViewDelegate <NSObject>
-- (void)refreshScrollViewShouldRefresh:(YKUIRefreshTableView *)refreshScrollView;
+- (void)refreshTableViewShouldRefresh:(YKUIRefreshTableView *)refreshScrollView;
 @end
 
 /*!
@@ -45,7 +45,6 @@
         [[self refreshTableView] setRefreshHeaderEnabled:YES];
         [[self refreshTableView] setRefreshDelegate:self];
      }
-
  
      - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
         [(YKUIRefreshTableView *)self.tableView scrollViewDidScroll:scrollView];
@@ -55,7 +54,7 @@
         [(YKUIRefreshTableView *)self.tableView scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
      }
  
-     - (void)refreshScrollViewShouldRefresh:(YKUIRefreshTableView *)refreshScrollView {
+     - (void)refreshTableViewShouldRefresh:(YKUIRefreshTableView *)refreshTableView {
         [[self refreshTableView] setRefreshing:NO];
         // Do the refresh
      }
@@ -66,13 +65,13 @@
      [[self refreshTableView] setRefreshing:NO];
  
  */
-@interface YKUIRefreshTableView : UITableView {
-  YKUIRefreshTableHeaderView *_refreshHeaderView;
+@interface YKUIRefreshTableView : UITableView <YKUIRefreshHeaderViewDelegate> {
+  YKUIRefreshHeaderView *_refreshHeaderView;
   
   id<YKUIRefreshTableViewDelegate> _refreshDelegate;
 }
 
-@property (readonly, nonatomic) YKUIRefreshTableHeaderView *refreshHeaderView;
+@property (readonly, nonatomic) YKUIRefreshHeaderView *refreshHeaderView;
 @property (assign, nonatomic) id<YKUIRefreshTableViewDelegate> refreshDelegate;
 
 /*!

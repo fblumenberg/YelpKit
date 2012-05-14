@@ -89,6 +89,10 @@
   _contentView.frame = [self rectForContentView:self.frame.size];
 }
 
+- (CGSize)sizeThatFits:(CGSize)size {
+  return CGSizeMake(size.width, 44);
+}
+
 - (void)setTitle:(NSString *)title animated:(BOOL)animated {
   UILabel *label = [[UILabel alloc] init];
   label.font = [UIFont boldSystemFontOfSize:20];

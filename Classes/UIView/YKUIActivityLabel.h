@@ -39,7 +39,15 @@
   BOOL _hidesWhenStopped;
 }
 
+/*!
+ Whether view is hidden if stopped.
+ */
 @property (assign, nonatomic) BOOL hidesWhenStopped;
+
+/*!
+ Start or stop animating.
+ */
+@property (assign, nonatomic, getter=isAnimating) BOOL animating;
 
 /*!
  Text label.
@@ -92,16 +100,5 @@
  Stop activity indicator.
  */
 - (void)stopAnimating;
-
-/*!
- Start or stop animating.
- @param animating
- */
-- (void)setAnimating:(BOOL)animating;
-
-/*!
- Check if animating (activity indicator).
- */
-- (BOOL)isAnimating;
 
 @end

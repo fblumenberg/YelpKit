@@ -30,13 +30,13 @@
 #import "YKCGUtils.h"
 
 /*!
- 
  Border view component.
  
- For example,
-   UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 0)];
-   YKUIBorder *border = [[YKUIBorder alloc] initWithFrame:CGRectMake(10, 10, 300, 0) style:YKUIBorderStyleRounded stroke:1.0 color:[UIColor grayColor]];
-   border.fillColor = [UIColor whiteColor]; 
+ For example:
+
+    YKUIBorder *border = [[YKUIBorder alloc] initWithFrame:CGRectMake(10, 10, 300, 0) style:YKUIBorderStyleRounded stroke:1.0 color:[UIColor grayColor]];
+    border.cornerRadius = 6.0;
+    border.fillColor = [UIColor whiteColor]; 
  */
 @interface YKUIBorder : UIView {
   YKUIBorderStyle _style;

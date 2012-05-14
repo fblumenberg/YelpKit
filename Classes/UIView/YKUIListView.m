@@ -51,6 +51,8 @@
 }
 
 - (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size {
+  if ([_views count] == 0) return CGSizeMake(size.width, 0);
+
   CGFloat x = _insets.left;
   CGFloat y = _insets.top + 1;
   for (UIView *view in _views) {

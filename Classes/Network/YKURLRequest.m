@@ -46,6 +46,8 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 
 @interface YKURLRequest ()
 @property (retain, nonatomic) NSData *responseData;
+@property (copy, nonatomic) YKURLRequestFinishBlock finishBlock; 
+@property (copy, nonatomic) YKURLRequestFailBlock failBlock;
 - (void)_start;
 - (void)_stop;
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error;
@@ -53,8 +55,8 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 
 @implementation YKURLRequest
 
-@synthesize connection=_connection, timeout=_timeout, request=_request, response=_response, delegate=__delegate, finishSelector=_finishSelector, failSelector=_failSelector, cancelSelector=_cancelSelector, expiresAge=_expiresAge, URL=_URL, cacheName=_cacheName, cachePolicy=_cachePolicy, mockResponse=_mockResponse, mockResponseDelayInterval=_mockResponseDelayInterval, dataInterval=_dataInterval, totalInterval=_totalInterval, start=_start, downloadedData=_downloadedData, cacheHit=_cacheHit, inCache=_inCache, stopped=_stopped, error=_error, detachOnThread=_detachOnThread, started=_started, responseInterval=_responseInterval, runLoop=_runLoop, sentInterval=_sentInterval, bytesWritten=_bytesWritten;
-@synthesize responseData=_responseData; // Private properties
+@synthesize connection=_connection, timeout=_timeout, request=_request, response=_response, delegate=__delegate, finishSelector=_finishSelector, failSelector=_failSelector, cancelSelector=_cancelSelector, expiresAge=_expiresAge, URL=_URL, cacheName=_cacheName, cachePolicy=_cachePolicy, mockResponse=_mockResponse, mockResponseDelayInterval=_mockResponseDelayInterval, dataInterval=_dataInterval, totalInterval=_totalInterval, start=_start, downloadedData=_downloadedData, cacheHit=_cacheHit, inCache=_inCache, stopped=_stopped, error=_error, detachOnThread=_detachOnThread, started=_started, responseInterval=_responseInterval, runLoop=_runLoop, sentInterval=_sentInterval, bytesWritten=_bytesWritten, JSONEnabled=_JSONEnabled;
+@synthesize responseData=_responseData, finishBlock=_finishBlock, failBlock=_failBlock; // Private properties
 
 
 - (id)init {
@@ -84,6 +86,8 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   [_mockResponse release];
   [_error release];
   [_responseData release];
+  Block_release(_finishBlock);
+  Block_release(_failBlock);
   [super dealloc];
 }
 
@@ -120,24 +124,49 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 }
 
 - (BOOL)requestWithURL:(YKURL *)URL headers:(NSDictionary *)headers delegate:(id)delegate finishSelector:(SEL)finishSelector failSelector:(SEL)failSelector cancelSelector:(SEL)cancelSelector {
-  return [self requestWithURL:URL method:YPHTTPMethodGet headers:headers postParams:nil keyEnumerator:nil 
-                     delegate:delegate finishSelector:finishSelector failSelector:failSelector cancelSelector:cancelSelector secure:NO];
+  return [self requestWithURL:URL method:YPHTTPMethodGet headers:headers postParams:nil keyEnumerator:nil delegate:delegate finishSelector:finishSelector failSelector:failSelector cancelSelector:cancelSelector];
 }
 
-- (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator 
-               delegate:(id)delegate finishSelector:(SEL)finishSelector failSelector:(SEL)failSelector cancelSelector:(SEL)cancelSelector secure:(BOOL)secure {
++ (BOOL)requestWithURL:(YKURL *)URL headers:(NSDictionary *)headers finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
+  YKURLRequest *request = [[[self class] alloc] init];
+  return [request requestWithURL:URL headers:headers finishBlock:finishBlock failBlock:failBlock];
+}
+
+- (BOOL)requestWithURL:(YKURL *)URL headers:(NSDictionary *)headers finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
+  return [self requestWithURL:URL method:YPHTTPMethodGet headers:headers postParams:nil keyEnumerator:nil finishBlock:finishBlock failBlock:failBlock];
+}
+
++ (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
+  YKURLRequest *request = [[[self class] alloc] init];
+  return [request requestWithURL:URL method:method headers:headers postParams:postParams keyEnumerator:keyEnumerator finishBlock:finishBlock failBlock:failBlock];
+}
+                
+- (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
   
-  YKAssertSelectorNilOrImplementedWithArguments(delegate, finishSelector, @encode(YKURLRequest *), 0);
-  YKAssertSelectorNilOrImplementedWithArguments(delegate, failSelector, @encode(YKURLRequest *), @encode(YKError *), 0);
-  YKAssertSelectorNilOrImplementedWithArguments(delegate, cancelSelector, @encode(YKURLRequest *), 0);
+  self.finishBlock = finishBlock;
+  self.failBlock = failBlock;
   
-  if (_started) [NSException raise:NSInternalInconsistencyException format:@"Re-using a request more than once is not supported."];
-  _started = YES;
+  return [self _requestWithURL:URL method:method headers:headers postParams:postParams keyEnumerator:keyEnumerator];
+}
+
+- (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator delegate:(id)delegate finishSelector:(SEL)finishSelector failSelector:(SEL)failSelector cancelSelector:(SEL)cancelSelector{
   
+  //YKAssertSelectorNilOrImplementedWithArguments(delegate, finishSelector, @encode(YKURLRequest *), 0);
+  //YKAssertSelectorNilOrImplementedWithArguments(delegate, failSelector, @encode(YKURLRequest *), @encode(YKError *), 0);
+  //YKAssertSelectorNilOrImplementedWithArguments(delegate, cancelSelector, @encode(YKURLRequest *), 0);
+    
   self.delegate = delegate; // Retained only for life of connection
   _finishSelector = finishSelector;
   _failSelector = failSelector;
   _cancelSelector = cancelSelector;
+ 
+  return [self _requestWithURL:URL method:method headers:headers postParams:postParams keyEnumerator:keyEnumerator];
+}
+
+- (BOOL)_requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator {
+
+  if (_started) [NSException raise:NSInternalInconsistencyException format:@"Re-using a request more than once is not supported."];
+  _started = YES;
   
   _URL = [URL retain];
   _method = method;
@@ -344,6 +373,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   [_error release];
   _error = error;
   if (_failSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_failSelector withObject:self withObject:error];
+  if (_failBlock != NULL) _failBlock(error);
   [[self gh_proxyOnMainThread:YES] _stop];
 }
 
@@ -354,13 +384,26 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   
   if (_stopped) return;
   
-  if (_finishSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_finishSelector withObject:self];
+  id obj = data;
+
+  if (_JSONEnabled && NSClassFromString(@"NSJSONSerialization")) {
+    NSError *error = nil;
+    obj = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:&error];
+    if (!obj) {
+      [self didError:[YKError errorForError:error]];
+      return;
+    }
+  }
+  
+  if (_finishSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_finishSelector withObject:self withObject:obj];
+  if (_finishBlock != NULL) _finishBlock(obj);
   [[self gh_proxyOnMainThread:YES] _stop];
 }
 
 - (void)didCancel {
   YKDebug(@"Cancel (%@/%@)", self.delegate, NSStringFromSelector(_cancelSelector));
   if (_cancelSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_cancelSelector withObject:self];
+  if (_failBlock != NULL) _failBlock(nil);
   [[self gh_proxyOnMainThread:YES] _stop];
 }
 

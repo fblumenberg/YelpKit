@@ -116,6 +116,12 @@
   return CGSizeMake(size.width, height);
 }
 
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+  [super setBackgroundColor:backgroundColor];
+  _textLabel.backgroundColor = backgroundColor;
+  _detailLabel.backgroundColor = backgroundColor;
+}
+
 - (void)startAnimating {
   if (_hidesWhenStopped) self.hidden = NO;
   _imageView.hidden = YES;
@@ -174,7 +180,7 @@
 - (UILabel *)detailLabel {
   if (!_detailLabel) {
     _detailLabel = [[UILabel alloc] init];
-    _detailLabel.backgroundColor = [UIColor clearColor];
+    _detailLabel.backgroundColor = self.backgroundColor;
     _detailLabel.font = [UIFont systemFontOfSize:14.0];
     _detailLabel.textColor = [UIColor colorWithWhite:0.45 alpha:1.0];
     _detailLabel.textAlignment = UITextAlignmentCenter;

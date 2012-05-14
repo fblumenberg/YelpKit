@@ -64,6 +64,16 @@ extern const double kYKURLRequestExpiresAgeMax;
 @class YKURLRequest;
 
 /*!
+ Request finished block. Object will be NSData or object if a YKJSONRequest.
+ */
+typedef void (^YKURLRequestFinishBlock)(id obj);
+
+/*!
+ Fail block. If error is nil, it means the request was cancelled.
+ */
+typedef void (^YKURLRequestFailBlock)(YKError *error);
+
+/*!
  URL request.
  
  To disable cache through user defaults, set NSUserDefaults#boolForKey:@"YKURLRequestCacheDisabled".
@@ -73,7 +83,9 @@ extern const double kYKURLRequestExpiresAgeMax;
   id __delegate; // weak; Retained while connection is active; Prefixed with __ so subclasses aren't encouraged to access directly
   SEL _finishSelector;
   SEL _failSelector;
-  SEL _cancelSelector;
+  
+  YKURLRequestFinishBlock _finishBlock; 
+  YKURLRequestFailBlock _failBlock;
   
   YKURL *_URL;
   YPHTTPMethod _method;
@@ -95,9 +107,9 @@ extern const double kYKURLRequestExpiresAgeMax;
   
   // For caching
   NSTimeInterval _expiresAge; // Max age for cached item; Defaults to 0 (expires immediately)
-  YKURLRequestCachePolicy _cachePolicy; // Defaults to YKURLRequestCachePolicyEnabled (see _expiresAge interval)
+  YKURLRequestCachePolicy _cachePolicy; // Defaults to YKURLRequestCachePolicyEnabled (but expiresAge must be set > 0)
   NSString *_cacheName; // Namespace for cache  
-  
+
   // For mocking
   NSData *_mockResponse;
   NSTimeInterval _mockResponseDelayInterval;
@@ -117,6 +129,8 @@ extern const double kYKURLRequestExpiresAgeMax;
   NSUInteger _bytesWritten;
   
   NSTimer *_timer;
+  
+  BOOL _JSONEnabled; // To enable JSON parsing (iOS5)
   
   BOOL _detachOnThread; //! Experimental!
   
@@ -145,7 +159,7 @@ extern const double kYKURLRequestExpiresAgeMax;
 
 @property (readonly, nonatomic) YKURL *URL;
 
-//! For request to be cacheable it must have _expiresAge > 0 and cacheable is YES
+//! For request to be cacheable it must have expiresAge > 0
 @property (assign, nonatomic) YKURLRequestCachePolicy cachePolicy;
 @property (assign, nonatomic) NSString *cacheName;
 
@@ -161,12 +175,38 @@ extern const double kYKURLRequestExpiresAgeMax;
 
 @property (assign, nonatomic) BOOL detachOnThread;
 
+@property (assign, nonatomic, getter=isJSONEnabled) BOOL JSONEnabled;
+
 @property (readonly, retain, nonatomic) NSData *responseData;
 
 @property (retain, nonatomic) NSRunLoop *runLoop;
 
 /*!
- Request the URL.
+ GET request. 
+ @param URL URL
+ @param headers Headers to include in request
+ @param finishBlock 
+ @param failBlock
+ @result NO if we were unable to make the request with the parameters
+ 
+ Server errors (status >= 300) are reported as the code of the error object.
+ */
+- (BOOL)requestWithURL:(YKURL *)URL headers:(NSDictionary *)headers finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
+
+/*!
+ GET request. 
+ @param URL URL
+ @param headers Headers to include in request
+ @param finishBlock 
+ @param failBlock
+ @result NO if we were unable to make the request with the parameters
+ 
+ Server errors (status >= 300) are reported as the code of the error object.
+ */
++ (BOOL)requestWithURL:(YKURL *)URL headers:(NSDictionary *)headers finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
+
+/*!
+ GET the URL.
  The delegate is retained for the duration of the connection.
  
  The delegate must provide and implement the finished and failed selectors.
@@ -175,24 +215,84 @@ extern const double kYKURLRequestExpiresAgeMax;
  @param headers Headers to include in request
  @param delegate Delegate
  @param finishSelector Finished selector, with a signature like:
-  @code
-  - (void)requestDidFinish:(YKURLRequest *)request;
-  @endcode 
+      
+      - (void)requestDidFinish:(YKURLRequest *)request object:(id)object;
+
  @param failSelector Failure selector, with a signature like:
-  @code
-  - (void)request:(YKURLRequest *)request failedWithError:(YKError *)error;
-  @endcode
+
+      - (void)request:(YKURLRequest *)request failedWithError:(YKError *)error;
+
  @param cancelSelector Cancel selector, with a signature like:
-  @code
-  - (void)requestDidCancel:(YKURLRequest *)request;
-  @endcode
+
+      - (void)requestDidCancel:(YKURLRequest *)request;
+
  @result NO if we were unable to make the request with the parameters
  
  Server errors (status >= 300) are reported as the code of the error object.
  */
 - (BOOL)requestWithURL:(YKURL *)URL headers:(NSDictionary *)headers delegate:(id)delegate finishSelector:(SEL)finishSelector failSelector:(SEL)failSelector cancelSelector:(SEL)cancelSelector;
 
-- (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator delegate:(id)delegate finishSelector:(SEL)finishSelector failSelector:(SEL)failSelector cancelSelector:(SEL)cancelSelector secure:(BOOL)secure;
+/*!
+ Request URL with method.
+ 
+ @param URL URL
+ @param method Method
+ @param headers Headers to include in request
+ @param postParams Post data
+ @param keyEnumerator Enumerator for ordering post data
+ @param finishBlock 
+ @param failBlock
+ @result NO if we were unable to make the request with the parameters
+ 
+ Server errors (status >= 300) are reported as the code of the error object.
+ */
+- (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
+
+/*!
+ Request URL with method.
+ 
+ @param URL URL
+ @param method Method
+ @param headers Headers to include in request
+ @param postParams Post data
+ @param keyEnumerator Enumerator for ordering post data
+ @param finishBlock 
+ @param failBlock
+ @result NO if we were unable to make the request with the parameters
+ 
+ Server errors (status >= 300) are reported as the code of the error object.
+ */
++ (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
+
+/*!
+ Request the URL.
+ The delegate is retained for the duration of the connection.
+ 
+ The delegate must provide and implement the finished and failed selectors.
+ 
+ @param URL URL
+ @param method Method
+ @param headers Headers to include in request
+ @param postParams Post data
+ @param keyEnumerator Enumerator for ordering post data
+ @param delegate Delegate
+ @param finishSelector Finished selector, with a signature like:
+
+      - (void)requestDidFinish:(YKURLRequest *)request object:(id)object;
+
+ @param failSelector Failure selector, with a signature like:
+
+      - (void)request:(YKURLRequest *)request failedWithError:(YKError *)error;
+
+ @param cancelSelector Cancel selector, with a signature like:
+
+      - (void)requestDidCancel:(YKURLRequest *)request;
+
+ @result NO if we were unable to make the request with the parameters
+ 
+ Server errors (status >= 300) are reported as the code of the error object.
+ */
+- (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator delegate:(id)delegate finishSelector:(SEL)finishSelector failSelector:(SEL)failSelector cancelSelector:(SEL)cancelSelector;
 
 /*!
  Cancel request. Will issued a cancelled notification to the delegate
@@ -347,6 +447,9 @@ __REQUEST__ = nil; \
 } while (0);
 
 
+/*!
+ YKURLRequest data part.
+ */
 @interface YKURLRequestDataPart : NSObject {
   NSString *_contentType;
   NSData *_data;

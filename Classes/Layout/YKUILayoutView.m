@@ -83,6 +83,7 @@
 
 - (void)setNeedsLayout {
   [super setNeedsLayout];
+  [self setNeedsDisplay];
   [_layout setNeedsLayout];
 }
 

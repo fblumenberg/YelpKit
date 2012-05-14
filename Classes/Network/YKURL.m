@@ -34,6 +34,14 @@
   return [URL autorelease];
 }
 
++ (YKURL *)URLWithHost:(NSString *)host path:(NSString *)path queryString:(NSString *)queryString secure:(BOOL)secure {
+  if ([path length] > 0 && ![[path substringToIndex:1] isEqualToString:@"/"]) path = [NSString stringWithFormat:@"/%@", path];
+  if ([queryString length] > 0 && ![[path substringToIndex:1] isEqualToString:@"?"]) queryString = [NSString stringWithFormat:@"?%@", queryString];
+  if (!queryString) queryString = @"";
+  NSString *URLString = [NSString stringWithFormat:@"%@%@%@%@", (secure ? @"https://" : @"http://"), host, path, queryString, nil];
+  return [self URLString:URLString];
+}
+
 - (NSString *)description {
   return _URLString;
 }

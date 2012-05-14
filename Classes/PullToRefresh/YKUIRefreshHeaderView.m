@@ -1,5 +1,5 @@
 //
-//  YKUIRefreshTableHeaderView.m
+//  YKUIRefreshHeaderView.m
 //  Original name: EGORefreshTableHeaderView.m
 //  Heavily modified
 //
@@ -26,14 +26,14 @@
 //
 
 
-#import "YKUIRefreshTableHeaderView.h"
+#import "YKUIRefreshHeaderView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "YKCGUtils.h"
 #import "YKLocalized.h"
 
-@implementation YKUIRefreshTableHeaderView
+@implementation YKUIRefreshHeaderView
 
-@synthesize state=_state, pullHeight=_pullHeight, pullAmount=_pullAmount, momentary=_momentary, pullIconDisabled=_pullIconDisabled;
+@synthesize state=_state, pullHeight=_pullHeight, pullAmount=_pullAmount, momentary=_momentary, pullIconDisabled=_pullIconDisabled, delegate=_delegate;
 
 - (id)initWithFrame:(CGRect)frame {
   if (self = [super initWithFrame:frame]) {
@@ -105,6 +105,10 @@
   _iconLayer.frame = CGRectMake(50, self.frame.size.height, _icon.size.width, _icon.size.height);
 }
 
+- (CGSize)sizeThatFits:(CGSize)size {
+  return CGSizeMake(size.width, 50);
+}
+
 - (void)drawRect:(CGRect)rect {
   [super drawRect:rect];
   
@@ -166,6 +170,61 @@
   }
   
   _state = state;
+}
+
+- (void)setRefreshing:(BOOL)refreshing inScrollView:(UIScrollView *)scrollView {
+  // Ensure refresh header is loading;
+  // If we are momentary then ensure we aren't expanded
+  [self setState:(refreshing ? YKUIPullRefreshLoading : YKUIPullRefreshNormal)];
+  if (self.momentary) {
+    [self expandRefreshHeaderView:NO inScrollView:scrollView];
+  } else {    
+    [self expandRefreshHeaderView:refreshing inScrollView:scrollView];
+  }
+}
+
+- (void)expandRefreshHeaderView:(BOOL)expand inScrollView:(UIScrollView *)scrollView {
+  if (expand) {
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.2];
+    scrollView.contentInset = UIEdgeInsetsMake(self.pullHeight, 0, 0, 0);
+    [UIView commitAnimations];  
+  } else {
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.2];
+    scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    [UIView commitAnimations];  
+  }
+}
+
+#pragma mark Delegates (UIScrollView)
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+  if (scrollView.isDragging) {    
+    if (self.state == YKUIPullRefreshPulling && scrollView.contentOffset.y > -(self.pullHeight + 5) && scrollView.contentOffset.y < 0) {
+      [self setState:YKUIPullRefreshNormal];
+    } else if (self.state == YKUIPullRefreshNormal && scrollView.contentOffset.y < -(self.pullHeight + 5)) {
+      [self setState:YKUIPullRefreshPulling];
+    }    
+  }
+  [self setPullAmount:-scrollView.contentOffset.y];
+  
+  // Fix issue where header doesn't scroll right while into pull to refresh
+  if (!self.momentary && self.state == YKUIPullRefreshLoading) {
+    if (scrollView.contentOffset.y >= 0) {
+      scrollView.contentInset = UIEdgeInsetsZero;
+    } else {
+      scrollView.contentInset = UIEdgeInsetsMake(MIN(-scrollView.contentOffset.y, self.pullHeight), 0, 0, 0);
+    }
+  }  
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {  
+  if (self && scrollView.contentOffset.y <= -(self.pullHeight + 5) &&  self.state != YKUIPullRefreshLoading) {
+    [_delegate refreshHeaderViewDidSelectRefresh:self];
+  } else {
+    [self setPullAmount:0];
+  }
 }
 
 @end

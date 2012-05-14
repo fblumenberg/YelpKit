@@ -63,6 +63,16 @@
 + (YKURL *)URLString:(NSString *)URLString cacheEnabled:(BOOL)cacheEnabled;
 
 /*!
+ Create YKURL from host, path, query.
+
+ @param host Host
+ @param path Path
+ @param query Query string; Use GHKit [NSDictionary gh_queryString] to convert NSDictionary to query string
+ @param secure If YES, use HTTPS
+ */
++ (YKURL *)URLWithHost:(NSString *)host path:(NSString *)path queryString:(NSString *)queryString secure:(BOOL)secure;
+
+/*!
  Cacheable URL string. Defaults to URLString.
  Subclasses may override to support custom implementation that ignores certain query params, for example.
  

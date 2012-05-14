@@ -1,5 +1,5 @@
 //
-//  YPUIRefreshTableView.h
+//  YKUIRefreshHeaderView.h
 //
 
 //  Code adapted from: EGORefreshTableHeaderView.h
@@ -34,10 +34,17 @@ typedef enum {
   YKUIPullRefreshLoading = 3, 
 } YKUIPullRefreshState;
 
+
+@class YKUIRefreshHeaderView;
+
+@protocol YKUIRefreshHeaderViewDelegate <NSObject>
+- (void)refreshHeaderViewDidSelectRefresh:(YKUIRefreshHeaderView *)refreshHeaderView;
+@end
+
 /*!
  Pull to refresh header view.
  */
-@interface YKUIRefreshTableHeaderView : UIView {
+@interface YKUIRefreshHeaderView : UIView <UIScrollViewDelegate> {
 
   YKUIActivityLabel *_activityLabel;
   UIImageView *_imageView;
@@ -54,6 +61,7 @@ typedef enum {
   
   YKUIPullRefreshState _state;
   
+  id<YKUIRefreshHeaderViewDelegate> _delegate;
 }
 
 @property (assign, nonatomic) YKUIPullRefreshState state;
@@ -61,5 +69,9 @@ typedef enum {
 @property (assign, nonatomic) CGFloat pullAmount;
 @property (assign, nonatomic, getter=isMomentary) BOOL momentary; // If YES, will not stay pulled down while loading
 @property (assign, nonatomic, getter=isPullIconDisabled) BOOL pullIconDisabled; // Whether to disable pull icon; Defaults to NO
+@property (assign, nonatomic) id<YKUIRefreshHeaderViewDelegate> delegate;
+
+- (void)expandRefreshHeaderView:(BOOL)expand inScrollView:(UIScrollView *)scrollView;
+- (void)setRefreshing:(BOOL)refreshing inScrollView:(UIScrollView *)scrollView;
 
 @end
