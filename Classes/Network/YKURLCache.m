@@ -409,7 +409,15 @@ static NSMutableDictionary *gNamedCaches = NULL;
     image = [UIImage imageWithData:cachedData];
     // If the image was invalid, remove it from the cache
     if (image) {
-      [self cacheImage:image forURLString:URLString];
+      // cacheImage:forURLString writes to instance variables. To be thread safe,
+      // let's make sure that happens on the main thread.
+      if ([NSThread isMainThread]) {
+        [self cacheImage:image forURLString:URLString];
+      } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [self cacheImage:image forURLString:URLString];
+        });
+      }
       YKDebug(@"Image disk cache HIT: %@ (length=%d), Loading image took: %0.3f", URLString, [cachedData length], ([NSDate timeIntervalSinceReferenceDate] - start));
     } else {
       [self removeURLString:URLString fromDisk:YES];
