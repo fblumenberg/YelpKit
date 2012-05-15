@@ -375,7 +375,7 @@
   
   size.height -= _insets.top + _insets.bottom;
   
-  BOOL isHighlighted = (self.isHighlighted && self.userInteractionEnabled);
+  BOOL isHighlighted = (self.isHighlighted && self.userInteractionEnabled && self.isHighlightedEnabled);
   BOOL isSelected = self.isSelected;
   BOOL isDisabled = !self.isEnabled;
   
