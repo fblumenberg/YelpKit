@@ -276,7 +276,7 @@ static NSMutableDictionary *gNamedCaches = NULL;
     NSString *key = [self keyForURLString:URLString];
     NSString *filePath = [self cachePathForKey:key];
     NSFileManager *fm = [NSFileManager defaultManager];
-    if (filePath && [fm fileExistsAtPath:filePath]) {
+    if (filePath) {
       [fm removeItemAtPath:filePath error:nil];
     }
   }
