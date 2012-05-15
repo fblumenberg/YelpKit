@@ -36,4 +36,20 @@
  */
 - (void)pushView:(YKUILayoutView *)view animated:(BOOL)animated;
 
+/*!
+ Set navigation title.
+ @param title
+ @param animated
+ */
+- (void)setNavigationTitle:(NSString *)title animated:(BOOL)animated;
+
+
+- (void)viewWillAppear:(BOOL)animated;
+
+- (void)viewDidAppear:(BOOL)animated;
+
+- (void)viewWillDisappear:(BOOL)animated;
+
+- (void)viewDidDisappear:(BOOL)animated;
+
 @end

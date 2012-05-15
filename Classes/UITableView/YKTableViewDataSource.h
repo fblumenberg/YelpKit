@@ -131,6 +131,8 @@
  */
 - (void)setCellDataSources:(NSArray */*of id<YKTableViewCellDataSource>*/)array section:(NSInteger)section;
 
+- (NSMutableArray *)cellDataSourcesForSection:(NSInteger)section;
+
 @end
 
 

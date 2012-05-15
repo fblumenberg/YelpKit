@@ -37,6 +37,7 @@
     YKUIBorder *border = [[YKUIBorder alloc] initWithFrame:CGRectMake(10, 10, 300, 0) style:YKUIBorderStyleRounded stroke:1.0 color:[UIColor grayColor]];
     border.cornerRadius = 6.0;
     border.fillColor = [UIColor whiteColor]; 
+
  */
 @interface YKUIBorder : UIView {
   YKUIBorderStyle _style;
@@ -59,7 +60,6 @@
   UIEdgeInsets _insets;
 }
 
-@property (retain, nonatomic) UIView *contentView;
 @property (assign, nonatomic) YKUIBorderStyle style;
 @property (assign, nonatomic) CGFloat cornerRadius;
 @property (retain, nonatomic) UIColor *color;

@@ -31,4 +31,16 @@
   [viewController release];
 }
 
+- (void)setNavigationTitle:(NSString *)title animated:(BOOL)animated {
+  [_viewController setNavigationTitle:title animated:animated];
+}
+
+- (void)viewWillAppear:(BOOL)animated { }
+
+- (void)viewDidAppear:(BOOL)animated { }
+
+- (void)viewWillDisappear:(BOOL)animated { }
+
+- (void)viewDidDisappear:(BOOL)animated { }
+
 @end

@@ -283,7 +283,7 @@
 }
 
 - (void)_cornerRadiusChanged {
-  if (_borderStyle == YKUIBorderStyleNone && (_cornerRadius > 0 || _cornerRadiusRatio > 0)) {
+  if ((_borderStyle == YKUIBorderStyleNone || _borderStyle == YKUIBorderStyleNormal) && (_cornerRadius > 0 || _cornerRadiusRatio > 0)) {
     _borderStyle = YKUIBorderStyleRounded;
     [self didChangeValueForKey:@"borderStyle"];
   }
@@ -299,6 +299,27 @@
   _cornerRadiusRatio = cornerRadiusRatio;
   [self didChangeValueForKey:@"cornerRadiusRatio"];
   [self _cornerRadiusChanged];
+}
+
+- (void)_borderChanged {
+  if (_borderStyle == YKUIBorderStyleNone && (_borderColor || _borderWidth > 0)) {
+    _borderStyle = YKUIBorderStyleNormal;
+    [self didChangeValueForKey:@"borderStyle"];
+  }
+}
+
+- (void)setBorderColor:(UIColor *)borderColor {
+  [borderColor retain];
+  [_borderColor release];
+  _borderColor = borderColor;
+  [self didChangeValueForKey:@"borderColor"];
+  [self _borderChanged];
+}
+
+- (void)setBorderWidth:(CGFloat)borderWidth {
+  _borderWidth = borderWidth;
+  [self didChangeValueForKey:@"borderWidth"];
+  [self _borderChanged];
 }
 
 + (YKUIButton *)button {

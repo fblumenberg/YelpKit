@@ -32,7 +32,7 @@
 
 @implementation YKUIBorder
 
-@synthesize contentView=_contentView, cornerRadius=_cornerRadius, color=_color, strokeWidth=_strokeWidth, alternateStrokeWidth=_alternateStrokeWidth, fillColor=_fillColor, highlightedColor=_highlightedColor, highlighted=_highlighted, style=_style, shadowColor=_shadowColor, shadowBlur=_shadowBlur, insets=_insets, shadingType=_shadingType, shadingColor=_shadingColor, shadingAlternateColor=_shadingAlternateColor, cornerColor=_cornerColor;
+@synthesize cornerRadius=_cornerRadius, color=_color, strokeWidth=_strokeWidth, alternateStrokeWidth=_alternateStrokeWidth, fillColor=_fillColor, highlightedColor=_highlightedColor, highlighted=_highlighted, style=_style, shadowColor=_shadowColor, shadowBlur=_shadowBlur, insets=_insets, shadingType=_shadingType, shadingColor=_shadingColor, shadingAlternateColor=_shadingAlternateColor, cornerColor=_cornerColor;
 
 - (void)sharedInit {
   self.opaque = NO;
