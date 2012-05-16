@@ -31,11 +31,10 @@
 
 @interface YKLImage : YKLBaseView {
   UIImage *_image;
+  UIEdgeInsets _insets;
 }
 
-@property (readonly, nonatomic) UIImage *image;
-
-+ (YKLImage *)imageWithImage:(UIImage *)image;
+@property (assign, nonatomic) UIEdgeInsets insets;
 
 - (id)initWithImage:(UIImage *)image;
 

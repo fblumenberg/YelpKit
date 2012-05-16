@@ -75,9 +75,20 @@ typedef enum {
 @property (assign, nonatomic) id<YKImageLoaderDelegate> delegate;
 @property (assign, nonatomic) YKImageLoaderQueue *queue;
 
-- (id)initWithLoadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage delegate:(id<YKImageLoaderDelegate>)delegate;
+/*!
+ Image loader with loading image and default image.
+ */
+- (id)initWithLoadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage delegate:(id<YKImageLoaderDelegate>)delegate ;
 
-+ (YKImageLoader *)imageLoaderWithURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage delegate:(id<YKImageLoaderDelegate>)delegate;
+/*!
+ Image loader with loading image, default image and error image.
+ */
+- (id)initWithLoadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage errorImage:(UIImage *)errorImage delegate:(id<YKImageLoaderDelegate>)delegate;
+
+/*!
+ Image loader with loading image, default image and error image.
+ */
++ (YKImageLoader *)imageLoaderWithURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage errorImage:(UIImage *)errorImage delegate:(id<YKImageLoaderDelegate>)delegate;
 
 /*!
  Set a global mock image.

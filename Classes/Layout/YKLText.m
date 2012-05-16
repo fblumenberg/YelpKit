@@ -29,13 +29,14 @@
 
 #import "YKLText.h"
 #import "YKCGUtils.h"
+#import "YKLImage.h"
 
 @implementation YKLText
 
 @synthesize shadowColor=_shadowColor, shadowOffset=_shadowOffset;
 
 - (id)initWithText:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode textAligment:(UITextAlignment)textAlignment {
-  if ((self = [super init])) {
+  if ((self = [self init])) {
     _text = [text retain];
     _font = [font retain];
     _color = [color retain];
@@ -52,6 +53,7 @@
   [_font release];
   [_color release];
   [_shadowColor release];
+  [_imageView release];
   [super dealloc];
 }
 
@@ -71,6 +73,18 @@
   return [[[YKLText alloc] initWithText:text font:font color:color lineBreakMode:lineBreakMode textAligment:textAlignment] autorelease];
 }
 
+- (void)_reset {
+  _sizeThatFits = YKCGSizeNull;
+  _sizeForSizeThatFits = YKCGSizeNull;
+}
+
+- (void)setImage:(UIImage *)image insets:(UIEdgeInsets)insets {
+  [_imageView release];
+  _imageView = [[YKLImage alloc] initWithImage:image];
+  _imageView.insets = insets;
+  [self _reset];
+}
+
 - (NSString *)description {
   return _text;
 }
@@ -85,11 +99,24 @@
   } else {
     _sizeThatFits = [_text sizeWithFont:_font forWidth:size.width lineBreakMode:_lineBreakMode];
   }
+  
+  if (_imageView) {
+    CGSize imageSize = [_imageView sizeThatFits:size];
+    _sizeThatFits.width += imageSize.width;
+    _sizeThatFits.height = MAX(_sizeThatFits.height, imageSize.height);
+  }
+  
   _sizeForSizeThatFits = size;
   return _sizeThatFits;
 }
 
 - (void)drawInRect:(CGRect)rect {
+  if (_imageView) {
+    CGSize imageViewSize = [_imageView sizeThatFits:rect.size];
+    [_imageView drawInRect:rect];
+    rect.origin.x += imageViewSize.width;
+  }
+
   if (_color) [_color setFill];
   if (_shadowColor) {
     CGContextRef context = UIGraphicsGetCurrentContext();	
@@ -97,7 +124,7 @@
   }
   if (_textAlignment != UITextAlignmentLeft) {
     [_text drawInRect:rect withFont:_font lineBreakMode:_lineBreakMode alignment:_textAlignment];
-  } else if (_lineBreakMode == -1 || _frame.size.width > 0) {
+  } else if (_lineBreakMode == -1) {
     [_text drawAtPoint:rect.origin withFont:_font];
   } else {
     [_text drawAtPoint:rect.origin forWidth:rect.size.width withFont:_font lineBreakMode:_lineBreakMode];

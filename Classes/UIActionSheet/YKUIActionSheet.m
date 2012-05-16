@@ -135,8 +135,8 @@
     SEL selector = [actionValue pointerValue];
     // Handle nil selectors
     if (selector != nil) {
-      id context = [_contexts objectAtIndex:buttonIndex];
-      if ([context isEqual:[NSNull null]]) context = nil;
+      id context = [_contexts gh_objectAtIndex:buttonIndex];
+      if (context && [context isEqual:[NSNull null]]) context = nil;
       [_target performSelector:selector withObject:(context ? context : self)];
     }
   }

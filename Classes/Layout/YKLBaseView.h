@@ -39,6 +39,7 @@
 
 /*!
  Size that fits for this view.
+ @result Size that fits
  */
 - (CGSize)sizeThatFits:(CGSize)size;
 
@@ -46,12 +47,14 @@
  Returns rect for this view in the superview frame based on content mode.
  @param rect Superview frame
  @param contentMode Where to place view in rect
+ @result Size that fits
  */
 - (CGRect)sizeThatFitsInRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode;
 
 /*!
  Draw view in rect.
  @param rect Rect to draw at/in.
+ @result Position after drawing
  */
 - (void)drawInRect:(CGRect)rect;
 
@@ -65,6 +68,7 @@
 /*!
  Draw this view.
  Defaults to [self drawRect:self.frame];.
+ @result Position after drawing
  */
 - (void)draw;
 

@@ -126,8 +126,6 @@
 
 #pragma mark Touches
 
-- (void)didTouchUpInside { }
-
 - (BOOL)continueTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event {
   BOOL continueTracking = ([self pointInside:[touch locationInView:self] withEvent:event]);
   if (!continueTracking) {

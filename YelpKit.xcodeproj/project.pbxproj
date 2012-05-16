@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0007497515630CE90096B69F /* YKUIScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0007497315630CE90096B69F /* YKUIScrollView.h */; };
+		0007497615630CE90096B69F /* YKUIScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0007497415630CE90096B69F /* YKUIScrollView.m */; };
 		0013505515003C1900B0976D /* YKUISwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 0013505315003C1900B0976D /* YKUISwitch.h */; };
 		00149F2D1521040800321DF4 /* YKUISwipeView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00149F2B1521040800321DF4 /* YKUISwipeView.h */; };
 		00149F2E1521040800321DF4 /* YKUISwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00149F2C1521040800321DF4 /* YKUISwipeView.m */; };
@@ -113,6 +115,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0007497315630CE90096B69F /* YKUIScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUIScrollView.h; sourceTree = "<group>"; };
+		0007497415630CE90096B69F /* YKUIScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKUIScrollView.m; sourceTree = "<group>"; };
 		0013505315003C1900B0976D /* YKUISwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUISwitch.h; sourceTree = "<group>"; };
 		00149F2B1521040800321DF4 /* YKUISwipeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUISwipeView.h; sourceTree = "<group>"; };
 		00149F2C1521040800321DF4 /* YKUISwipeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKUISwipeView.m; sourceTree = "<group>"; };
@@ -390,6 +394,8 @@
 				00149F2C1521040800321DF4 /* YKUISwipeView.m */,
 				00D5FD211527E89000F72FEB /* YKUINavigationBar.h */,
 				00D5FD221527E89000F72FEB /* YKUINavigationBar.m */,
+				0007497315630CE90096B69F /* YKUIScrollView.h */,
+				0007497415630CE90096B69F /* YKUIScrollView.m */,
 			);
 			path = UIView;
 			sourceTree = "<group>";
@@ -554,6 +560,7 @@
 				00EAB7201560BC2500B292DE /* YKTableViewDataSource.h in Headers */,
 				00EAB7251560BC9100B292DE /* YKTableViewCell.h in Headers */,
 				00EAB7291560BE9600B292DE /* YKTableView.h in Headers */,
+				0007497515630CE90096B69F /* YKUIScrollView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,6 +664,7 @@
 				00EAB7211560BC2500B292DE /* YKTableViewDatasource.m in Sources */,
 				00EAB7261560BC9100B292DE /* YKTableViewCell.m in Sources */,
 				00EAB72A1560BE9600B292DE /* YKTableView.m in Sources */,
+				0007497615630CE90096B69F /* YKUIScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

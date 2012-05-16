@@ -1,8 +1,8 @@
 //
-//  YKLImage.m
+//  YKUIScrollView.h
 //  YelpKit
 //
-//  Created by Gabriel Handford on 4/11/12.
+//  Created by Gabriel Handford on 5/15/12.
 //  Copyright (c) 2012 Yelp. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
@@ -27,39 +27,10 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "YKLImage.h"
-
-@implementation YKLImage
-
-@synthesize insets=_insets;
-
-- (id)initWithImage:(UIImage *)image {
-  if ((self = [super init])) {
-    _image = [image retain];
-    _insets = UIEdgeInsetsZero;
-  }
-  return self;
-}
-
-- (void)dealloc {
-  [_image release];
-  [super dealloc];
-}
-
-- (CGSize)sizeThatFits:(CGSize)size {
-  if (!_image) return CGSizeZero;
-  return CGSizeMake(_image.size.width + _insets.left + _insets.right, _image.size.height + _insets.top + _insets.bottom);
-}
-
-- (void)drawInRect:(CGRect)rect {
-  if (!_image) return;
-  if (rect.size.width == 0) rect.size.width = _image.size.width;
-  if (rect.size.height == 0) rect.size.height = _image.size.height;
-  rect.origin.x += _insets.left;
-  rect.origin.y += _insets.top;
-  rect.size.width += _insets.left + _insets.right;
-  rect.size.height += _insets.bottom + _insets.top;
-  [_image drawAtPoint:CGPointMake(rect.origin.x, rect.origin.y)];
-}
+/*!
+ Scroll view.
+ Cancels touches in subviews, even if they are UIControl's.
+ */
+@interface YKUIScrollView : UIScrollView
 
 @end
