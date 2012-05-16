@@ -12,17 +12,11 @@
 
 @implementation YKTUIViewController
 
-@synthesize navigationBar=_navigationBar, templateView=_templateView, viewDelegate=_viewDelegate;
+@synthesize templateView=_templateView, viewDelegate=_viewDelegate;
 
 - (void)loadView {
   [_templateView release];
   _templateView = [[YKTUIInternalView alloc] init];
-  
-  _navigationBar = [[YKUINavigationBar alloc] init];
-  [self applyStyleForNavigationBar:_navigationBar];
-  [_templateView setNavigationView:_navigationBar];
-  [_navigationBar release];
-  
   self.view = _templateView;
 }
 
@@ -34,8 +28,8 @@
   [_templateView viewWillAppear:animated];
   
   // Set back button on navigation bar if not left button
-  if (self.navigationController && _navigationBar) {
-    if (!_navigationBar.leftButton) {
+  if (self.navigationController && _templateView.view.navigationBar) {
+    if (!_templateView.view.navigationBar.leftButton) {
       NSUInteger index = [[self.navigationController viewControllers] indexOfObject:self];
       if (index > 0 && index != NSNotFound) {      
         
@@ -45,9 +39,10 @@
         YKUIButton *backButton = [[YKUIButton alloc] init];
         backButton.title = backTitle;
         backButton.borderStyle = YKUIBorderStyleRoundedBack;
-        [self applyStyleForNavigationButton:backButton];
+        [_templateView.view applyStyleForNavigationButton:backButton];
         [backButton setTarget:self action:@selector(_back)];
-        _navigationBar.leftButton = backButton;
+        _templateView.view.navigationBar.leftButton = backButton;
+        [backButton release];
       }
     }
   }
@@ -81,63 +76,147 @@
   [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)setNavigationTitle:(NSString *)title animated:(BOOL)animated {
-  [self view];
-  [_navigationBar setTitle:title animated:animated];
-}
-
-- (YKUIButton *)setNavigationLeftButtonWithTitle:(NSString *)title animated:(BOOL)animated target:(id)target action:(SEL)action {
-  [self view];
-  YKUIButton *button = [[YKUIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
-  button.title = title;
-  [button setTarget:target action:action];
-  [self applyStyleForNavigationButton:button];
-  [_navigationBar setLeftButton:button animated:animated];
-  return button;
-}
-
-- (YKUIButton *)setNavigationRightButtonWithTitle:(NSString *)title animated:(BOOL)animated target:(id)target action:(SEL)action {
-  [self view];
-  YKUIButton *button = [[YKUIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
-  button.title = title;
-  [button setTarget:target action:action];
-  [self applyStyleForNavigationButton:button];
-  [_navigationBar setRightButton:button animated:animated];
-  return button;
-}
-
-- (void)setContentView:(UIView *)view {
+- (void)setContentView:(YKTUIView *)view {
   [self view];
   [_templateView setView:view];
 }
 
-#pragma mark Style
+@end
 
-- (void)applyStyleForNavigationButton:(YKUIButton *)button {
-  button.titleFont = [UIFont boldSystemFontOfSize:12];
-  button.insets = UIEdgeInsetsMake(0, 8, 0, 8);
-  button.titleColor = [UIColor whiteColor];
-  button.margin = UIEdgeInsetsMake(6, 0, 6, 0);
-  button.cornerRadius = 4.0;
-  button.borderWidth = 0.5;
-  button.titleShadowColor = [UIColor colorWithWhite:0 alpha:0.5];
-  button.titleShadowOffset = CGSizeMake(0, -1);
-  button.shadingType = YKUIShadingTypeLinear;
-  button.color = [UIColor colorWithRed:98.0f/255.0f green:120.0f/255.0f blue:170.0f/255.0f alpha:1.0];
-  button.color2 = [UIColor colorWithRed:64.0f/255.0f green:90.0f/255.0f blue:136.0f/255.0f alpha:1.0];
-  button.highlightedShadingType = YKUIShadingTypeLinear;
-  button.highlightedColor = [UIColor colorWithRed:70.0f/255.0f green:92.0f/255.0f blue:138.0f/255.0f alpha:1.0];
-  button.highlightedColor2 = [UIColor colorWithRed:44.0f/255.0f green:70.0f/255.0f blue:126.0f/255.0f alpha:1.0];
-  button.borderColor = [UIColor colorWithRed:87.0f/255.0f green:100.0f/255.0f blue:153.0f/255.0f alpha:1.0];
-  
-  CGSize size = [button sizeThatFitsTitle:CGSizeMake(120, 999) minWidth:55];
-  button.frame = CGRectMake(0, 0, size.width, 30 + button.margin.top + button.margin.bottom);
+
+@implementation YKTUIInternalView
+
+@synthesize view=_view, progressView=_progressView, headerView=_headerView, footerView=_footerView;
+
+- (void)sharedInit {
+  self.backgroundColor = [UIColor blackColor];
+  self.opaque = YES;
+  self.layout = [YKLayout layoutForView:self];
 }
 
-- (void)applyStyleForNavigationBar:(YKUINavigationBar *)navigationBar {
-  navigationBar.backgroundColor = [UIColor colorWithRed:98.0f/255.0f green:120.0f/255.0f blue:170.0f/255.0f alpha:1.0];
-  navigationBar.topBorderColor = [UIColor colorWithRed:87.0f/255.0f green:100.0f/255.0f blue:153.0f/255.0f alpha:1.0];
-  navigationBar.bottomBorderColor = [UIColor colorWithRed:87.0f/255.0f green:100.0f/255.0f blue:153.0f/255.0f alpha:1.0];
+- (id)initWithCoder:(NSCoder *)coder {
+  if ((self = [super initWithCoder:coder])) {
+    [self sharedInit];
+  }
+  return self;
+}
+
+- (id)initWithFrame:(CGRect)frame {
+  if ((self = [super initWithFrame:frame])) {
+    [self sharedInit];
+  }
+  return self;
+}
+
+- (void)dealloc {
+  [_headerView release];
+  [_footerView release];
+  [_view release];
+  [super dealloc];
+}
+
+- (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size {
+  CGFloat y = 0;
+  CGSize contentSize = size;
+  
+  UIView *navigationBar = _view.navigationBar;
+  if (navigationBar && !navigationBar.hidden) {
+    CGRect navigationBarFrame = [layout setFrame:CGRectMake(0, y, size.width, 0) view:navigationBar sizeToFit:YES];    
+    y += navigationBarFrame.size.height;
+    contentSize.height -= navigationBarFrame.size.height;
+  }
+  
+  if (_progressView && !_progressView.hidden) {    
+    CGRect progressViewFrame = [layout setFrame:CGRectMake(0, y, size.width, 0) view:_progressView sizeToFit:YES];
+    y += progressViewFrame.size.height;
+    contentSize.height -= progressViewFrame.size.height;
+  }
+  
+  if (_headerView && !_headerView.hidden) {    
+    CGRect headerViewFrame = [layout setFrame:CGRectMake(0, y, size.width, 0) view:_headerView sizeToFit:YES];
+    y += headerViewFrame.size.height;
+    contentSize.height -= headerViewFrame.size.height;
+  }
+  
+  if (_footerView) {
+    CGRect footerViewFrame = [layout setFrame:CGRectMake(0, y, size.width, 0) view:_footerView sizeToFit:YES];
+    contentSize.height -= footerViewFrame.size.height;
+  }
+  
+  CGRect contentFrame = CGRectMake(0, y, contentSize.width, contentSize.height);
+  // This prevents UIScrollViews from causing a layoutSubviews call after setFrame.
+  //if (!YKCGRectIsEqual(contentFrame, _contentView.frame)) {
+  [layout setFrame:contentFrame view:_view];    
+  
+  return size;
+}
+
+- (void)setHeaderView:(UIView *)headerView {
+  [_headerView removeFromSuperview];
+  [headerView retain];
+  [_headerView release];  
+  _headerView = headerView;
+  [self addSubview:_headerView];
+  [self setNeedsLayout];
+  [self setNeedsDisplay];
+}
+
+- (void)setFooterView:(UIView *)footerView {
+  [_footerView removeFromSuperview];
+  [footerView retain];
+  [_footerView release];  
+  _footerView = footerView;
+  [self addSubview:_footerView];
+  [self setNeedsLayout];
+  [self setNeedsDisplay];
+}
+
+- (void)setProgressView:(UIView *)progressView {
+  [_progressView removeFromSuperview];
+  [progressView retain];
+  [_progressView release];  
+  _progressView = progressView;
+  [self addSubview:_progressView];
+  [self setNeedsLayout];
+  [self setNeedsDisplay];
+}
+
+- (void)setView:(YKTUIView *)view {
+  [_view removeFromSuperview];
+  [view retain];
+  [_view release];  
+  _view = view;
+  [self addSubview:_view];
+
+  // Navigation bar
+  [self addSubview:_view.navigationBar];
+  
+  [self setNeedsLayout];
+  [self setNeedsDisplay];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+  if ([_view respondsToSelector:@selector(viewWillAppear:)]) {
+    [(id)_view viewWillAppear:animated];
+  }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+  if ([_view respondsToSelector:@selector(viewDidAppear:)]) {
+    [(id)_view viewDidAppear:animated];
+  }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+  if ([_view respondsToSelector:@selector(viewWillDisappear:)]) {
+    [(id)_view viewWillDisappear:animated];
+  }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+  if ([_view respondsToSelector:@selector(viewDidDisappear:)]) {
+    [(id)_view viewDidDisappear:animated];
+  }
 }
 
 @end

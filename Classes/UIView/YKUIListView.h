@@ -54,6 +54,7 @@
 
 @property (retain, nonatomic) UIColor *topBorderColor;
 @property (retain, nonatomic) UIColor *lineSeparatorColor;
+@property (assign, nonatomic) UIEdgeInsets insets;
 @property (assign, nonatomic) UIEdgeInsets lineInsets;
 
 - (NSArray *)listSubviews;

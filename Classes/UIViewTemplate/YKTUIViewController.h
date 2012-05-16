@@ -7,9 +7,10 @@
 //
 
 #import "YKUINavigationBar.h"
-#import "YKTUIInternalView.h"
 #import "YKUIButton.h"
+#import "YKTUIView.h"
 
+@class YKTUIInternalView;
 @class YKTUIViewController;
 
 @protocol YKTUIViewControllerViewDelegate <NSObject>
@@ -25,46 +26,41 @@
  */
 @interface YKTUIViewController : UIViewController {
 @private
-  YKUINavigationBar *_navigationBar;
   YKTUIInternalView *_templateView;
   
   id<YKTUIViewControllerViewDelegate> _viewDelegate;
 }
 
-@property (nonatomic, readonly) YKUINavigationBar *navigationBar;
 @property (nonatomic, readonly) YKTUIInternalView *templateView;
 @property (assign, nonatomic) id<YKTUIViewControllerViewDelegate> viewDelegate;
 
 /*!
- Set navigation title.
- */
-- (void)setNavigationTitle:(NSString *)title animated:(BOOL)animated;
-
-/*!
- Set left navigation button with title.
- */
-- (YKUIButton *)setNavigationLeftButtonWithTitle:(NSString *)title animated:(BOOL)animated target:(id)target action:(SEL)action;
-
-/*!
- Set right navigation button with title.
- */
-- (YKUIButton *)setNavigationRightButtonWithTitle:(NSString *)title animated:(BOOL)animated target:(id)target action:(SEL)action;
-
-/*!
  Set the content view for this view controller.
  */
-- (void)setContentView:(UIView *)view;
+- (void)setContentView:(YKTUIView *)view;
 
-/*!
- Apply style for navigation button.
- Subclasses should override.
- */
-- (void)applyStyleForNavigationButton:(YKUIButton *)button;
+@end
 
-/*!
- Apply style for navigation bar.
- Subclasses should override.
- */
-- (void)applyStyleForNavigationBar:(YKUINavigationBar *)navigationBar;
+
+@interface YKTUIInternalView : YKUILayoutView {
+  UIView *_progressView;
+  UIView *_headerView;
+  UIView *_footerView;
+  
+  YKTUIView *_view;
+}
+
+@property (retain, nonatomic) UIView *progressView;
+@property (retain, nonatomic) UIView *headerView;
+@property (retain, nonatomic) YKTUIView *view;
+@property (retain, nonatomic) UIView *footerView;
+
+- (void)viewWillAppear:(BOOL)animated;
+
+- (void)viewDidAppear:(BOOL)animated;
+
+- (void)viewWillDisappear:(BOOL)animated;
+
+- (void)viewDidDisappear:(BOOL)animated;
 
 @end

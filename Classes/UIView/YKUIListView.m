@@ -32,7 +32,7 @@
 
 @implementation YKUIListView
 
-@synthesize lineSeparatorColor=_lineSeparatorColor, topBorderColor=_topBorderColor, lineInsets=_lineInsets;
+@synthesize lineSeparatorColor=_lineSeparatorColor, topBorderColor=_topBorderColor, lineInsets=_lineInsets, insets=_insets;
 
 - (id)initWithFrame:(CGRect)frame {
   if ((self = [super initWithFrame:frame])) {
@@ -60,7 +60,7 @@
     BOOL skip = (_tagRemovalAnimating != NSNotFound && view.tag == _tagRemovalAnimating);
     if (!skip) {
       CGRect viewRect = [layout setFrame:CGRectMake(x, y, size.width - x - _insets.right, 0) view:view sizeToFit:YES];
-      y += viewRect.size.height + 1;
+      y += viewRect.size.height + 1 + _insets.bottom;
     }
   }
   y += _insets.bottom;

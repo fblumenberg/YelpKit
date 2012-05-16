@@ -11,9 +11,9 @@
 #import <GHKitIOS/GHNSError+Utils.h>
 #import "YKLocalized.h"
 
-// TODO(gabe): Adjust these back to YK prefixes when we fix our translation files
+NSString *const YKErrorDomain = @"YKErrorDomain";
 
-NSString *const YKErrorDomain = @"YPErrorDomain";
+// TODO(gabe): Adjust these back to YK prefixes when we fix our translation files
 
 NSString *const YKErrorUnknown = @"YPErrorUnknown"; // Unknown error
 
@@ -64,7 +64,7 @@ NSString *const YKErrorNotConnectedToInternet = @"YPErrorNotConnectedToInternet"
   return YKDescription(@"class", @"domain", @"key", @"userInfo");
 }
 
-- (NSString *)localizedDescriptionForKey {
+- (NSString *)localizedDescriptionForKey {    
   return YKLocalizedString(_key);
 }
 
@@ -86,6 +86,19 @@ NSString *const YKErrorNotConnectedToInternet = @"YPErrorNotConnectedToInternet"
       // For backwards compatibility
       NSString *defaultErrorMessage = YKLocalizedString(@"YPErrorUnknown");
       if (![defaultErrorMessage isEqualToString:@"YPErrorUnknown"]) return defaultErrorMessage;
+      
+      static NSDictionary *DescriptionsBuiltIn = nil;
+      if (!DescriptionsBuiltIn) DescriptionsBuiltIn = [[NSDictionary dictionaryWithObjectsAndKeys:
+                                                        @"There was an error. Please try again later.", @"YPErrorUnknown",
+                                                        @"Sorry, we couldn't complete your request. Please try again in a bit.", @"YPErrorServerResourceNotFound",
+                                                        @"Sorry, we couldn't complete your request. Please try again in a bit. ", @"YPErrorServerResponse",
+                                                        @"Sorry, we're down for maintenance. But don't worry, we'll be back shortly!", @"YPErrorServerMaintenance",
+                                                        @"Sorry, something's funky with your connection. Try again in a bit.", @"YPErrorCannotConnectToHost",
+                                                        @"You're not connected to the Internet. Please connect and retry.", @"YPErrorNotConnectedToInternet",
+                                                        nil] retain];
+      
+      NSString *keyBuiltIn = [DescriptionsBuiltIn objectForKey:_key];
+      if (keyBuiltIn) return YKLocalizedString(keyBuiltIn);      
       
       return YKLocalizedString(@"YKErrorUnknown");
     }

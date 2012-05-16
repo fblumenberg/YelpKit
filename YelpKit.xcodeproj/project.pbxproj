@@ -92,8 +92,6 @@
 		00EAB6D11560ACBA00B292DE /* YKTUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00EAB6CB1560ACBA00B292DE /* YKTUIView.m */; };
 		00EAB6D21560ACBA00B292DE /* YKTUIViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 00EAB6CC1560ACBA00B292DE /* YKTUIViewController.h */; };
 		00EAB6D31560ACBA00B292DE /* YKTUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 00EAB6CD1560ACBA00B292DE /* YKTUIViewController.m */; };
-		00EAB6D41560ACBA00B292DE /* YKTUIInternalView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00EAB6CE1560ACBA00B292DE /* YKTUIInternalView.h */; };
-		00EAB6D51560ACBA00B292DE /* YKTUIInternalView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00EAB6CF1560ACBA00B292DE /* YKTUIInternalView.m */; };
 		00EAB7201560BC2500B292DE /* YKTableViewDataSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 00EAB71E1560BC2500B292DE /* YKTableViewDataSource.h */; };
 		00EAB7211560BC2500B292DE /* YKTableViewDatasource.m in Sources */ = {isa = PBXBuildFile; fileRef = 00EAB71F1560BC2500B292DE /* YKTableViewDatasource.m */; };
 		00EAB7251560BC9100B292DE /* YKTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 00EAB7231560BC9100B292DE /* YKTableViewCell.h */; };
@@ -205,8 +203,6 @@
 		00EAB6CB1560ACBA00B292DE /* YKTUIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKTUIView.m; sourceTree = "<group>"; };
 		00EAB6CC1560ACBA00B292DE /* YKTUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKTUIViewController.h; sourceTree = "<group>"; };
 		00EAB6CD1560ACBA00B292DE /* YKTUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKTUIViewController.m; sourceTree = "<group>"; };
-		00EAB6CE1560ACBA00B292DE /* YKTUIInternalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKTUIInternalView.h; sourceTree = "<group>"; };
-		00EAB6CF1560ACBA00B292DE /* YKTUIInternalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKTUIInternalView.m; sourceTree = "<group>"; };
 		00EAB71E1560BC2500B292DE /* YKTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKTableViewDataSource.h; sourceTree = "<group>"; };
 		00EAB71F1560BC2500B292DE /* YKTableViewDatasource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKTableViewDatasource.m; sourceTree = "<group>"; };
 		00EAB7231560BC9100B292DE /* YKTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKTableViewCell.h; sourceTree = "<group>"; };
@@ -455,8 +451,6 @@
 				00EAB6CB1560ACBA00B292DE /* YKTUIView.m */,
 				00EAB6CC1560ACBA00B292DE /* YKTUIViewController.h */,
 				00EAB6CD1560ACBA00B292DE /* YKTUIViewController.m */,
-				00EAB6CE1560ACBA00B292DE /* YKTUIInternalView.h */,
-				00EAB6CF1560ACBA00B292DE /* YKTUIInternalView.m */,
 			);
 			path = UIViewTemplate;
 			sourceTree = "<group>";
@@ -556,7 +550,6 @@
 				00BB7AB715606CD500B30BE6 /* YKUIRefreshScrollView.h in Headers */,
 				00EAB6D01560ACBA00B292DE /* YKTUIView.h in Headers */,
 				00EAB6D21560ACBA00B292DE /* YKTUIViewController.h in Headers */,
-				00EAB6D41560ACBA00B292DE /* YKTUIInternalView.h in Headers */,
 				00EAB7201560BC2500B292DE /* YKTableViewDataSource.h in Headers */,
 				00EAB7251560BC9100B292DE /* YKTableViewCell.h in Headers */,
 				00EAB7291560BE9600B292DE /* YKTableView.h in Headers */,
@@ -660,7 +653,6 @@
 				00BB7AB815606CD500B30BE6 /* YKUIRefreshScrollView.m in Sources */,
 				00EAB6D11560ACBA00B292DE /* YKTUIView.m in Sources */,
 				00EAB6D31560ACBA00B292DE /* YKTUIViewController.m in Sources */,
-				00EAB6D51560ACBA00B292DE /* YKTUIInternalView.m in Sources */,
 				00EAB7211560BC2500B292DE /* YKTableViewDatasource.m in Sources */,
 				00EAB7261560BC9100B292DE /* YKTableViewCell.m in Sources */,
 				00EAB72A1560BE9600B292DE /* YKTableView.m in Sources */,

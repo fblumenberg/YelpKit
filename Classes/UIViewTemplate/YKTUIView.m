@@ -11,7 +11,32 @@
 
 @implementation YKTUIView
 
-@synthesize viewController=_viewController;
+@synthesize viewController=_viewController, navigationBar=_navigationBar;
+
+- (void)sharedInit {
+  self.backgroundColor = [UIColor blackColor];
+  self.opaque = YES;
+  self.layout = [YKLayout layoutForView:self];
+  
+  _navigationBar = [[YKUINavigationBar alloc] init];
+  [self applyStyleForNavigationBar:_navigationBar];
+  [self addSubview:_navigationBar];
+  [_navigationBar release];
+}
+
+- (id)initWithCoder:(NSCoder *)coder {
+  if ((self = [super initWithCoder:coder])) {
+    [self sharedInit];
+  }
+  return self;
+}
+
+- (id)initWithFrame:(CGRect)frame {
+  if ((self = [super initWithFrame:frame])) {
+    [self sharedInit];
+  }
+  return self;
+}
 
 - (YKTUIViewController *)newViewController { 
   YKTUIViewController *viewController = [[self viewControllerForView] retain];
@@ -21,7 +46,7 @@
 
 - (YKTUIViewController *)viewControllerForView {
   YKTUIViewController *viewController = [[YKTUIViewController alloc] init];  
-  viewController.view = self;
+  [viewController setContentView:self];
   return [viewController autorelease];
 }
 
@@ -32,7 +57,25 @@
 }
 
 - (void)setNavigationTitle:(NSString *)title animated:(BOOL)animated {
-  [_viewController setNavigationTitle:title animated:animated];
+  [self.navigationBar setTitle:title animated:animated];
+}
+
+- (YKUIButton *)setNavigationLeftButtonWithTitle:(NSString *)title animated:(BOOL)animated target:(id)target action:(SEL)action {
+  YKUIButton *button = [[YKUIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
+  button.title = title;
+  [button setTarget:target action:action];
+  [self applyStyleForNavigationButton:button];
+  [self.navigationBar setLeftButton:button animated:animated];
+  return button;
+}
+
+- (YKUIButton *)setNavigationRightButtonWithTitle:(NSString *)title animated:(BOOL)animated target:(id)target action:(SEL)action {
+  YKUIButton *button = [[YKUIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
+  button.title = title;
+  [button setTarget:target action:action];
+  [self applyStyleForNavigationButton:button];
+  [self.navigationBar setRightButton:button animated:animated];
+  return button;
 }
 
 - (void)viewWillAppear:(BOOL)animated { }
@@ -42,5 +85,34 @@
 - (void)viewWillDisappear:(BOOL)animated { }
 
 - (void)viewDidDisappear:(BOOL)animated { }
+
+#pragma mark Style
+
+- (void)applyStyleForNavigationButton:(YKUIButton *)button {
+  button.titleFont = [UIFont boldSystemFontOfSize:12];
+  button.insets = UIEdgeInsetsMake(0, 8, 0, 8);
+  button.titleColor = [UIColor whiteColor];
+  button.margin = UIEdgeInsetsMake(6, 0, 6, 0);
+  button.cornerRadius = 4.0;
+  button.borderWidth = 0.5;
+  button.titleShadowColor = [UIColor colorWithWhite:0 alpha:0.5];
+  button.titleShadowOffset = CGSizeMake(0, -1);
+  button.shadingType = YKUIShadingTypeLinear;
+  button.color = [UIColor colorWithRed:98.0f/255.0f green:120.0f/255.0f blue:170.0f/255.0f alpha:1.0];
+  button.color2 = [UIColor colorWithRed:64.0f/255.0f green:90.0f/255.0f blue:136.0f/255.0f alpha:1.0];
+  button.highlightedShadingType = YKUIShadingTypeLinear;
+  button.highlightedColor = [UIColor colorWithRed:70.0f/255.0f green:92.0f/255.0f blue:138.0f/255.0f alpha:1.0];
+  button.highlightedColor2 = [UIColor colorWithRed:44.0f/255.0f green:70.0f/255.0f blue:126.0f/255.0f alpha:1.0];
+  button.borderColor = [UIColor colorWithRed:87.0f/255.0f green:100.0f/255.0f blue:153.0f/255.0f alpha:1.0];
+  
+  CGSize size = [button sizeThatFitsTitle:CGSizeMake(120, 999) minWidth:55];
+  button.frame = CGRectMake(0, 0, size.width, 30 + button.margin.top + button.margin.bottom);
+}
+
+- (void)applyStyleForNavigationBar:(YKUINavigationBar *)navigationBar {
+  navigationBar.backgroundColor = [UIColor colorWithRed:98.0f/255.0f green:120.0f/255.0f blue:170.0f/255.0f alpha:1.0];
+  navigationBar.topBorderColor = [UIColor colorWithRed:87.0f/255.0f green:100.0f/255.0f blue:153.0f/255.0f alpha:1.0];
+  navigationBar.bottomBorderColor = [UIColor colorWithRed:87.0f/255.0f green:100.0f/255.0f blue:153.0f/255.0f alpha:1.0];
+}
 
 @end
