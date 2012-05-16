@@ -104,6 +104,7 @@
   label.backgroundColor = [UIColor clearColor];
   label.text = title;
   label.userInteractionEnabled = NO;
+  [label sizeToFit];
   [self setContentView:label animated:animated];
   [label release];
 }
@@ -134,11 +135,14 @@
       oldContentView.alpha = 1.0;
     }];
   } else {
+    CGPoint contentViewOrigin = CGPointZero;
+    if (_contentView) contentViewOrigin = _contentView.frame.origin;
     [_contentView removeFromSuperview];
     _contentView = nil;
     if (contentView) {
       _contentView = contentView;
       _defaultContentViewSize = contentView.frame.size;
+      _contentView.frame = CGRectMake(contentViewOrigin.x, contentViewOrigin.y, contentView.frame.size.width, contentView.frame.size.height);
       [self addSubview:_contentView];
     }
     [self setNeedsLayout];
