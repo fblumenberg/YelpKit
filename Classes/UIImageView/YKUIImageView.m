@@ -32,6 +32,8 @@
 #import "YKLocalized.h"
 #import "YKDefines.h"
 #import "UIImage+YKUtils.h"
+#import "YKInMemoryImageCache.h"
+#import <GHKitIOS/GHNSString+Utils.h>
 
 @implementation YKUIImageBaseView
 
@@ -114,11 +116,35 @@
 
 - (void)setImage:(UIImage *)image {
   [self reset];
+  _status = YKUIImageViewStatusLoaded;
+  [self _setImage:image];
+}
+
+- (void)_setImage:(UIImage *)image {
   [image retain];
   [_image release];
   _image = image;
-  [self setNeedsDisplay];
-  [self setNeedsLayout];
+  
+  if (_renderInBackground) {
+    if (image) {
+      [self renderInBackgroundWithCompletion:^{
+        [self didLoadImage:image];
+        if ([self.delegate respondsToSelector:@selector(imageView:didLoadImage:)])
+          [self.delegate imageView:self didLoadImage:image];
+        if (_statusBlock) _statusBlock(self, _status, image);
+        [self setNeedsDisplay];
+      }];
+    }
+  } else {
+    if (image) {
+      [self didLoadImage:image];
+      if ([self.delegate respondsToSelector:@selector(imageView:didLoadImage:)])
+        [self.delegate imageView:self didLoadImage:self.image];
+    }
+    if (_statusBlock) _statusBlock(self, _status, image);
+    [self setNeedsLayout];
+    [self setNeedsDisplay];
+  }
 }
 
 - (UIImage *)loadingImage {
@@ -163,30 +189,7 @@
     default:
       break;
   }
-
-  [image retain];
-  [_image release];
-  _image = image;
-  if (_renderInBackground) {
-    if (image) {
-      [self renderInBackgroundWithCompletion:^{
-        [self didLoadImage:image];
-        if ([self.delegate respondsToSelector:@selector(imageView:didLoadImage:)])
-          [self.delegate imageView:self didLoadImage:image];
-        if (_statusBlock) _statusBlock(self, _status, image);
-        [self setNeedsDisplay];
-      }];
-    }
-  } else {
-    if (image) {
-      [self didLoadImage:image];
-      if ([self.delegate respondsToSelector:@selector(imageView:didLoadImage:)])
-        [self.delegate imageView:self didLoadImage:self.image];
-    }
-    if (_statusBlock) _statusBlock(self, _status, image);
-    [self setNeedsLayout];
-    [self setNeedsDisplay];
-  }
+  [self _setImage:image];
 }
 
 - (void)imageLoader:(YKImageLoader *)imageLoader didError:(YKError *)error {
@@ -250,7 +253,48 @@
 }
 
 - (void)renderInBackgroundWithCompletion:(void (^)())completion {
-  [self backgroundRenderForRect:self.bounds contentMode:self.contentMode completion:completion];
+  // Look up the rendered vers ion of the image in the in-memory image cache.
+  NSString *cacheKey = [self _cacheKey];
+  if (cacheKey) {
+    UIImage *renderedImage = [[YKInMemoryImageCache sharedCache] memoryCachedImageForKey:cacheKey];
+    if (renderedImage) {
+      [renderedImage retain];
+      [_renderedContents release];
+      _renderedContents = renderedImage;
+      completion();
+      return;
+    }
+  }
+  
+  UIImage *image = _image;
+  dispatch_async([YKUIImageView backgroundRenderQueue], ^{
+    // If the image has changed since this block was created, bail out
+    if (!_image || image != _image) {
+      YKDebug(@"Image has changed since block was created. image=%@ _image=%@ _renderedContents=%@", image, _image, _renderedContents);
+      return;
+    }
+    UIImage *renderedImage = [UIImage imageFromDrawOperations:^(CGContextRef context) {
+      [self drawImage:image inRect:YKCGRectZeroOrigin(self.bounds) contentMode:self.contentMode];
+    } size:self.bounds.size opaque:self.opaque];
+    // Because image rendering is slow, we might thread switch back to the main thread while the view was background rendering.
+    // That means renderedImage is now incorrect. Let's just check again and bail out if the image has changed since render.
+    dispatch_async(dispatch_get_main_queue(), ^{
+      if (!_image || image != _image) {
+        YKDebug(@"Image has changed since render. image=%@ _image=%@ _renderedContents=%@", image, _image, _renderedContents);
+        return;
+      }
+      [renderedImage retain];
+      [_renderedContents release];
+      _renderedContents = renderedImage;
+      completion();
+      
+      // Cache the rendered image
+      NSString *cacheKey = [self _cacheKey];
+      if (cacheKey) {
+        [[YKInMemoryImageCache sharedCache] cacheImage:_renderedContents forKey:cacheKey];
+      }
+    });
+  });
 }
 
 #pragma mark Drawing
@@ -319,30 +363,31 @@
   [self drawInRect:self.bounds];
 }
 
-- (void)backgroundRenderForRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode completion:(void (^)())completion {
-  UIImage *image = _image;
-  dispatch_async([YKUIImageView backgroundRenderQueue], ^{
-    // If the image has changed since this block was created, bail out
-    if (!_image || image != _image) {
-      YKDebug(@"Image has changed since block was created. image=%@ _image=%@ _renderedContents=%@", image, _image, _renderedContents);
-      return;
+- (NSString *)_cacheKey {
+  NSString *imageIdentifier = [self URLString];
+  if ([NSString gh_isBlank:imageIdentifier]) {
+    if (!_image) {
+      // A YKUIImageView object needs to either have URLString set or image set in order to be cacheable.
+      YKAssert(NO, @"Trying to cache a rendered image of YKUIImageView without URLString or image being set.");
+      return nil;
     }
-    UIImage *renderedImage = [UIImage imageFromDrawOperations:^(CGContextRef context) {
-      [self drawImage:image inRect:YKCGRectZeroOrigin(rect) contentMode:contentMode];
-    } size:rect.size opaque:self.opaque];
-    // Because image rendering is slow, we might thread switch back to the main thread while the view was background rendering.
-    // That means renderedImage is now incorrect. Let's just check again and bail out if the image has changed since render.
-    dispatch_async(dispatch_get_main_queue(), ^{
-      if (!_image || image != _image) {
-        YKDebug(@"Image has changed since render. image=%@ _image=%@ _renderedContents=%@", image, _image, _renderedContents);
-        return;
-      }
-      [renderedImage retain];
-      [_renderedContents release];
-      _renderedContents = renderedImage;
-      completion();
-    });
-  });
+    imageIdentifier = [NSString stringWithFormat:@"%d", [_image hash]];
+  }
+
+  NSString *cacheKey = [imageIdentifier stringByAppendingFormat:@"%@{%d,%d,%d,%d,%d,%.2f,%.2f,%.2f}",
+                        NSStringFromCGSize(self.bounds.size),
+                        self.contentMode,
+                        [_color hash],
+                        [_overlayColor hash], 
+                        [_shadowColor hash], 
+                        [_strokeColor hash], 
+                        _cornerRadius, 
+                        _strokeWidth, 
+                        _shadowBlur];
+  // Example cacheKeys: 
+  // @"http://s3-media1.ak.yelpcdn.com/bphoto/XAfi9DuKxRraiqtw9YPLvQ/ms.jpg{64, 64}{2,0,0,65536,633506,4.00,0.50,3.00}"
+  // @"12215568{64, 64}{2,0,0,65536,633506,4.00,0.50,3.00}"
+  return cacheKey;
 }
 
 @end
