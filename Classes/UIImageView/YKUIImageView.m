@@ -384,7 +384,7 @@
                         _cornerRadius, 
                         _strokeWidth, 
                         _shadowBlur];
-  // Example cacheKeys: 
+  // Example cacheKeys for rendered images:
   // @"http://s3-media1.ak.yelpcdn.com/bphoto/XAfi9DuKxRraiqtw9YPLvQ/ms.jpg{64, 64}{2,0,0,65536,633506,4.00,0.50,3.00}"
   // @"12215568{64, 64}{2,0,0,65536,633506,4.00,0.50,3.00}"
   return cacheKey;
