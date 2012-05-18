@@ -1,5 +1,5 @@
 //
-//  YKImageCacheMemory.m
+//  YKImageMemoryCache.m
 //  YelpKit
 //
 //  Created by Amir Haghighat  on 5/16/12.
@@ -27,11 +27,11 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "YKImageCacheMemory.h"
+#import "YKImageMemoryCache.h"
 #import "YKURLCache.h"
 #import "YKDefines.h"
 
-@implementation YKImageCacheMemory
+@implementation YKImageMemoryCache
 
 @synthesize maxPixelCount=_maxPixelCount;
 
@@ -52,11 +52,11 @@
   return self;
 }
 
-+ (YKImageCacheMemory *)sharedCache {
-  static dispatch_once_t pred;
-  static YKImageCacheMemory *gSharedImageCacheMemory = nil;
++ (YKImageMemoryCache *)sharedCache {
+  static dispatch_once_t predicate;
+  static YKImageMemoryCache *gSharedImageCacheMemory = nil;
 
-  dispatch_once(&pred, ^{
+  dispatch_once(&predicate, ^{
     gSharedImageCacheMemory = [[self alloc] init];
   });
   return gSharedImageCacheMemory;

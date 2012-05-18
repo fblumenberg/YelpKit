@@ -51,7 +51,7 @@
 #import <GHKitIOS/GHNSString+Utils.h>
 #import "YKResource.h"
 #import "YKDefines.h"
-#import "YKImageCacheMemory.h"
+#import "YKImageMemoryCache.h"
 
 #include <sys/sysctl.h>
 

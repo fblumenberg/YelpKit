@@ -1,5 +1,5 @@
 //
-//  YKImageCacheMemory.h
+//  YKImageMemoryCache.h
 //  YelpKit
 //
 //  Created by Amir Haghighat  on 5/16/12.
@@ -27,7 +27,7 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-@interface YKImageCacheMemory : NSObject {
+@interface YKImageMemoryCache : NSObject {
   NSMutableDictionary *_imageCache;
   NSMutableArray *_imageSortedList;
   NSInteger _totalPixelCount;
@@ -44,7 +44,7 @@
 /*!
  Get shared cache.
  */
-+ (YKImageCacheMemory *)sharedCache;
++ (YKImageMemoryCache *)sharedCache;
 
 /**
  Stores an image in the memory cache.
