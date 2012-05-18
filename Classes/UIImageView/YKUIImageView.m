@@ -32,7 +32,7 @@
 #import "YKLocalized.h"
 #import "YKDefines.h"
 #import "UIImage+YKUtils.h"
-#import "YKInMemoryImageCache.h"
+#import "YKImageCacheMemory.h"
 #import <GHKitIOS/GHNSString+Utils.h>
 
 @implementation YKUIImageBaseView
@@ -253,10 +253,10 @@
 }
 
 - (void)renderInBackgroundWithCompletion:(void (^)())completion {
-  // Look up the rendered vers ion of the image in the in-memory image cache.
+  // Look up the rendered version of the image in the in-memory image cache.
   NSString *cacheKey = [self _cacheKey];
   if (cacheKey) {
-    UIImage *renderedImage = [[YKInMemoryImageCache sharedCache] memoryCachedImageForKey:cacheKey];
+    UIImage *renderedImage = [[YKImageCacheMemory sharedCache] memoryCachedImageForKey:cacheKey];
     if (renderedImage) {
       [renderedImage retain];
       [_renderedContents release];
@@ -291,7 +291,7 @@
       // Cache the rendered image
       NSString *cacheKey = [self _cacheKey];
       if (cacheKey) {
-        [[YKInMemoryImageCache sharedCache] cacheImage:_renderedContents forKey:cacheKey];
+        [[YKImageCacheMemory sharedCache] cacheImage:_renderedContents forKey:cacheKey];
       }
     });
   });

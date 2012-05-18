@@ -29,7 +29,7 @@
 
 #import "YKImageLoader.h"
 
-#import "YKInMemoryImageCache.h"
+#import "YKImageCacheMemory.h"
 #import <GHKitIOS/GHNSObject+Invocation.h>
 #import "YKResource.h"
 #import "YKDefines.h"
@@ -133,7 +133,7 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
   }
 
   // Check for cached image in memory, and set immediately if available
-  UIImage *memoryCachedImage = [[YKInMemoryImageCache sharedCache] memoryCachedImageForKey:URL.cacheableURLString];
+  UIImage *memoryCachedImage = [[YKImageCacheMemory sharedCache] memoryCachedImageForKey:URL.cacheableURLString];
   if (memoryCachedImage) {
     [self setImage:memoryCachedImage status:YKImageLoaderStatusLoaded];
     return;
@@ -159,6 +159,10 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
       UIImage *cachedImage = [[YKURLCache sharedCache] diskCachedImageForURLString:URL.cacheableURLString expires:kExpiresAge];
       if (cachedImage) {
         dispatch_async(dispatch_get_main_queue(), ^{
+          // Cache the image. Cache it real good.
+          YKImageCacheMemory *imageCache = [YKImageCacheMemory sharedCache];
+          [imageCache cacheImage:cachedImage forKey:URL.URLString];
+
           [self setImage:cachedImage status:YKImageLoaderStatusLoaded];
         });
       } else {
@@ -232,7 +236,7 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
     [self setError:[YKError errorWithKey:YKErrorRequest]];
   } else {
     if (image && request.URL.cacheableURLString) {
-      [[YKInMemoryImageCache sharedCache] cacheImage:image forKey:request.URL.cacheableURLString];
+      [[YKImageCacheMemory sharedCache] cacheImage:image forKey:request.URL.cacheableURLString];
     }
     [self setImage:image status:YKImageLoaderStatusLoaded];
   }

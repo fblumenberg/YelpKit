@@ -51,7 +51,7 @@
 #import <GHKitIOS/GHNSString+Utils.h>
 #import "YKResource.h"
 #import "YKDefines.h"
-#import "YKInMemoryImageCache.h"
+#import "YKImageCacheMemory.h"
 
 #include <sys/sysctl.h>
 
@@ -326,20 +326,9 @@ static NSMutableDictionary *gNamedCaches = NULL;
   NSData *cachedData = [self dataForURLString:URLString expires:expires timestamp:nil];
   if (cachedData) {
     image = [UIImage imageWithData:cachedData];
+    YKDebug(@"Image disk cache HIT: %@ (length=%d), Loading image took: %0.3f", URLString, [cachedData length], ([NSDate timeIntervalSinceReferenceDate] - start));
     // If the image was invalid, remove it from the cache
-    if (image) {
-      YKInMemoryImageCache *imageCache = [YKInMemoryImageCache sharedCache];
-      // cacheImage:forURLString writes to instance variables. To be thread safe,
-      // let's make sure that happens on the main thread.
-      if ([NSThread isMainThread]) {
-        [imageCache cacheImage:image forKey:URLString];
-      } else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-          [imageCache cacheImage:image forKey:URLString];
-        });
-      }
-      YKDebug(@"Image disk cache HIT: %@ (length=%d), Loading image took: %0.3f", URLString, [cachedData length], ([NSDate timeIntervalSinceReferenceDate] - start));
-    } else {
+    if (!image) {
       [self removeURLString:URLString fromDisk:YES];
     }
   }
