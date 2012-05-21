@@ -30,6 +30,7 @@
 #import "YKUIButtons.h"
 #import "YKUIButton.h"
 #import "YKUIButtonStyles.h"
+#import <GHKitiOS/GHNSArray+Utils.h>
 
 @implementation YKUIButtons
 
@@ -66,6 +67,7 @@
 - (id)initWithButtons:(NSArray *)buttons style:(YKUIButtonsStyle)style apply:(YKUIButtonsApplyBlock)apply {
   if ((self = [self initWithFrame:CGRectZero])) {
     _style = style;
+    _applyBlock = [apply copy];
     [self setButtons:buttons apply:apply];
   }
   return self;
@@ -73,6 +75,7 @@
 
 - (void)dealloc {
   [_buttons release];
+  Block_release(_applyBlock);
   [super dealloc];
 }
 
@@ -169,6 +172,7 @@
   if (!_buttons) _buttons = [[NSMutableArray alloc] init];
   [_buttons addObject:button];
   [self addSubview:button];
+  if (_applyBlock != NULL) _applyBlock(button, [_buttons count] - 1);
   [self _applyButton];
   [self setNeedsDisplay];
   [self setNeedsLayout];
@@ -188,8 +192,15 @@
   return YES;
 }
 
+- (void)removeAllButtons {
+  for (UIView *button in _buttons) {
+    [button removeFromSuperview];
+  }
+  [_buttons removeAllObjects];
+}
+
 - (void)setButton:(YKUIButton *)button index:(NSInteger)index animated:(BOOL)animated {
-  YKUIButton *buttonToRemove = [_buttons objectAtIndex:index];
+  YKUIButton *buttonToRemove = [_buttons gh_objectAtIndex:index];
   if (index == [_buttons count]) {
     [_buttons addObject:button];
   } else {
@@ -237,19 +248,27 @@
 }
 
 - (void)setEnabled:(BOOL)enabled index:(NSInteger)index {
-  YKUIButton *button = [_buttons objectAtIndex:index];
+  YKUIButton *button = [_buttons gh_objectAtIndex:index];
   [button setEnabled:enabled];
 }
 
+- (void)setEnabled:(BOOL)enabled {
+  for (YKUIButton *button in _buttons) {
+    [button setEnabled:enabled];
+  }
+}
+
 - (void)setSelectedIndex:(NSInteger)selectedIndex {
-  YKUIButton *button = [_buttons objectAtIndex:selectedIndex];
+  YKUIButton *button = [_buttons gh_objectAtIndex:selectedIndex];
   [self setSelected:YES button:button];
 }
 
-- (void)setSelected:(BOOL)selected button:(YKUIButton *)button {
+- (void)setSelected:(BOOL)selected button:(YKUIButton *)button {  
   if (_selectionMode == YKUIButtonsSelectionModeSingle) {
     for (YKUIButton *b in _buttons) {
-      if (b != button) [b setSelected:NO];
+      if (b != button) {
+        [b setSelected:NO];
+      }
     }
   }
   [button setSelected:selected];
@@ -333,8 +352,9 @@
 }
 
 - (void)_didSelect:(id)sender {
-  if ([_delegate respondsToSelector:@selector(buttons:shouldSelectButton:)]) {
-    if (![_delegate buttons:self shouldSelectButton:sender]) return;
+  NSInteger index = [_buttons indexOfObject:sender];
+  if ([_delegate respondsToSelector:@selector(buttons:shouldSelectButton:index:)]) {
+    if (![_delegate buttons:self shouldSelectButton:sender index:index]) return;
   }
   
   YKUIButton *previousButton = [self selectedButton];
@@ -345,8 +365,9 @@
     [self setSelected:![sender isSelected] button:sender];
   }
   
-  if ([_delegate respondsToSelector:@selector(buttons:didSelectButton:previousButton:)]) {
-    [_delegate buttons:self didSelectButton:sender previousButton:previousButton];
+
+  if ([_delegate respondsToSelector:@selector(buttons:didSelectButton:index:previousButton:)]) {
+    [_delegate buttons:self didSelectButton:sender index:index previousButton:previousButton];
   }
 }
 

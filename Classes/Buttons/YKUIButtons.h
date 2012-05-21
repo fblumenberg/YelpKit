@@ -49,17 +49,17 @@ typedef void (^YKUIButtonsApplyBlock)(YKUIButton *button, NSInteger index);
 @class YKUIButtons;
 
 @protocol YKUIButtonsDelegate <NSObject>
-@optional
 /*!
  Notified when a button is selected.
  */
-- (void)buttons:(YKUIButtons *)buttons didSelectButton:(YKUIButton *)button previousButton:(YKUIButton *)previousButton;
+- (void)buttons:(YKUIButtons *)buttons didSelectButton:(YKUIButton *)button index:(NSInteger)index previousButton:(YKUIButton *)previousButton;
 
+@optional
 /*!
  Allows the delegate to veto a selection.
  @param button
  */ 
-- (BOOL)buttons:(YKUIButtons *)buttons shouldSelectButton:(YKUIButton *)button;
+- (BOOL)buttons:(YKUIButtons *)buttons shouldSelectButton:(YKUIButton *)button index:(NSInteger)index;
 @end
 
 /*!
@@ -71,6 +71,8 @@ typedef void (^YKUIButtonsApplyBlock)(YKUIButton *button, NSInteger index);
   UIEdgeInsets _insets;
   YKUIButtonsStyle _style;
   YKUIButtonsSelectionMode _selectionMode;
+  
+  YKUIButtonsApplyBlock _applyBlock;
   
   id<YKUIButtonsDelegate> _delegate;
 }
@@ -144,6 +146,12 @@ typedef void (^YKUIButtonsApplyBlock)(YKUIButton *button, NSInteger index);
 - (void)setEnabled:(BOOL)enabled index:(NSInteger)index;
 
 /*!
+ Set all buttons enabled/disabled.
+ @param enabled
+ */
+- (void)setEnabled:(BOOL)enabled;
+
+/*!
  Select button.
  @param selected
  @param button
@@ -212,6 +220,11 @@ typedef void (^YKUIButtonsApplyBlock)(YKUIButton *button, NSInteger index);
  @param button
  */
 - (void)removeButton:(YKUIButton *)button;
+
+/*!
+ Remove all buttons.
+ */
+- (void)removeAllButtons;
 
 /*!
  Remove button with title.

@@ -38,6 +38,11 @@ typedef enum {
   YKUIButtonIconPositionTopCenter,
 } YKUIButtonIconPosition;
 
+typedef enum {
+  YKUIButtonSecondaryTitlePositionRight = 0, // Default
+  YKUIButtonSecondaryTitlePositionBottom,
+} YKUIButtonSecondaryTitlePosition;
+
 /*!
  Button.
  */
@@ -112,6 +117,7 @@ typedef enum {
   NSString *_secondaryTitle;
   UIColor *_secondaryTitleColor;
   UIFont *_secondaryTitleFont;
+  YKUIButtonSecondaryTitlePosition _secondaryTitlePosition;
   
   NSInteger _maxLineCount;
   
@@ -421,6 +427,11 @@ typedef enum {
 @property (retain, nonatomic) UIFont *secondaryTitleFont;
 
 /*!
+ Secondary title position.
+ */
+@property (assign, nonatomic) YKUIButtonSecondaryTitlePosition secondaryTitlePosition;
+
+/*!
  For a custom button content view.
  */
 @property (retain, nonatomic) UIView *contentView;
@@ -431,7 +442,7 @@ typedef enum {
 @property (assign, nonatomic) NSInteger maxLineCount;
 
 /*!
- Create button.
+ Button.
  @param frame Frame
  @param title Title
  @param target Target
@@ -440,7 +451,7 @@ typedef enum {
 - (id)initWithFrame:(CGRect)frame title:(NSString *)title target:(id)target action:(SEL)action;
 
 /*!
- Create button.
+ Button.
  @param frame Frame
  @param title Title
  */
@@ -458,20 +469,28 @@ typedef enum {
 + (YKUIButton *)button;
 
 /*!
- Button with style.
+ Button.
  @param frame Frame
  @param title Title
  */
 + (YKUIButton *)buttonWithFrame:(CGRect)frame title:(NSString *)title;
 
 /*!
- Button with style.
+ Button.
  @param frame Frame
  @param title Title
  @param target Target
  @param action Action
  */
 + (YKUIButton *)buttonWithFrame:(CGRect)frame title:(NSString *)title target:(id)target action:(SEL)action;
+
+/*!
+ Button.
+ @param title Title
+ @param target Target
+ @param action Action
+ */
++ (YKUIButton *)buttonWithTitle:(NSString *)title target:(id)target action:(SEL)action;
 
 /*!
  Size to fit button with a minimum size.
@@ -510,6 +529,11 @@ typedef enum {
  @param cornerRadius Corner radius
  */
 - (void)setBorderStyle:(YKUIBorderStyle)borderStyle color:(UIColor *)color width:(CGFloat)width alternateWidth:(CGFloat)alternateWidth cornerRadius:(CGFloat)cornerRadius;
+
+/*!
+ Activity indicator view.
+ */
+- (UIActivityIndicatorView *)activityIndicatorView;
 
 /*!
  Set activity indicator animating.
