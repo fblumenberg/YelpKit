@@ -8,7 +8,6 @@
 
 #import "YKError.h"
 #import "YKDefines.h"
-#import <GHKitIOS/GHNSError+Utils.h>
 #import "YKLocalized.h"
 
 // TODO(gabe): Adjust these back to YK prefixes when we fix our translation files

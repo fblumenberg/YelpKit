@@ -30,7 +30,6 @@
 #import "YKImageLoader.h"
 
 #import "YKImageMemoryCache.h"
-#import <GHKitIOS/GHNSObject+Invocation.h>
 #import "YKResource.h"
 #import "YKDefines.h"
 
@@ -326,7 +325,9 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
   imageLoader.queue = nil;
   [_loadingQueue removeObject:imageLoader];
   [self _updateIndicator];
-  [[self gh_proxyAfterDelay:0] check];
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+    [self check];
+  });
 }
 
 @end

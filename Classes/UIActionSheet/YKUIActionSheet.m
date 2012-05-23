@@ -29,7 +29,6 @@
 
 #import "YKUIActionSheet.h"
 
-#import <GHKitIOS/GHNSArray+Utils.h>
 #import "YKUtils.h"
 
 @implementation YKUIActionSheet

@@ -33,7 +33,6 @@
 #import "YKDefines.h"
 #import "UIImage+YKUtils.h"
 #import "YKImageMemoryCache.h"
-#import <GHKitIOS/GHNSString+Utils.h>
 
 @implementation YKUIImageBaseView
 

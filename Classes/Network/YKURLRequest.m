@@ -31,9 +31,6 @@
 
 #import "YKURLCache.h"
 #import "YKDefines.h"
-#import <GHKitIOS/GHNSObject+Invocation.h>
-#import <GHKitIOS/GHNSURL+Utils.h>
-#import <GHKitIOS/GHNSDate+Parsing.h>
 
 NSString *const kYKURLRequestDefaultMultipartBoundary = @"----------------314159265358979323846";
 NSString *const kYKURLRequestDefaultContentType = @"application/octet-stream";

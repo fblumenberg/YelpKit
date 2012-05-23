@@ -25,7 +25,6 @@
 //
 
 #import "YKUIActivityLabel.h"
-#import <GHKitIOS/GHNSString+Utils.h>
 #import "YKCGUtils.h"
 #import "YKLocalized.h"
 

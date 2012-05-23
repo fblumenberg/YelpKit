@@ -29,8 +29,6 @@
 
 #import "YKResource.h"
 #import "YKDefines.h"
-#import <GHKitIOS/GHNSFileManager+Utils.h>
-#import <GHKitIOS/GHNSError+Utils.h>
 
 @implementation YKResource
 

@@ -49,9 +49,9 @@
 		00559348140B00F6001E9C43 /* YKError.m in Sources */ = {isa = PBXBuildFile; fileRef = 00559326140B00F6001E9C43 /* YKError.m */; };
 		00559349140B00F6001E9C43 /* YKLocalized.h in Headers */ = {isa = PBXBuildFile; fileRef = 00559327140B00F6001E9C43 /* YKLocalized.h */; settings = {ATTRIBUTES = (); }; };
 		0055934A140B00F6001E9C43 /* YKLocalized.m in Sources */ = {isa = PBXBuildFile; fileRef = 00559328140B00F6001E9C43 /* YKLocalized.m */; };
-		00559353140B0102001E9C43 /* GHKitIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00559352140B0102001E9C43 /* GHKitIOS.framework */; };
 		005F5C78155B206E001D8517 /* YKUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 005F5C76155B206E001D8517 /* YKUtils.h */; };
 		005F5C79155B206E001D8517 /* YKUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 005F5C77155B206E001D8517 /* YKUtils.m */; };
+		006371FE156D8ED100DEC4B5 /* libGHKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 006371F5156D8E9400DEC4B5 /* libGHKit.a */; };
 		006E7DAD151FF2DE005FD9D3 /* YKUIBorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 006E7DAB151FF2DE005FD9D3 /* YKUIBorder.h */; };
 		006E7DAE151FF2DE005FD9D3 /* YKUIBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 006E7DAC151FF2DE005FD9D3 /* YKUIBorder.m */; };
 		0072E459151E74D2006EAC84 /* YKUIListView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0072E457151E74D2006EAC84 /* YKUIListView.h */; };
@@ -99,6 +99,44 @@
 		6E6DC675156450F400D95455 /* YKImageMemoryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6DC673156450F400D95455 /* YKImageMemoryCache.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		006371F4156D8E9400DEC4B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 006371E8156D8E9400DEC4B5 /* GHKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00D022D4154DF1EB003BAAC3;
+			remoteInfo = GHKit;
+		};
+		006371F6156D8E9400DEC4B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 006371E8156D8E9400DEC4B5 /* GHKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00D022E8154DF226003BAAC3;
+			remoteInfo = GHKitFramework;
+		};
+		006371F8156D8E9400DEC4B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 006371E8156D8E9400DEC4B5 /* GHKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00D02394154DF67D003BAAC3;
+			remoteInfo = Tests;
+		};
+		006371FA156D8E9400DEC4B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 006371E8156D8E9400DEC4B5 /* GHKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00D02415154DFB0C003BAAC3;
+			remoteInfo = TestsFramework;
+		};
+		006371FC156D8ECC00DEC4B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 006371E8156D8E9400DEC4B5 /* GHKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 00D022D3154DF1EB003BAAC3;
+			remoteInfo = GHKit;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		0007497315630CE90096B69F /* YKUIScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUIScrollView.h; sourceTree = "<group>"; };
 		0007497415630CE90096B69F /* YKUIScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKUIScrollView.m; sourceTree = "<group>"; };
@@ -145,9 +183,9 @@
 		00559326140B00F6001E9C43 /* YKError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKError.m; sourceTree = "<group>"; };
 		00559327140B00F6001E9C43 /* YKLocalized.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKLocalized.h; sourceTree = "<group>"; };
 		00559328140B00F6001E9C43 /* YKLocalized.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKLocalized.m; sourceTree = "<group>"; };
-		00559352140B0102001E9C43 /* GHKitIOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GHKitIOS.framework; sourceTree = "<group>"; };
 		005F5C76155B206E001D8517 /* YKUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUtils.h; sourceTree = "<group>"; };
 		005F5C77155B206E001D8517 /* YKUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKUtils.m; sourceTree = "<group>"; };
+		006371E8156D8E9400DEC4B5 /* GHKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GHKit.xcodeproj; path = GHKit/GHKit.xcodeproj; sourceTree = "<group>"; };
 		006E7DAB151FF2DE005FD9D3 /* YKUIBorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUIBorder.h; sourceTree = "<group>"; };
 		006E7DAC151FF2DE005FD9D3 /* YKUIBorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKUIBorder.m; sourceTree = "<group>"; };
 		0072E457151E74D2006EAC84 /* YKUIListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUIListView.h; sourceTree = "<group>"; };
@@ -202,9 +240,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				006371FE156D8ED100DEC4B5 /* libGHKit.a in Frameworks */,
 				00D5757B1457C65200DE6487 /* QuartzCore.framework in Frameworks */,
 				005592EC140B0085001E9C43 /* Foundation.framework in Frameworks */,
-				00559353140B0102001E9C43 /* GHKitIOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,9 +414,20 @@
 		0055934B140B0102001E9C43 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				00559352140B0102001E9C43 /* GHKitIOS.framework */,
+				006371E8156D8E9400DEC4B5 /* GHKit.xcodeproj */,
 			);
 			path = Libraries;
+			sourceTree = "<group>";
+		};
+		006371E9156D8E9400DEC4B5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				006371F5156D8E9400DEC4B5 /* libGHKit.a */,
+				006371F7156D8E9400DEC4B5 /* GHKit.framework */,
+				006371F9156D8E9400DEC4B5 /* Tests.app */,
+				006371FB156D8E9400DEC4B5 /* TestsFramework.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		00BE005414A148A8006B733B /* Location */ = {
@@ -517,6 +566,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				006371FD156D8ECC00DEC4B5 /* PBXTargetDependency */,
 			);
 			name = YelpKit;
 			productName = YelpKit;
@@ -543,12 +593,49 @@
 			mainGroup = 005592DD140B0085001E9C43;
 			productRefGroup = 005592E9140B0085001E9C43 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 006371E9156D8E9400DEC4B5 /* Products */;
+					ProjectRef = 006371E8156D8E9400DEC4B5 /* GHKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				005592E7140B0085001E9C43 /* YelpKit */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		006371F5156D8E9400DEC4B5 /* libGHKit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libGHKit.a;
+			remoteRef = 006371F4156D8E9400DEC4B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		006371F7156D8E9400DEC4B5 /* GHKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = GHKit.framework;
+			remoteRef = 006371F6156D8E9400DEC4B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		006371F9156D8E9400DEC4B5 /* Tests.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Tests.app;
+			remoteRef = 006371F8156D8E9400DEC4B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		006371FB156D8E9400DEC4B5 /* TestsFramework.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = TestsFramework.app;
+			remoteRef = 006371FA156D8E9400DEC4B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		005592E4140B0085001E9C43 /* Sources */ = {
@@ -602,6 +689,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		006371FD156D8ECC00DEC4B5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GHKit;
+			targetProxy = 006371FC156D8ECC00DEC4B5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		005592F0140B0085001E9C43 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -648,8 +743,12 @@
 				GCC_PREFIX_HEADER = "YelpKit-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)/../../Headers\"";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -671,8 +770,12 @@
 				GCC_PREFIX_HEADER = "YelpKit-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)/../../Headers\"";
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

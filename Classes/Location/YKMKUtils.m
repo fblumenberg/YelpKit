@@ -10,8 +10,6 @@
 #import "YKCLUtils.h"
 #import "YKCGUtils.h"
 #import "YKMKAnnotation.h"
-#import <GHKitIOS/GHNSDictionary+Utils.h>
-#import <GHKitIOS/GHNSDictionary+NSNull.h>
 #import "NSDictionary+YKValidation.h"
 
 NSString *YKNSStringFromMKCoordinateSpan(MKCoordinateSpan span) {

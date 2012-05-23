@@ -47,8 +47,6 @@
 
 
 #import "YKURLCache.h"
-#import <GHKitIOS/GHNSFileManager+Utils.h>
-#import <GHKitIOS/GHNSString+Utils.h>
 #import "YKResource.h"
 #import "YKDefines.h"
 #import "YKImageMemoryCache.h"
