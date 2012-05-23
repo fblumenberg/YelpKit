@@ -548,7 +548,13 @@
           x += iconSize.width + 2; // TODO(gabe): This 2px padding should come from default inset
           break;
         }
-        case YKUIButtonIconPositionTopCenter: {
+        case YKUIButtonIconPositionTop: {
+          CGPoint iconTop = YKCGPointToCenter(iconSize, size);
+          [icon drawInRect:CGRectMake(iconTop.x, _insets.top, iconSize.width, iconSize.height)];
+          y = _insets.top + iconSize.height;
+          break;
+        }
+        case YKUIButtonIconPositionCenter: {
           CGPoint iconTop = YKCGPointToCenter(iconSize, CGSizeMake(size.width, size.height - _titleSize.height));
           if (_iconOrigin.x != CGFLOAT_MAX) iconTop.x = _iconOrigin.x;
           if (_iconOrigin.y != CGFLOAT_MAX) iconTop.y = _iconOrigin.y;

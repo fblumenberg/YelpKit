@@ -35,7 +35,8 @@
 
 typedef enum {
   YKUIButtonIconPositionLeft = 0, // Default
-  YKUIButtonIconPositionTopCenter,
+  YKUIButtonIconPositionCenter, // Centered
+  YKUIButtonIconPositionTop, // Aligned with top of button
 } YKUIButtonIconPosition;
 
 typedef enum {
