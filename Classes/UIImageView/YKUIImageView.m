@@ -273,6 +273,7 @@
       YKDebug(@"Image has changed since block was created. image=%@ _image=%@ _renderedContents=%@", image, _image, _renderedContents);
       return;
     }
+    YKAssert(!CGRectIsEmpty(self.bounds), @"Bounds should not be empty when doing background rendering. Make sure to init your view with the correct size.");
     UIImage *renderedImage = [UIImage imageFromDrawOperations:^(CGContextRef context) {
       [self drawImage:image inRect:YKCGRectZeroOrigin(self.bounds) contentMode:self.contentMode];
     } size:self.bounds.size opaque:self.opaque];
