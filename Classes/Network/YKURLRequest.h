@@ -53,8 +53,8 @@ typedef enum {
 } YPHTTPMethod;
 
 typedef enum {
-  YKURLRequestCachePolicyDisabled = 0, // Default
-  YKURLRequestCachePolicyEnabled,
+  YKURLRequestCachePolicyDisabled = 0,
+  YKURLRequestCachePolicyEnabled, // Default
   YKURLRequestCachePolicyIfModifiedSince, // Currently not implemented
 } YKURLRequestCachePolicy;
 
