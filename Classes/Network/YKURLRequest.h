@@ -184,26 +184,24 @@ typedef void (^YKURLRequestFailBlock)(YKError *error);
 /*!
  GET request. 
  @param URL URL
- @param headers Headers to include in request
  @param finishBlock 
  @param failBlock
  @result NO if we were unable to make the request with the parameters
  
  Server errors (status >= 300) are reported as the code of the error object.
  */
-- (BOOL)requestWithURL:(YKURL *)URL headers:(NSDictionary *)headers finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
+- (BOOL)requestWithURL:(YKURL *)URL finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
 
 /*!
  GET request. 
  @param URL URL
- @param headers Headers to include in request
  @param finishBlock 
  @param failBlock
  @result NO if we were unable to make the request with the parameters
  
  Server errors (status >= 300) are reported as the code of the error object.
  */
-+ (BOOL)requestWithURL:(YKURL *)URL headers:(NSDictionary *)headers finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
++ (BOOL)requestWithURL:(YKURL *)URL finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
 
 /*!
  GET the URL.
@@ -263,6 +261,34 @@ typedef void (^YKURLRequestFailBlock)(YKError *error);
  Server errors (status >= 300) are reported as the code of the error object.
  */
 + (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
+
+/*!
+ Request URL with method.
+ 
+ @param URL URL
+ @param method Method
+ @param postParams Post data
+ @param finishBlock 
+ @param failBlock
+ @result NO if we were unable to make the request with the parameters
+ 
+ Server errors (status >= 300) are reported as the code of the error object.
+ */
+- (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method postParams:(NSDictionary *)postParams finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
+
+/*!
+ Request URL with method.
+ 
+ @param URL URL
+ @param method Method
+ @param postParams Post data
+ @param finishBlock 
+ @param failBlock
+ @result NO if we were unable to make the request with the parameters
+ 
+ Server errors (status >= 300) are reported as the code of the error object.
+ */
++ (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method postParams:(NSDictionary *)postParams finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
 
 /*!
  Request the URL.
@@ -376,6 +402,13 @@ typedef void (^YKURLRequestFailBlock)(YKError *error);
  @param theClass Class to use for connection
  */
 + (void)setConnectionClass:(Class)theClass;
+
+/*!
+ Set gloval connection timeout.
+ 
+ @param connectionTimeout
+ */
++ (void)setConnectionTimeout:(NSTimeInterval)connectionTimeout;
 
 /*!
  To disable the cache globally. (For testing.)

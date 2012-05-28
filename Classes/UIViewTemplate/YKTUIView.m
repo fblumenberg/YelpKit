@@ -11,7 +11,7 @@
 
 @implementation YKTUIView
 
-@synthesize viewController=_viewController, navigationBar=_navigationBar;
+@synthesize viewController=_viewController, navigationBar=_navigationBar, navigationController=_navigationController;
 
 - (void)sharedInit {
   self.backgroundColor = [UIColor blackColor];
@@ -38,10 +38,10 @@
   return self;
 }
 
-- (YKTUIViewController *)newViewController { 
+- (YKTUIViewController *)newViewController {
   YKTUIViewController *viewController = [[self viewControllerForView] retain];
   _viewController = viewController;
-  return viewController;
+  return _viewController;
 }
 
 - (YKTUIViewController *)viewControllerForView {
@@ -50,10 +50,37 @@
   return [viewController autorelease];
 }
 
+- (void)popPushView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration cache:(BOOL)cache {
+  YKTUIViewController *viewController = [view newViewController];
+  if (transition != UIViewAnimationTransitionNone) {
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:duration];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationWillStartSelector:@selector(navigationAnimationWillStart:context:)];
+    [UIView setAnimationDidStopSelector:@selector(navigationAnimationDidStop:finished:context:)];
+    [UIView setAnimationTransition:transition forView:_navigationController.view cache:cache];
+  }
+  
+  [_navigationController popViewControllerAnimated:NO];
+  [_navigationController pushViewController:viewController animated:NO];
+  
+  if (transition != UIViewAnimationTransitionNone) [UIView commitAnimations];
+}
+
 - (void)pushView:(YKTUIView *)view animated:(BOOL)animated {
   YKTUIViewController *viewController = [view newViewController];
-  [self.viewController.navigationController pushViewController:viewController animated:animated];
+  [_navigationController pushViewController:viewController animated:animated];
   [viewController release];
+}
+
+- (void)setView:(YKTUIView *)view animated:(BOOL)animated {
+  YKTUIViewController *viewController = [view newViewController];
+  [_navigationController setViewControllers:[NSArray arrayWithObject:viewController] animated:animated];
+  [viewController release];
+}
+
+- (void)popToRootViewAnimated:(BOOL)animated {
+  [_navigationController popToRootViewControllerAnimated:animated];
 }
 
 - (void)setNavigationTitle:(NSString *)title animated:(BOOL)animated {

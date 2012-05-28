@@ -1,8 +1,8 @@
 //
-//  YKTableView.m
+//  YKTableViewCellDataSource.h
 //  YelpKit
 //
-//  Created by Gabriel Handford on 5/13/12.
+//  Created by Gabriel Handford on 5/27/12.
 //  Copyright (c) 2012 Yelp. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
@@ -27,39 +27,7 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "YKTableView.h"
-
-@implementation YKTableView
-
-@dynamic dataSource;
-
-- (void)sharedInit {
-  dataSource_ = [[YKTableViewDataSource alloc] init];
-  self.dataSource = dataSource_;
-  self.delegate = dataSource_;
-}
-
-- (id)initWithCoder:(NSCoder *)coder {
-  if ((self = [super initWithCoder:coder])) {
-    [self sharedInit];
-  }
-  return self;
-}
-
-- (id)initWithFrame:(CGRect)frame {
-  if ((self = [super initWithFrame:frame])) {
-    [self sharedInit];
-  }
-  return self;
-}
-
-- (void)dealloc {
-  [dataSource_ release];
-  [super dealloc];
-}
-
-- (YKTableViewDataSource *)tableViewDataSource {
-  return dataSource_;
-}
-
+@protocol YKTableViewCellDataSource <NSObject>
+- (UITableViewCell *)cellForTableView:(UITableView *)tableView rowAtIndexPath:(NSIndexPath *)indexPath;
+- (CGSize)sizeThatFits:(CGSize)size;
 @end

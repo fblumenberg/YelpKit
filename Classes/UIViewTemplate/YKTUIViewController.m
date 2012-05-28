@@ -22,6 +22,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
+  _templateView.view.navigationController = self.navigationController;
   if ([_viewDelegate respondsToSelector:@selector(viewController:viewWillAppear:)]) {
     [_viewDelegate viewController:self viewWillAppear:animated];
   }

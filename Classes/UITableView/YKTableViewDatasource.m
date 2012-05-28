@@ -5,10 +5,33 @@
 //  Created by Gabriel Handford on 5/13/12.
 //  Copyright (c) 2012 Yelp. All rights reserved.
 //
+//  Permission is hereby granted, free of charge, to any person
+//  obtaining a copy of this software and associated documentation
+//  files (the "Software"), to deal in the Software without
+//  restriction, including without limitation the rights to use,
+//  copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following
+//  conditions:
+//
+//  The above copyright notice and this permission notice shall be
+//  included in all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+//  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+//  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+//  OTHER DEALINGS IN THE SOFTWARE.
+//
 
 #import "YKTableViewDataSource.h"
 
 @implementation YKTableViewDataSource
+
+@synthesize sectionIndexTitles=_sectionIndexTitles;
 
 - (id)init {
   if ((self = [super init])) {
@@ -222,17 +245,29 @@
   if (section >= _sectionCount) _sectionCount = section + 1;
 }
 
-- (void)setHeaderTitle:(NSString *)title section:(NSInteger)section {
+- (NSMutableDictionary *)_sectionHeaderTitles {
+  if (!_sectionHeaderTitles) _sectionHeaderTitles = [[NSMutableDictionary alloc] init];
+  return _sectionHeaderTitles;
+}
+
+- (void)setSectionHeaderTitle:(NSString *)title section:(NSInteger)section {
   _headersExist = YES;
   if (title) {
-    if (!_sectionHeaderTitles) _sectionHeaderTitles = [[NSMutableDictionary alloc] init];
-    [_sectionHeaderTitles setObject:title forKey:[NSNumber numberWithInteger:section]];
+    [[self _sectionHeaderTitles] setObject:title forKey:[NSNumber numberWithInteger:section]];
   } else {
     [_sectionHeaderTitles removeObjectForKey:[NSNumber numberWithInteger:section]];
   }
 }
 
-- (void)setHeaderView:(UIView *)view section:(NSInteger)section {
+- (void)setSectionHeaderTitles:(NSArray *)titles {
+  _headersExist = YES;
+  NSInteger i = 0;
+  for (NSString *title in titles) {
+    [[self _sectionHeaderTitles] setObject:title forKey:[NSNumber numberWithInteger:i++]];
+  }
+}
+
+- (void)setSectionHeaderView:(UIView *)view section:(NSInteger)section {
   _headersExist = YES;
   if (view) {
     if (!_sectionHeaderViews) _sectionHeaderViews = [[NSMutableDictionary alloc] init];
@@ -242,7 +277,7 @@
   } 
 }
 
-- (void)setFooterView:(UIView *)view section:(NSInteger)section {
+- (void)setSectionFooterView:(UIView *)view section:(NSInteger)section {
   if (view) {
     if (!_sectionFooterViews) _sectionFooterViews = [[NSMutableDictionary alloc] init];
     [_sectionFooterViews setObject:view forKey:[NSNumber numberWithInteger:section]];
@@ -251,7 +286,7 @@
   } 
 }
 
-- (BOOL)hasHeaderForSection:(NSInteger)section {
+- (BOOL)hasSectionHeaderForSection:(NSInteger)section {
   if (!_headersExist) return NO;
   if ([self countForSection:section] > 0) 
     return ([_sectionHeaderTitles objectForKey:[NSNumber numberWithInteger:section]] != nil);
@@ -322,13 +357,15 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
   if (!_headersExist) return nil;
+
+  // Only show view if we have cells
+  if ([self countForSection:section] == 0) return nil;
   
   NSString *sectionTitle = [self tableView:tableView titleForHeaderInSection:section];
   if (!sectionTitle) return nil;
   
   UIView *sectionHeaderView = [_sectionHeaderViews objectForKey:[NSNumber numberWithInteger:section]];  
-  // TODO(gabe): We should assert this
-  // NSAssert([sectionHeaderView respondsToSelector:@selector(setText:)], @"Header views must respond to setText:");
+
   if ([sectionHeaderView respondsToSelector:@selector(setText:)])       
     [(id)sectionHeaderView setText:sectionTitle];
   return sectionHeaderView;
@@ -357,6 +394,20 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
   return [self tableView:tableView viewForFooterInSection:section].frame.size.height;
 }
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+	return _sectionIndexTitles;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+	if (title == UITableViewIndexSearch) {
+		// Hack to scroll to table header if selecting the UITableViewIndexSearch item
+		[tableView setContentOffset:CGPointZero];
+		return -1;
+	}
+	return index;
+}
+
 
 @end
 

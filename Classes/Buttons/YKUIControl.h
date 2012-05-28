@@ -8,7 +8,7 @@
 
 #import "YKLayout.h"
 
-typedef void (^UIControlTargetBlock)(UIControl *control, id context);
+typedef void (^UIControlTargetBlock)();
 
 /*!
  UIControl with some helpers.

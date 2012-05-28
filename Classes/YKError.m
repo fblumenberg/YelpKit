@@ -24,6 +24,7 @@ NSString *const YKErrorServerMaintenance = @"YPErrorServerMaintenance"; // Serve
 NSString *const YKErrorServerResponse = @"YPErrorServerResponse"; // Reached server, but there was an error returned
 NSString *const YKErrorCannotConnectToHost = @"YPErrorCannotConnectToHost"; // Server not reachable but internet active
 NSString *const YKErrorNotConnectedToInternet = @"YPErrorNotConnectedToInternet";
+NSString *const YKErrorServerUnauthorized = @"YPErrorServerUnauthorized";
 
 
 @interface YKError ()
@@ -95,12 +96,15 @@ NSString *const YKErrorNotConnectedToInternet = @"YPErrorNotConnectedToInternet"
                                                         @"Sorry, we're down for maintenance. But don't worry, we'll be back shortly!", @"YPErrorServerMaintenance",
                                                         @"Sorry, something's funky with your connection. Try again in a bit.", @"YPErrorCannotConnectToHost",
                                                         @"You're not connected to the Internet. Please connect and retry.", @"YPErrorNotConnectedToInternet",
+                                                        @"You'll need to log in.", @"YPErrorServerUnauthorized",
                                                         nil] retain];
       
       NSString *keyBuiltIn = [DescriptionsBuiltIn objectForKey:_key];
       if (keyBuiltIn) return YKLocalizedString(keyBuiltIn);      
       
-      return YKLocalizedString(@"YKErrorUnknown");
+      NSString *unknownError = YKLocalizedString(@"YKErrorUnknown");
+      if ([unknownError isEqualToString:YKErrorUnknown]) unknownError = YKLocalizedString(@"There was an error. Please try again later.");
+      return unknownError;
     }
   }
   return description;
@@ -183,6 +187,7 @@ NSString *const YKErrorNotConnectedToInternet = @"YPErrorNotConnectedToInternet"
   switch(HTTPStatus) {
     case 503: return YKErrorServerMaintenance;
     case 404: return YKErrorServerResourceNotFound;
+    case 401: return YKErrorServerUnauthorized;
     default: return YKErrorServerResponse;
   }
 }

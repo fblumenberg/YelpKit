@@ -14,31 +14,51 @@
 
 @interface YKTUIView : YKUILayoutView {
   YKUINavigationBar *_navigationBar;
+  
+  UINavigationController *_navigationController;
   YKTUIViewController *_viewController;
 }
 
-/*!
- Weak, set if newViewController method is used.
- */
-@property (readonly, assign, nonatomic) UIViewController *viewController;
+@property (readonly, assign, nonatomic) YKTUIViewController *viewController;
+@property (assign, nonatomic) UINavigationController *navigationController;
+
 @property (readonly, nonatomic) YKUINavigationBar *navigationBar;
 
 /*!
- Returns UIViewController for this view.
+ @result Returns UIViewController for this view.
  Do not override. For a custom view controller, use viewControllerForView.
  This method registers the view controller.
  */
 - (YKTUIViewController *)newViewController;
 
 /*!
- Returns UIViewController for this view.
+ @result Returns UIViewController for this view. Subclasses can override this method.
  */
 - (YKTUIViewController *)viewControllerForView;
 
 /*!
  Push view.
+ @param view
+ @param animated
  */
 - (void)pushView:(YKUILayoutView *)view animated:(BOOL)animated;
+
+/*!
+ Set the main view.
+ @param view
+ @param animated
+ */
+- (void)setView:(YKTUIView *)view animated:(BOOL)animated;
+
+/*!
+ Pop then push view with transition.
+ */
+- (void)popPushView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration cache:(BOOL)cache;
+
+/*!
+ Pop to root view.
+ */
+- (void)popToRootViewAnimated:(BOOL)animated;
 
 /*!
  Set navigation title.

@@ -5,11 +5,29 @@
 //  Created by Gabriel Handford on 5/13/12.
 //  Copyright (c) 2012 Yelp. All rights reserved.
 //
+//  Permission is hereby granted, free of charge, to any person
+//  obtaining a copy of this software and associated documentation
+//  files (the "Software"), to deal in the Software without
+//  restriction, including without limitation the rights to use,
+//  copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the
+//  Software is furnished to do so, subject to the following
+//  conditions:
+//
+//  The above copyright notice and this permission notice shall be
+//  included in all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+//  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+//  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+//  OTHER DEALINGS IN THE SOFTWARE.
+//
 
-@protocol YKTableViewCellDataSource <NSObject>
-- (UITableViewCell *)cellForTableView:(UITableView *)tableView rowAtIndexPath:(NSIndexPath *)indexPath;
-- (CGSize)sizeThatFits:(CGSize)size;
-@end
+#import "YKTableViewCellDataSource.h"
 
 
 @interface YKTableViewDataSource : NSObject <UITableViewDelegate, UITableViewDataSource> {  
@@ -18,12 +36,15 @@
   NSMutableDictionary */*Row -> NSString*/_sectionHeaderTitles;
   NSMutableDictionary */*Row -> UIView*/_sectionHeaderViews;  
   NSMutableDictionary */*Row -> UIView*/_sectionFooterViews;
+  NSArray *_sectionIndexTitles;
   
   NSInteger _sectionCount; // We need to keep section count stable since row animating requires tht we don't add or remove sections while animating.
   
   // We can optimize away *forHeaderInSection by tracking if we've ever had headers set
   BOOL _headersExist;
 }
+
+@property (retain, nonatomic) NSArray *sectionIndexTitles;
 
 /*!
  Create empty data source.
@@ -64,17 +85,23 @@
 
 - (void)clearSection:(NSInteger)section indexPaths:(NSMutableArray **)indexPaths;
 
-- (void)setHeaderTitle:(NSString *)title section:(NSInteger)section;
-- (void)setHeaderView:(UIView *)view section:(NSInteger)section;
+- (void)setSectionHeaderTitle:(NSString *)title section:(NSInteger)section;
+- (void)setSectionHeaderView:(UIView *)view section:(NSInteger)section;
 
-//! Clear all cells.
+- (void)setSectionHeaderTitles:(NSArray *)titles;
+
+/*! 
+ Clear all cells.
+ */
 - (void)clearAll;
 
-//! Clear header views and titles
+/*!
+ Clear header views and titles.
+ */
 - (void)clearHeaders;
 
-- (void)setHeaderView:(UIView *)view section:(NSInteger)section;
-- (void)setFooterView:(UIView *)view section:(NSInteger)section;
+- (void)setSectionHeaderView:(UIView *)view section:(NSInteger)section;
+- (void)setSectionFooterView:(UIView *)view section:(NSInteger)section;
 
 - (id<YKTableViewCellDataSource>)cellDataSourceAtIndexPath:(NSIndexPath *)indexPath;
 

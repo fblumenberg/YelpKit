@@ -39,7 +39,7 @@ extern NSString *const YKErrorServerMaintenance; // Server was reached but retur
 extern NSString *const YKErrorServerResponse; // Server was reached but returned some other error
 extern NSString *const YKErrorCannotConnectToHost; // Server not reachable but internet active
 extern NSString *const YKErrorNotConnectedToInternet;
-
+extern NSString *const YKErrorServerUnauthorized; // Server returned 401
 
 /*!
  Generic error class, which stores error code as a unique string (key).

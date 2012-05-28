@@ -56,6 +56,7 @@
 }
 
 - (CGRect)rectForContentView:(CGSize)size {
+  if (YKCGSizeIsEqual(size, CGSizeZero)) return CGRectZero;
   CGRect leftRect = [self rectForLeftButton:size];
   CGRect rightRect = [self rectForRightButton:size];
   

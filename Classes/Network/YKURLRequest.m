@@ -127,13 +127,18 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   return [self requestWithURL:URL method:YPHTTPMethodGet headers:headers postParams:nil keyEnumerator:nil delegate:delegate finishSelector:finishSelector failSelector:failSelector cancelSelector:cancelSelector];
 }
 
-+ (BOOL)requestWithURL:(YKURL *)URL headers:(NSDictionary *)headers finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
++ (BOOL)requestWithURL:(YKURL *)URL finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
   YKURLRequest *request = [[[self class] alloc] init];
-  return [request requestWithURL:URL headers:headers finishBlock:finishBlock failBlock:failBlock];
+  return [request requestWithURL:URL finishBlock:finishBlock failBlock:failBlock];
 }
 
-- (BOOL)requestWithURL:(YKURL *)URL headers:(NSDictionary *)headers finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
-  return [self requestWithURL:URL method:YPHTTPMethodGet headers:headers postParams:nil keyEnumerator:nil finishBlock:finishBlock failBlock:failBlock];
+- (BOOL)requestWithURL:(YKURL *)URL finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
+  return [self requestWithURL:URL method:YPHTTPMethodGet headers:nil postParams:nil keyEnumerator:nil finishBlock:finishBlock failBlock:failBlock];
+}
+
++ (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method postParams:(NSDictionary *)postParams finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
+  YKURLRequest *request = [[[self class] alloc] init];
+  return [request requestWithURL:URL method:method postParams:postParams finishBlock:finishBlock failBlock:failBlock];
 }
 
 + (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
@@ -149,7 +154,12 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   return [self _requestWithURL:URL method:method headers:headers postParams:postParams keyEnumerator:keyEnumerator];
 }
 
-- (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator delegate:(id)delegate finishSelector:(SEL)finishSelector failSelector:(SEL)failSelector cancelSelector:(SEL)cancelSelector{
+- (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method postParams:(NSDictionary *)postParams finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
+  return [self requestWithURL:URL method:method headers:nil postParams:postParams keyEnumerator:nil finishBlock:finishBlock failBlock:failBlock];
+}
+
+
+- (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator delegate:(id)delegate finishSelector:(SEL)finishSelector failSelector:(SEL)failSelector cancelSelector:(SEL)cancelSelector {
   
   //YKAssertSelectorNilOrImplementedWithArguments(delegate, finishSelector, @encode(YKURLRequest *), 0);
   //YKAssertSelectorNilOrImplementedWithArguments(delegate, failSelector, @encode(YKURLRequest *), @encode(YKError *), 0);
@@ -483,6 +493,12 @@ static Class gYKURLRequestConnectionClass = NULL;
 
 + (void)setConnectionClass:(Class)theClass {
   gYKURLRequestConnectionClass = theClass;
+}
+
+#pragma mark Timeout Globals
+
++ (void)setConnectionTimeout:(NSTimeInterval)connectionTimeout {
+  gYKURLRequestDefaultTimeout = connectionTimeout;
 }
 
 #pragma mark Compressor
