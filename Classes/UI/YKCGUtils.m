@@ -411,11 +411,11 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
   // Need to adjust path rect to inset (since the stroke is drawn from the middle of the path)
   CGRect insetBounds;
   switch(style) {
-    case YKUIBorderStyleRoundedBottomWithAlternateTop:
+    case YKUIBorderStyleRoundedBottom:
       insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y + alternateStrokeInset, rect.size.width - (strokeInset * 2), rect.size.height - strokeInset - alternateStrokeInset);
       break;
       
-    case YKUIBorderStyleLeftRightWithAlternateTop:
+    case YKUIBorderStyleTopLeftRight:
       insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y + alternateStrokeInset, rect.size.width - (strokeInset * 2), rect.size.height - alternateStrokeInset);
       break;
       
@@ -464,7 +464,7 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
   CGMutablePathRef path = CGPathCreateMutable();
   
   switch(style) {
-    case YKUIBorderStyleRoundedBottomWithAlternateTop:
+    case YKUIBorderStyleRoundedBottom:
       CGPathMoveToPoint(path, &transform, fw, 0); 
       CGPathAddLineToPoint(path, &transform, fw, fh/2);
       CGPathAddArcToPoint(path, &transform, fw, fh, fw/2, fh, 1);
@@ -506,7 +506,7 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
       CGPathAddLineToPoint(path, &transform, 0, fh);
       break;
       
-    case YKUIBorderStyleLeftRightWithAlternateTop:
+    case YKUIBorderStyleTopLeftRight:
       // Go +/- 2 in order to clip the top and bottom border; Only draw left, right border
       CGPathMoveToPoint(path, &transform, 0, fh + 2);
       CGPathAddLineToPoint(path, &transform, 0, -2);
@@ -569,8 +569,8 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
 
 BOOL YKCGContextAddAlternateBorderToPath(CGContextRef context, CGRect rect, YKUIBorderStyle style) {
   // Skip styles that don't have alternate border path
-  if (style != YKUIBorderStyleRoundedBottomWithAlternateTop &&
-      style != YKUIBorderStyleLeftRightWithAlternateTop) {
+  if (style != YKUIBorderStyleRoundedBottom &&
+      style != YKUIBorderStyleTopLeftRight) {
     return NO;
   }
   

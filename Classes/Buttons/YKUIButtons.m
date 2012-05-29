@@ -63,6 +63,10 @@
   return [self initWithButtons:buttons style:style apply:apply];
 }
 
+- (id)initWithStyle:(YKUIButtonsStyle)style {
+  return [self initWithButtons:nil style:style apply:nil];
+}
+
 - (id)initWithButtons:(NSArray *)buttons style:(YKUIButtonsStyle)style apply:(YKUIButtonsApplyBlock)apply {
   if ((self = [self initWithFrame:CGRectZero])) {
     _style = style;
@@ -145,7 +149,7 @@
             button.borderStyle = YKUIBorderStyleRoundedRightCap;
             break;
           case YKUIButtonsStyleVerticalRounded:
-            button.borderStyle = YKUIBorderStyleRoundedBottomWithAlternateTop;
+            button.borderStyle = YKUIBorderStyleRoundedBottom;
             break;
           default:
             break;
@@ -156,7 +160,7 @@
             button.borderStyle = YKUIBorderStyleNormal;
             break;
           case YKUIButtonsStyleVerticalRounded:
-            button.borderStyle = YKUIBorderStyleLeftRightWithAlternateTop;
+            button.borderStyle = YKUIBorderStyleTopLeftRight;
             break;
           default:
             break;

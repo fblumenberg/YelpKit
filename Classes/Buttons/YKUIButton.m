@@ -140,7 +140,14 @@
     CGSize lineSize = [@" " sizeWithFont:_titleFont];
     constrainedToSize.height = lineSize.height * _maxLineCount;
   }
-  CGSize titleSize = (_title ? [_title sizeWithFont:_titleFont constrainedToSize:constrainedToSize lineBreakMode:UILineBreakModeTailTruncation] : CGSizeZero);
+  
+  CGSize titleSize = CGSizeZero;
+  
+  if (_title) {
+    titleSize = [_title sizeWithFont:_titleFont constrainedToSize:constrainedToSize lineBreakMode:UILineBreakModeTailTruncation];
+    // TODO: Probably need this because sizeWithFont and draw methods produce different sizing
+    titleSize.width += 2;
+  }
   
   if (_secondaryTitle) {
     if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionRight) {
@@ -234,7 +241,7 @@
   if (_iconImageView.image && YKCGSizeIsZero(iconSize)) {
     iconSize = _iconImageView.image.size;
   }
-  return CGSizeMake(titleSize.width + iconSize.width + 2, titleSize.height + iconSize.height);
+  return CGSizeMake(titleSize.width + iconSize.width, titleSize.height + iconSize.height);
 }
 
 - (void)setHighlighted:(BOOL)highlighted {
@@ -526,7 +533,7 @@
   
   if (!_titleHidden) {
     CGFloat lineWidth = _titleSize.width + _titleInsets.left + _titleInsets.right;
-    if (showIcon && _iconPosition == YKUIButtonIconPositionLeft) lineWidth += iconSize.width + 2;
+    if (showIcon && _iconPosition == YKUIButtonIconPositionLeft) lineWidth += iconSize.width;
     CGFloat x = bounds.origin.x + _insets.left;
     
     if (_titleAlignment == UITextAlignmentCenter) {
@@ -545,7 +552,7 @@
           iconTop.x = x;
           iconTop.y += bounds.origin.y + _insets.top;
           [icon drawInRect:CGRectMake(iconTop.x, iconTop.y, iconSize.width, iconSize.height)];
-          x += iconSize.width + 2; // TODO(gabe): This 2px padding should come from default inset
+          x += iconSize.width;
           break;
         }
         case YKUIButtonIconPositionTop: {
@@ -566,7 +573,7 @@
       showIcon = NO;
     } else if (!YKCGSizeIsZero(iconSize)) {
       if (_iconPosition == YKUIButtonIconPositionLeft) {
-        x += iconSize.width + 2;
+        x += iconSize.width;
       }
     }
     
@@ -580,7 +587,8 @@
     if (!_secondaryTitle) {
       [_title drawInRect:CGRectMake(x, y, _titleSize.width, _titleSize.height) withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:_titleAlignment];
     } else if (_secondaryTitle) {
-      CGSize titleSize = [_title drawInRect:CGRectMake(x, y, _titleSize.width, _titleSize.height) withFont:font lineBreakMode:UILineBreakModeTailTruncation];
+      CGSize titleSize = [_title sizeWithFont:_titleFont constrainedToSize:_titleSize lineBreakMode:UILineBreakModeTailTruncation];      
+      titleSize = [_title drawInRect:CGRectMake(x, y, titleSize.width, titleSize.height) withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:_titleAlignment];
       if (_secondaryTitleColor) [_secondaryTitleColor set];
       if (_secondaryTitleFont) font = _secondaryTitleFont;
       if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionRight) {
@@ -589,7 +597,8 @@
       } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionBottom) {
         x = _insets.left + _titleInsets.left;
         y += titleSize.height;
-        CGRect secondaryTitleRect = CGRectMake(x, y, size.width - x, size.height - y);
+        // TODO(gabe): Needed to put "+ _insets.bottom" so secondary text would wrap
+        CGRect secondaryTitleRect = CGRectMake(x, y, size.width - x - _insets.right - _titleInsets.right, size.height - y + _insets.bottom);
         [_secondaryTitle drawInRect:secondaryTitleRect withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];  
       }
     }

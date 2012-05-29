@@ -194,7 +194,7 @@ typedef enum {
 @property (assign, nonatomic) CGFloat borderWidth;
 
 /*!
- Border width (alternate). Used with custom border styles like YKUIBorderStyleLeftRightWithAlternateTop.
+ Border width (alternate). Used with custom border styles like YKUIBorderStyleTopLeftRight.
  Defaults to 1.
  */
 @property (assign, nonatomic) CGFloat borderAlternateWidth;

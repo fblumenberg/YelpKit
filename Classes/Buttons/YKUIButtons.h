@@ -127,6 +127,12 @@ typedef void (^YKUIButtonsApplyBlock)(YKUIButton *button, NSInteger index);
 - (id)initWithTitles:(NSArray *)titles style:(YKUIButtonsStyle)style apply:(YKUIButtonsApplyBlock)apply;
 
 /*!
+ Create buttons with no buttons. Use setButtons to add them.
+ @param style Style, use rounded style if you want the YKUIButton border style to be automatically set.
+ */
+- (id)initWithStyle:(YKUIButtonsStyle)style;
+
+/*!
  @result The buttons
  */
 - (NSArray *)buttons;
