@@ -319,7 +319,9 @@ static NSMutableDictionary *gNamedCaches = NULL;
 
 - (UIImage *)diskCachedImageForURLString:(NSString *)URLString expires:(NSTimeInterval)expires {
   if (!URLString) return nil;
+#if DEBUG
   NSTimeInterval start = [NSDate timeIntervalSinceReferenceDate];
+#endif
   UIImage *image = nil;
   NSData *cachedData = [self dataForURLString:URLString expires:expires timestamp:nil];
   if (cachedData) {
