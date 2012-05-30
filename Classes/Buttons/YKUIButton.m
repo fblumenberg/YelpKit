@@ -66,8 +66,8 @@
 }
 
 - (id)initWithFrame:(CGRect)frame title:(NSString *)title target:(id)target action:(SEL)action {
-  if ((self = [super initWithFrame:frame])) {    
-    self.title = title;   
+  if ((self = [self initWithFrame:frame])) {
+    self.title = title;
     [self setTarget:target action:action];
   }
   return self;
