@@ -33,7 +33,7 @@
 
 @implementation YKUIButton
 
-@synthesize title=_title, titleColor=_titleColor, titleFont=_titleFont, borderWidth=_borderWidth, borderAlternateWidth=_borderAlternateWidth, color=_color, color2=_color2, color3=_color3, color4=_color4, highlightedTitleColor=_highlightedTitleColor, highlightedColor=_highlightedColor, highlightedColor2=_highlightedColor2, highlightedShadingType=_highlightedShadingType, disabledTitleColor=_disabledTitleColor, disabledColor=_disabledColor, disabledColor2=_disabledColor2, disabledShadingType=_disabledShadingType, shadingType=_shadingType, borderColor=_borderColor, borderStyle=_borderStyle, titleShadowColor=_titleShadowColor, accessoryImageView=_accessoryImageView, titleAlignment=_titleAlignment, titleHidden=_titleHidden, titleInsets=_titleInsets, titleShadowOffset=_titleShadowOffset, selectedTitleColor=_selectedTitleColor, selectedColor=_selectedColor, selectedColor2=_selectedColor2, selectedShadingType=_selectedShadingType, cornerRadius=_cornerRadius, highlightedTitleShadowColor=_highlightedTitleShadowColor, highlightedTitleShadowOffset=_highlightedTitleShadowOffset, disabledBorderColor=_disabledBorderColor, insets=_insets, borderShadowColor=_borderShadowColor, borderShadowBlur=_borderShadowBlur, iconImageSize=_iconImageSize, iconImageView=_iconImageView, highlightedImage=_highlightedImage, image=_image, selectedBorderShadowColor=_selectedBorderShadowColor, selectedBorderShadowBlur=_selectedBorderShadowBlur, disabledImage=_disabledImage, iconPosition=_iconPosition, highlightedBorderShadowColor=_highlightedBorderShadowColor, highlightedBorderShadowBlur=_highlightedBorderShadowBlur, secondaryTitle=_secondaryTitle, secondaryTitleColor=_secondaryTitleColor, secondaryTitleFont=_secondaryTitleFont, iconOrigin=_iconOrigin, contentView=_contentView, maxLineCount=_maxLineCount, highlightedBorderColor=_highlightedBorderColor, disabledIconImage=_disabledIconImage, margin=_margin, cornerRadiusRatio=_cornerRadiusRatio, secondaryTitlePosition=_secondaryTitlePosition;
+@synthesize title=_title, titleColor=_titleColor, titleFont=_titleFont, borderWidth=_borderWidth, borderAlternateWidth=_borderAlternateWidth, color=_color, color2=_color2, color3=_color3, color4=_color4, highlightedTitleColor=_highlightedTitleColor, highlightedColor=_highlightedColor, highlightedColor2=_highlightedColor2, highlightedShadingType=_highlightedShadingType, disabledTitleColor=_disabledTitleColor, disabledColor=_disabledColor, disabledColor2=_disabledColor2, disabledShadingType=_disabledShadingType, shadingType=_shadingType, borderColor=_borderColor, borderStyle=_borderStyle, titleShadowColor=_titleShadowColor, accessoryImageView=_accessoryImageView, titleAlignment=_titleAlignment, titleHidden=_titleHidden, titleInsets=_titleInsets, titleShadowOffset=_titleShadowOffset, selectedTitleColor=_selectedTitleColor, selectedColor=_selectedColor, selectedColor2=_selectedColor2, selectedShadingType=_selectedShadingType, cornerRadius=_cornerRadius, highlightedTitleShadowColor=_highlightedTitleShadowColor, highlightedTitleShadowOffset=_highlightedTitleShadowOffset, disabledBorderColor=_disabledBorderColor, insets=_insets, borderShadowColor=_borderShadowColor, borderShadowBlur=_borderShadowBlur, iconImageSize=_iconImageSize, iconImageView=_iconImageView, highlightedImage=_highlightedImage, image=_image, selectedBorderShadowColor=_selectedBorderShadowColor, selectedBorderShadowBlur=_selectedBorderShadowBlur, disabledImage=_disabledImage, iconPosition=_iconPosition, highlightedBorderShadowColor=_highlightedBorderShadowColor, highlightedBorderShadowBlur=_highlightedBorderShadowBlur, secondaryTitle=_secondaryTitle, secondaryTitleColor=_secondaryTitleColor, secondaryTitleFont=_secondaryTitleFont, iconOrigin=_iconOrigin, contentView=_contentView, maxLineCount=_maxLineCount, highlightedBorderColor=_highlightedBorderColor, disabledIconImage=_disabledIconImage, margin=_margin, cornerRadiusRatio=_cornerRadiusRatio, secondaryTitlePosition=_secondaryTitlePosition, selectedIconImage=_selectedIconImage, highlightedIconImage=_highlightedIconImage;
 ;
 
 
@@ -96,6 +96,10 @@
   [_highlightedTitleColor release];
   [_highlightedColor release];
   [_highlightedColor2 release];
+  [_highlightedBorderColor release];
+  [_highlightedBorderShadowColor release];
+  [_highlightedIconImage release];
+  [_highlightedTitleShadowColor release];
   [_disabledColor2 release];
   [_disabledTitleColor release];
   [_disabledColor release];
@@ -103,15 +107,17 @@
   [_disabledBorderColor release];
   [_borderColor release];
   [_borderShadowColor release];
+  [_selectedColor release];
+  [_selectedColor2 release];
   [_selectedBorderShadowColor release];
+  [_selectedIconImage release];
+  [_selectedTitleColor release];
   [_titleShadowColor release];
   [_iconImageView release];
   [_accessoryImageView release];
   [_image release];
   [_highlightedImage release];
   [_disabledImage release];
-  [_highlightedBorderColor release];
-  [_highlightedBorderShadowColor release];
   [_secondaryTitle release];
   [_secondaryTitleColor release];
   [_secondaryTitleFont release];
@@ -343,11 +349,12 @@
 }
 
 - (void)setIconImage:(UIImage *)iconImage {
-  self.iconImageView = [[[UIImageView alloc] initWithImage:iconImage] autorelease];
+  [_iconImageView release];
+  _iconImageView = [[UIImageView alloc] initWithImage:iconImage];
 }
 
 - (UIImage *)iconImage {
-  return self.iconImageView.image;
+  return _iconImageView.image;
 }
 
 - (UIColor *)textColorForState:(UIControlState)state {
@@ -425,6 +432,7 @@
   
   UIColor *titleShadowColor = _titleShadowColor;
   CGSize titleShadowOffset = _titleShadowOffset;
+  UIImage *icon = _iconImageView.image;
 
   if (isDisabled) {
     if (_disabledShadingType != YKUIShadingTypeUnknown) shadingType = _disabledShadingType;
@@ -432,6 +440,7 @@
     if (_disabledColor2) color2 = _disabledColor2;
     if (_disabledBorderColor) borderColor = _disabledBorderColor;
     if (_disabledImage) image = _disabledImage;
+    if (_disabledIconImage) icon = _disabledIconImage;
   } else if (isHighlighted) {
     if (_highlightedShadingType != YKUIShadingTypeUnknown) shadingType = _highlightedShadingType;
     if (_highlightedColor) color = _highlightedColor;
@@ -442,6 +451,7 @@
     if (_highlightedBorderShadowBlur) borderShadowBlur = _highlightedBorderShadowBlur;
     if (_highlightedTitleShadowColor) titleShadowColor = _highlightedTitleShadowColor;
     if (!CGSizeEqualToSize(_highlightedTitleShadowOffset, CGSizeZero)) titleShadowOffset = _highlightedTitleShadowOffset;
+    if (_highlightedIconImage) icon = _highlightedIconImage;
   } else if (isSelected) {
     // Set from selected properties; Fall back to highlighted properties
     if (_selectedShadingType != YKUIShadingTypeUnknown) shadingType = _selectedShadingType;
@@ -453,16 +463,13 @@
     if (_highlightedImage) image = _highlightedImage;
     if (_selectedBorderShadowColor) borderShadowColor = _selectedBorderShadowColor;
     if (_selectedBorderShadowBlur) borderShadowBlur = _selectedBorderShadowBlur;
+    if (_selectedIconImage) icon = _selectedIconImage;
   }
-  
+
   // Set a sensible default
   if (borderShadowColor && borderShadowBlur == 0) borderShadowBlur = 3;
   
   UIColor *fillColor = color;
-  
-  UIImage *icon = _iconImageView.image;
-  if (isHighlighted && [_iconImageView respondsToSelector:@selector(highlightedImage)] && _iconImageView.highlightedImage) icon = _iconImageView.highlightedImage;
-  if (isDisabled && _disabledIconImage) icon = _disabledIconImage;
   
   UIImage *accessoryIcon = _accessoryImageView.image;
   if (isHighlighted && _accessoryImageView.highlightedImage) accessoryIcon = _accessoryImageView.highlightedImage;

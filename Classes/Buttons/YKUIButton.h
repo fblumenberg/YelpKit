@@ -80,6 +80,7 @@ typedef enum {
   UIColor *_highlightedBorderColor;
   UIColor *_highlightedBorderShadowColor;
   CGFloat _highlightedBorderShadowBlur;
+  UIImage *_highlightedIconImage;
   
   UIColor *_disabledTitleColor;
   UIColor *_disabledColor;
@@ -94,6 +95,7 @@ typedef enum {
   YKUIShadingType _selectedShadingType;
   UIColor *_selectedBorderShadowColor;
   CGFloat _selectedBorderShadowBlur;
+  UIImage *_selectedIconImage;
 
   UIColor *_borderColor;
   CGFloat _borderWidth;
@@ -349,6 +351,11 @@ typedef enum {
 @property (assign, nonatomic) CGSize highlightedTitleShadowOffset;
 
 /*!
+ Icon image (highlighted).
+ */
+@property (retain, nonatomic) UIImage *highlightedIconImage;
+
+/*!
  Text color for title (selected).
  */
 @property (retain, nonatomic) UIColor *selectedTitleColor;
@@ -379,6 +386,11 @@ typedef enum {
  Border shadow blur (selected).
  */
 @property (assign, nonatomic) CGFloat selectedBorderShadowBlur;
+
+/*!
+ Icon image (selected).
+ */
+@property (retain, nonatomic) UIImage *selectedIconImage;
 
 /*!
  Text color for title (selected).
