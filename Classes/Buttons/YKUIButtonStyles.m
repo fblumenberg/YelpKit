@@ -366,8 +366,8 @@
       button.highlightedTitleShadowColor = [UIColor blackColor];
       button.highlightedTitleShadowOffset = CGSizeMake(0, 0.5);
       button.shadingType = YKUIShadingTypeLinear;
-      button.accessoryImageView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"disclosure.png"]
-                                                   highlightedImage:[UIImage imageNamed:@"disclosure_selected.png"]] autorelease];
+      button.accessoryImage = [UIImage imageNamed:@"disclosure.png"];
+      button.highlightedAccessoryImage = [UIImage imageNamed:@"disclosure_selected.png"];
 
       // Disabled: Gray text on gray linear shading
       button.disabledTitleColor = [UIColor grayColor];
@@ -403,8 +403,8 @@
       button.highlightedTitleShadowColor = [UIColor grayColor];
       button.highlightedTitleShadowOffset = CGSizeMake(0, 0.5);
       button.shadingType = YKUIShadingTypeLinear;
-      button.accessoryImageView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"disclosure.png"]
-                                                     highlightedImage:[UIImage imageNamed:@"disclosure_selected.png"]] autorelease];
+      button.accessoryImage = [UIImage imageNamed:@"disclosure.png"];
+      button.highlightedAccessoryImage = [UIImage imageNamed:@"disclosure_selected.png"];
 
       // Disabled: Gray text on gray linear shading
       button.disabledTitleColor = [UIColor grayColor];
@@ -520,9 +520,8 @@
       button.disabledShadingType = YKUIShadingTypeLinear;
       button.disabledColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
       button.disabledColor2 = [UIColor colorWithRed:0.675 green:0.675 blue:0.675 alpha:1.0];
-
-      button.accessoryImageView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"disclosure.png"]
-                                                   highlightedImage:[UIImage imageNamed:@"disclosure_selected.png"]] autorelease];
+      button.accessoryImage = [UIImage imageNamed:@"disclosure.png"];
+      button.highlightedAccessoryImage = [UIImage imageNamed:@"disclosure_selected.png"];
 
       [button setBorderStyle:YKUIBorderStyleBottomOnly color:[UIColor grayColor] width:0.5 alternateWidth:0 cornerRadius:0];
       break;

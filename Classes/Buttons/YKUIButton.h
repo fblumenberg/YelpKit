@@ -112,7 +112,10 @@ typedef enum {
   UIImageView *_iconImageView;
   CGSize _iconImageSize;
   CGPoint _iconOrigin;
-  UIImageView *_accessoryImageView;
+  
+  UIImage *_accessoryImage;
+  UIImage *_highlightedAccessoryImage;
+  
   YKUIButtonIconPosition _iconPosition;
   
   UIActivityIndicatorView *_activityIndicatorView;
@@ -121,6 +124,9 @@ typedef enum {
   UIColor *_secondaryTitleColor;
   UIFont *_secondaryTitleFont;
   YKUIButtonSecondaryTitlePosition _secondaryTitlePosition;
+  
+  NSString *_abbreviatedTitle;
+  CGSize _abbreviatedTitleSize;
   
   NSInteger _maxLineCount;
   
@@ -260,7 +266,7 @@ typedef enum {
 /*!
  Image to display on the right side of the button.
  */
-@property (retain, nonatomic) UIImageView *accessoryImageView;
+@property (retain, nonatomic) UIImage *accessoryImage;
 
 /*!
  Insets for title text.
@@ -354,6 +360,11 @@ typedef enum {
  Icon image (highlighted).
  */
 @property (retain, nonatomic) UIImage *highlightedIconImage;
+
+/*!
+ Image to display on the right side of the button (highlighted).
+ */
+@property (retain, nonatomic) UIImage *highlightedAccessoryImage;
 
 /*!
  Text color for title (selected).
@@ -453,6 +464,11 @@ typedef enum {
  Maximum line count. Default is no max (0).
  */
 @property (assign, nonatomic) NSInteger maxLineCount;
+
+/*!
+ Abbreviated title to use if title doesn't fit.
+ */
+@property (retain, nonatomic) NSString *abbreviatedTitle;
 
 /*!
  Button.
