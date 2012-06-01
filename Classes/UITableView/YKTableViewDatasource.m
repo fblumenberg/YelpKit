@@ -366,22 +366,20 @@
   
   UIView *sectionHeaderView = [_sectionHeaderViews objectForKey:[NSNumber numberWithInteger:section]];  
 
-  if ([sectionHeaderView respondsToSelector:@selector(setText:)])       
+  if ([sectionHeaderView respondsToSelector:@selector(setText:)]) {
     [(id)sectionHeaderView setText:sectionTitle];
+  }
+
   return sectionHeaderView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-  if (!_headersExist) return 0.0;
+  if (!_headersExist) return 0.0f;
   UIView *sectionHeaderView = [self tableView:tableView viewForHeaderInSection:section];
   if (sectionHeaderView) {
     return sectionHeaderView.frame.size.height;
-  } else {
-    // If there's a section title, but not a header view, return some default height
-    NSString *sectionTitle = [self tableView:tableView titleForHeaderInSection:section];
-    if (sectionTitle) return 24;
   }
-  return 0;
+  return 0.0f;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {

@@ -71,7 +71,7 @@ typedef void (^YKURLRequestFinishBlock)(id obj);
 /*!
  Fail block. If error is nil, it means the request was cancelled.
  */
-typedef void (^YKURLRequestFailBlock)(YKError *error);
+typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
 
 /*!
  URL request.

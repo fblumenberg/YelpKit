@@ -38,7 +38,7 @@
   [self setSectionIndexTitles:[NSArray arrayWithObjects:UITableViewIndexSearch, @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", @"#", nil] sectionHeadersEnabled:YES];
 
   self.sectionIndexMinimumDisplayRowCount = 10;
-  //self.decelerationRate = UIScrollViewDecelerationRateNormal * 10;
+  self.decelerationRate = UIScrollViewDecelerationRateNormal * 10;
 }
 
 - (void)setSectionIndexTitles:(NSArray *)sectionIndexTitles sectionHeadersEnabled:(BOOL)sectionHeadersEnabled {

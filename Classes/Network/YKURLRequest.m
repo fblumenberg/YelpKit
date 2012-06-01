@@ -377,7 +377,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 
 - (BOOL)shouldCacheData:(NSData *)data forKey:(id)key { return YES; }
 
-- (void)didError:(YKError *)error { 
+- (void)didError:(YKHTTPError *)error { 
   YKErr(@"Error in response: %@", error);
   [error retain];
   [_error release];

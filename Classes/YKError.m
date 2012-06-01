@@ -203,4 +203,8 @@ NSString *const YKErrorServerUnauthorized = @"YPErrorServerUnauthorized";
   return error;
 }
 
+- (BOOL)isClientError {
+  return (_HTTPStatus >= 400 && _HTTPStatus < 500);
+}
+
 @end

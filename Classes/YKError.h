@@ -232,4 +232,9 @@ extern NSString *const YKErrorServerUnauthorized; // Server returned 401
  */
 + (NSString *const)keyForHTTPStatus:(NSInteger)HTTPStatus;
 
+/*!
+ @result YES if HTTP status code is 4xx
+ */
+- (BOOL)isClientError;
+
 @end
