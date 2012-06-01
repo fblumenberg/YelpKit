@@ -8,7 +8,6 @@
 
 #import "YKError.h"
 #import "YKDefines.h"
-#import <GHKitIOS/GHNSError+Utils.h>
 #import "YKLocalized.h"
 
 NSString *const YKErrorDomain = @"YKErrorDomain";

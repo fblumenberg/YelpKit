@@ -80,6 +80,7 @@ typedef void (^YKUIImageViewStatusBlock)(id<YKUIImageView> imageView, YKUIImageV
  Note: If this view is drawn directly using drawInRect:, self.frame.size must be set to the same size
  that will be used with drawInRect:. Otherwise the background rendered image may render with an
  incorrect size.
+ The images rendered in the background are automatically added to the in-memory image cache and reused appropriately.
  */
 @property (assign, nonatomic) BOOL renderInBackground;
 

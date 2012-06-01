@@ -318,12 +318,12 @@ CGRect YKCGRectWithInsets(CGSize size, UIEdgeInsets insets);
 //   |     |
 //
 //
-//   YKUIBorderStyleLeftRightWithAlternateTop
+//   YKUIBorderStyleTopLeftRight
 //   -------  (alternate stroke on top)
 //   |     |
 //
 //  
-//   YKUIBorderStyleRoundedBottomWithAlternateTop
+//   YKUIBorderStyleRoundedBottom
 //   -------  (alternate stroke on top)
 //   |     |
 //   ╰----╯
@@ -335,9 +335,9 @@ typedef enum {
   YKUIBorderStyleTopOnly, // Top (straight) only
   YKUIBorderStyleBottomOnly, // Bottom (straight) only
   YKUIBorderStyleTopBottom, // Top and bottom only
-  YKUIBorderStyleRoundedTop, // Rounded top with left and right sides (no bottom); Uses strokeWidth for all sides
-  YKUIBorderStyleLeftRightWithAlternateTop, // Left and right sides (no bottom) in strokeWidth; Top in alternateStrokeWidth
-  YKUIBorderStyleRoundedBottomWithAlternateTop, // Rounded bottom with left and right sides in strokeWidth; Top in alternateStrokeWidth  
+  YKUIBorderStyleRoundedTop, // Rounded top with left and right sides (no bottom)
+  YKUIBorderStyleTopLeftRight, // Left and right sides (no bottom)
+  YKUIBorderStyleRoundedBottom, // Rounded bottom with left and right sides
   //YKUIBorderStyleTopBottomRight, // Top bottom and right sides in strokeWidth
   YKUIBorderStyleRoundedTopOnly, // Rounded top with no sides
   YKUIBorderStyleRoundedLeftCap, // Rounded left segment

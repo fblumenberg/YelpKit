@@ -28,8 +28,6 @@
 //
 
 #import "YKUtils.h"
-#import <GHKitIOS/GHNSInvocation+Utils.h>
-#import <GHKitIOS/GHKitDefines.h>
 #import <mach/mach.h>
 #import "YKDefines.h"
 

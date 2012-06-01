@@ -35,8 +35,14 @@
 
 typedef enum {
   YKUIButtonIconPositionLeft = 0, // Default
-  YKUIButtonIconPositionTopCenter,
+  YKUIButtonIconPositionCenter, // Centered
+  YKUIButtonIconPositionTop, // Aligned with top of button
 } YKUIButtonIconPosition;
+
+typedef enum {
+  YKUIButtonSecondaryTitlePositionRight = 0, // Default
+  YKUIButtonSecondaryTitlePositionBottom,
+} YKUIButtonSecondaryTitlePosition;
 
 /*!
  Button.
@@ -74,6 +80,7 @@ typedef enum {
   UIColor *_highlightedBorderColor;
   UIColor *_highlightedBorderShadowColor;
   CGFloat _highlightedBorderShadowBlur;
+  UIImage *_highlightedIconImage;
   
   UIColor *_disabledTitleColor;
   UIColor *_disabledColor;
@@ -88,6 +95,7 @@ typedef enum {
   YKUIShadingType _selectedShadingType;
   UIColor *_selectedBorderShadowColor;
   CGFloat _selectedBorderShadowBlur;
+  UIImage *_selectedIconImage;
 
   UIColor *_borderColor;
   CGFloat _borderWidth;
@@ -112,6 +120,7 @@ typedef enum {
   NSString *_secondaryTitle;
   UIColor *_secondaryTitleColor;
   UIFont *_secondaryTitleFont;
+  YKUIButtonSecondaryTitlePosition _secondaryTitlePosition;
   
   NSInteger _maxLineCount;
   
@@ -187,7 +196,7 @@ typedef enum {
 @property (assign, nonatomic) CGFloat borderWidth;
 
 /*!
- Border width (alternate). Used with custom border styles like YKUIBorderStyleLeftRightWithAlternateTop.
+ Border width (alternate). Used with custom border styles like YKUIBorderStyleTopLeftRight.
  Defaults to 1.
  */
 @property (assign, nonatomic) CGFloat borderAlternateWidth;
@@ -342,6 +351,11 @@ typedef enum {
 @property (assign, nonatomic) CGSize highlightedTitleShadowOffset;
 
 /*!
+ Icon image (highlighted).
+ */
+@property (retain, nonatomic) UIImage *highlightedIconImage;
+
+/*!
  Text color for title (selected).
  */
 @property (retain, nonatomic) UIColor *selectedTitleColor;
@@ -372,6 +386,11 @@ typedef enum {
  Border shadow blur (selected).
  */
 @property (assign, nonatomic) CGFloat selectedBorderShadowBlur;
+
+/*!
+ Icon image (selected).
+ */
+@property (retain, nonatomic) UIImage *selectedIconImage;
 
 /*!
  Text color for title (selected).
@@ -421,6 +440,11 @@ typedef enum {
 @property (retain, nonatomic) UIFont *secondaryTitleFont;
 
 /*!
+ Secondary title position.
+ */
+@property (assign, nonatomic) YKUIButtonSecondaryTitlePosition secondaryTitlePosition;
+
+/*!
  For a custom button content view.
  */
 @property (retain, nonatomic) UIView *contentView;
@@ -431,7 +455,7 @@ typedef enum {
 @property (assign, nonatomic) NSInteger maxLineCount;
 
 /*!
- Create button.
+ Button.
  @param frame Frame
  @param title Title
  @param target Target
@@ -440,7 +464,7 @@ typedef enum {
 - (id)initWithFrame:(CGRect)frame title:(NSString *)title target:(id)target action:(SEL)action;
 
 /*!
- Create button.
+ Button.
  @param frame Frame
  @param title Title
  */
@@ -458,20 +482,28 @@ typedef enum {
 + (YKUIButton *)button;
 
 /*!
- Button with style.
+ Button.
  @param frame Frame
  @param title Title
  */
 + (YKUIButton *)buttonWithFrame:(CGRect)frame title:(NSString *)title;
 
 /*!
- Button with style.
+ Button.
  @param frame Frame
  @param title Title
  @param target Target
  @param action Action
  */
 + (YKUIButton *)buttonWithFrame:(CGRect)frame title:(NSString *)title target:(id)target action:(SEL)action;
+
+/*!
+ Button.
+ @param title Title
+ @param target Target
+ @param action Action
+ */
++ (YKUIButton *)buttonWithTitle:(NSString *)title target:(id)target action:(SEL)action;
 
 /*!
  Size to fit button with a minimum size.
@@ -510,6 +542,11 @@ typedef enum {
  @param cornerRadius Corner radius
  */
 - (void)setBorderStyle:(YKUIBorderStyle)borderStyle color:(UIColor *)color width:(CGFloat)width alternateWidth:(CGFloat)alternateWidth cornerRadius:(CGFloat)cornerRadius;
+
+/*!
+ Activity indicator view.
+ */
+- (UIActivityIndicatorView *)activityIndicatorView;
 
 /*!
  Set activity indicator animating.

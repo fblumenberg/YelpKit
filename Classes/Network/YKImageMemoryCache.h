@@ -1,9 +1,9 @@
 //
-//  GHNSBundle+Utils.h
-//  GHKit
+//  YKImageMemoryCache.h
+//  YelpKit
 //
-//  Created by Gabriel Handford on 4/27/09.
-//  Copyright 2009. All rights reserved.
+//  Created by Amir Haghighat  on 5/16/12.
+//  Copyright 2012 Yelp. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
 //  obtaining a copy of this software and associated documentation
@@ -27,30 +27,38 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-/*!
- Utilities for accessing bundles.
- */
-@interface NSBundle(GHUtils)
+@interface YKImageMemoryCache : NSObject {
+  NSMutableDictionary *_imageCache;
+  NSMutableArray *_imageSortedList;
+  NSInteger _totalPixelCount;
+  NSUInteger _maxPixelCount;
+}
 
 /*!
- Load data from resource.
- @param resource Name of resource
- @result NSData
+ The maximum number of pixels to keep in memory for cached images.
+ 
+ Setting this to zero will allow an unlimited number of images to be cached. The default is 262,144.
  */
-- (NSData *)gh_loadDataFromResource:(NSString *)resource;
+@property (nonatomic) NSUInteger maxPixelCount;
 
 /*!
- Load string data from resource.
- @param resource Name of resource
- @result NSString
+ Get shared cache.
  */
-- (NSString *)gh_loadStringDataFromResource:(NSString *)resource;
++ (YKImageMemoryCache *)sharedCache;
+
+/**
+ Stores an image in the memory cache.
+ */
+- (BOOL)cacheImage:(UIImage *)image forKey:(NSString *)key;
+
+/**
+ Retrieves an image from the memory cache.
+ */
+- (UIImage *)memoryCachedImageForKey:(NSString *)key;
 
 /*!
- Get URL for resource.
- @param resource Name of resource
- @result URL to resource
+ Erases the cache.
  */
-- (NSURL *)gh_URLForResource:(NSString *)resource;
+- (void)clearCache;
 
 @end

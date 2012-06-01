@@ -43,6 +43,7 @@
   _shadowBlur = 3.0;
   _insets = UIEdgeInsetsZero;
   self.userInteractionEnabled = NO;
+  self.contentMode = UIViewContentModeRedraw;
 }
 
 - (id)initWithCoder:(NSCoder *)coder {

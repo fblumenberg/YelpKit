@@ -7,7 +7,6 @@
 //
 
 #import "YKUIControl.h"
-#import <GHKitIOS/GHNSObject+Invocation.h>
 
 @implementation YKUIControl 
 
@@ -157,8 +156,10 @@
   
   if (_highlightedEnabled && self.userInteractionEnabled) {
     // Unhighlight the control in a short while to give it a chance to be drawn highlighted
-    [[self gh_proxyAfterDelay:.05] setHighlighted:NO];
-    [[self gh_proxyAfterDelay:.05] setNeedsDisplay];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.05 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+      [self setHighlighted:NO];
+      [self setNeedsDisplay];
+    });
   }
 }
 

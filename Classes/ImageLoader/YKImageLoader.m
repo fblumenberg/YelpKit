@@ -29,8 +29,7 @@
 
 #import "YKImageLoader.h"
 
-#import "YKURLCache.h"
-#import <GHKitIOS/GHNSObject+Invocation.h>
+#import "YKImageMemoryCache.h"
 #import "YKResource.h"
 #import "YKDefines.h"
 
@@ -133,7 +132,7 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
   }
 
   // Check for cached image in memory, and set immediately if available
-  UIImage *memoryCachedImage = [[YKURLCache sharedCache] memoryCachedImageForURLString:URL.cacheableURLString];
+  UIImage *memoryCachedImage = [[YKImageMemoryCache sharedCache] memoryCachedImageForKey:URL.cacheableURLString];
   if (memoryCachedImage) {
     [self setImage:memoryCachedImage status:YKImageLoaderStatusLoaded];
     return;
@@ -159,6 +158,10 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
       UIImage *cachedImage = [[YKURLCache sharedCache] diskCachedImageForURLString:URL.cacheableURLString expires:kExpiresAge];
       if (cachedImage) {
         dispatch_async(dispatch_get_main_queue(), ^{
+          // Cache the image. Cache it real good.
+          YKImageMemoryCache *imageCache = [YKImageMemoryCache sharedCache];
+          [imageCache cacheImage:cachedImage forKey:URL.URLString];
+
           [self setImage:cachedImage status:YKImageLoaderStatusLoaded];
         });
       } else {
@@ -232,7 +235,7 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
     [self setError:[YKError errorWithKey:YKErrorRequest]];
   } else {
     if (image && request.URL.cacheableURLString) {
-      [[YKURLCache sharedCache] cacheImage:image forURLString:request.URL.cacheableURLString];
+      [[YKImageMemoryCache sharedCache] cacheImage:image forKey:request.URL.cacheableURLString];
     }
     [self setImage:image status:YKImageLoaderStatusLoaded];
   }
@@ -322,7 +325,9 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
   imageLoader.queue = nil;
   [_loadingQueue removeObject:imageLoader];
   [self _updateIndicator];
-  [[self gh_proxyAfterDelay:0] check];
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+    [self check];
+  });
 }
 
 @end

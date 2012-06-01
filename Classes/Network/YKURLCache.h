@@ -54,13 +54,7 @@
   NSString *_name;
   NSString *_cachePath;  
   NSTimeInterval _invalidationAge;
-  BOOL _disableDiskCache;
-  
-  // Image cache
-  NSMutableDictionary *_imageCache;
-  NSMutableArray *_imageSortedList;
-  NSInteger _totalPixelCount;
-  NSUInteger _maxPixelCount;  
+  BOOL _disableDiskCache; 
 }
 
 /*!
@@ -82,13 +76,6 @@
   The amount of time to set back the modification timestamp on files when invalidating them.
  */
 @property (nonatomic) NSTimeInterval invalidationAge;
-
-/*!
- The maximum number of pixels to keep in memory for cached images.
-
- Setting this to zero will allow an unlimited number of images to be cached. The default is 262,144.
- */
-@property (nonatomic) NSUInteger maxPixelCount;
 
 /*!
  Gets a shared cache identified with a unique name.
@@ -210,9 +197,9 @@
 - (void)removeKey:(NSString *)key;
 
 /*!
- Erases the memory cache and optionally the disk cache.
+ Erases the disk cache.
  */
-- (void)removeAll:(BOOL)fromDisk;
+- (void)removeAll;
 
 /*!
  Invalidates the file in the disk cache so that its modified timestamp is the current
@@ -230,14 +217,7 @@
  */
 - (void)invalidateAll;
 
-#pragma mark Image Cache
-
-/**
-   Stores an image in the memory cache.
- */
-- (BOOL)cacheImage:(UIImage *)image forURLString:(NSString *)URLString;
-
-- (UIImage *)memoryCachedImageForURLString:(NSString *)URLString;
+#pragma mark Image Disk Cache
 
 - (UIImage *)diskCachedImageForURLString:(NSString *)URLString expires:(NSTimeInterval)expires;
 
