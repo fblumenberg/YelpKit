@@ -83,6 +83,7 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
   id __delegate; // weak; Retained while connection is active; Prefixed with __ so subclasses aren't encouraged to access directly
   SEL _finishSelector;
   SEL _failSelector;
+  SEL _cancelSelector;
   
   YKURLRequestFinishBlock _finishBlock; 
   YKURLRequestFailBlock _failBlock;

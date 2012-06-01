@@ -51,8 +51,6 @@
 		006E7DAE151FF2DE005FD9D3 /* YKUIBorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 006E7DAC151FF2DE005FD9D3 /* YKUIBorder.m */; };
 		0072E459151E74D2006EAC84 /* YKUIListView.h in Headers */ = {isa = PBXBuildFile; fileRef = 0072E457151E74D2006EAC84 /* YKUIListView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0072E45A151E74D2006EAC84 /* YKUIListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0072E458151E74D2006EAC84 /* YKUIListView.m */; };
-		00924A5D15785342000546DA /* YKUIActionSheet.h in Headers */ = {isa = PBXBuildFile; fileRef = 00924A5015785341000546DA /* YKUIActionSheet.h */; };
-		00924A5E15785342000546DA /* YKUIActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 00924A5115785341000546DA /* YKUIActionSheet.m */; };
 		00924A5F15785342000546DA /* YKTableIndexedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00924A5315785341000546DA /* YKTableIndexedView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		00924A6015785342000546DA /* YKTableIndexedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00924A5415785341000546DA /* YKTableIndexedView.m */; };
 		00924A6115785342000546DA /* YKTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00924A5515785341000546DA /* YKTableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -65,9 +63,9 @@
 		00924A6815785342000546DA /* YelpKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 00924A5C15785341000546DA /* YelpKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		00924A6B15785374000546DA /* YKUIActivityLabel.h in Headers */ = {isa = PBXBuildFile; fileRef = 00924A6915785374000546DA /* YKUIActivityLabel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		00924A6C15785374000546DA /* YKUIActivityLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 00924A6A15785374000546DA /* YKUIActivityLabel.m */; };
-		00924A7E157853ED000546DA /* YKUIRefreshHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00924A7A157853ED000546DA /* YKUIRefreshHeaderView.h */; };
+		00924A7E157853ED000546DA /* YKUIRefreshHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00924A7A157853ED000546DA /* YKUIRefreshHeaderView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		00924A7F157853ED000546DA /* YKUIRefreshHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00924A7B157853ED000546DA /* YKUIRefreshHeaderView.m */; };
-		00924A80157853ED000546DA /* YKUIRefreshScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00924A7C157853ED000546DA /* YKUIRefreshScrollView.h */; };
+		00924A80157853ED000546DA /* YKUIRefreshScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00924A7C157853ED000546DA /* YKUIRefreshScrollView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		00924A81157853ED000546DA /* YKUIRefreshScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00924A7D157853ED000546DA /* YKUIRefreshScrollView.m */; };
 		009E44A51551FF5400CACDEE /* YKLUIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 009E44A31551FF5400CACDEE /* YKLUIView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		009E44A61551FF5400CACDEE /* YKLUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 009E44A41551FF5400CACDEE /* YKLUIView.m */; };
@@ -597,7 +595,6 @@
 				005F5C78155B206E001D8517 /* YKUtils.h in Headers */,
 				0007497515630CE90096B69F /* YKUIScrollView.h in Headers */,
 				6E6DC674156450F400D95455 /* YKImageMemoryCache.h in Headers */,
-				00924A5D15785342000546DA /* YKUIActionSheet.h in Headers */,
 				00924A5F15785342000546DA /* YKTableIndexedView.h in Headers */,
 				00924A6115785342000546DA /* YKTableView.h in Headers */,
 				00924A6315785342000546DA /* YKTableViewCell.h in Headers */,
@@ -740,7 +737,6 @@
 				005F5C79155B206E001D8517 /* YKUtils.m in Sources */,
 				0007497615630CE90096B69F /* YKUIScrollView.m in Sources */,
 				6E6DC675156450F400D95455 /* YKImageMemoryCache.m in Sources */,
-				00924A5E15785342000546DA /* YKUIActionSheet.m in Sources */,
 				00924A6015785342000546DA /* YKTableIndexedView.m in Sources */,
 				00924A6215785342000546DA /* YKTableView.m in Sources */,
 				00924A6415785342000546DA /* YKTableViewCell.m in Sources */,
