@@ -30,7 +30,6 @@
 #import "YKUIAlertView.h"
 #import "YKLocalized.h"
 #import "YKDefines.h"
-#import <GHKitiOS/GHNSObject+Invocation.h>
 
 @implementation YKUIAlertView
 
