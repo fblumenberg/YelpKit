@@ -198,11 +198,11 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
  @param URL URL
  @param finishBlock 
  @param failBlock
- @result NO if we were unable to make the request with the parameters
+ @result Request, or nil if we were unable to make the request with the parameters
  
  Server errors (status >= 300) are reported as the code of the error object.
  */
-+ (BOOL)requestWithURL:(YKURL *)URL finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
++ (YKURLRequest *)requestWithURL:(YKURL *)URL finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
 
 /*!
  GET the URL.
@@ -257,11 +257,11 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
  @param keyEnumerator Enumerator for ordering post data
  @param finishBlock 
  @param failBlock
- @result NO if we were unable to make the request with the parameters
+ @result Request, or nil if we were unable to make the request with the parameters
  
  Server errors (status >= 300) are reported as the code of the error object.
  */
-+ (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
++ (YKURLRequest *)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
 
 /*!
  Request URL with method.
@@ -285,11 +285,11 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
  @param postParams Post data
  @param finishBlock 
  @param failBlock
- @result NO if we were unable to make the request with the parameters
+ @result Request, or nil if we were unable to make the request with the parameters
  
  Server errors (status >= 300) are reported as the code of the error object.
  */
-+ (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method postParams:(NSDictionary *)postParams finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
++ (YKURLRequest *)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method postParams:(NSDictionary *)postParams finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
 
 /*!
  Request the URL.

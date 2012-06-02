@@ -34,15 +34,13 @@
 
 @synthesize lineSeparatorColor=_lineSeparatorColor, topBorderColor=_topBorderColor, lineInsets=_lineInsets, insets=_insets;
 
-- (id)initWithFrame:(CGRect)frame {
-  if ((self = [super initWithFrame:frame])) {
-    self.layout = [YKLayout layoutForView:self];
-    self.backgroundColor = [UIColor whiteColor];
-    _insets = UIEdgeInsetsMake(0, 0, 0, 0);
-    _lineInsets = UIEdgeInsetsMake(0, 10, 0, 10);
-    _tagRemovalAnimating = NSNotFound;
-  }
-  return self;
+- (void)sharedInit {
+  [super sharedInit];
+  self.layout = [YKLayout layoutForView:self];
+  self.backgroundColor = [UIColor whiteColor];
+  _insets = UIEdgeInsetsMake(0, 0, 0, 0);
+  _lineInsets = UIEdgeInsetsMake(0, 10, 0, 10);
+  _tagRemovalAnimating = NSNotFound;
 }
 
 - (void)dealloc {
