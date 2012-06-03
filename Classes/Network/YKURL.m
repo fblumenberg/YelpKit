@@ -19,6 +19,15 @@
   return self;
 }
 
+- (id)initWithHost:(NSString *)host path:(NSString *)path queryParams:(NSDictionary *)queryParams secure:(BOOL)secure {
+  if ([path length] > 0 && ![[path substringToIndex:1] isEqualToString:@"/"]) path = [NSString stringWithFormat:@"/%@", path];
+  NSString *queryString = [queryParams gh_queryString];
+  if ([queryString length] > 0 && ![[path substringToIndex:1] isEqualToString:@"?"]) queryString = [NSString stringWithFormat:@"?%@", queryString];
+  if (!queryString) queryString = @"";
+  NSString *URLString = [NSString stringWithFormat:@"%@%@%@%@", (secure ? @"https://" : @"http://"), host, path, queryString, nil];
+  return [self initWithURLString:URLString];
+}
+
 - (void)dealloc {
   [_URLString release];
   [super dealloc];
@@ -34,12 +43,8 @@
   return [URL autorelease];
 }
 
-+ (YKURL *)URLWithHost:(NSString *)host path:(NSString *)path queryString:(NSString *)queryString secure:(BOOL)secure {
-  if ([path length] > 0 && ![[path substringToIndex:1] isEqualToString:@"/"]) path = [NSString stringWithFormat:@"/%@", path];
-  if ([queryString length] > 0 && ![[path substringToIndex:1] isEqualToString:@"?"]) queryString = [NSString stringWithFormat:@"?%@", queryString];
-  if (!queryString) queryString = @"";
-  NSString *URLString = [NSString stringWithFormat:@"%@%@%@%@", (secure ? @"https://" : @"http://"), host, path, queryString, nil];
-  return [self URLString:URLString];
++ (YKURL *)URLWithHost:(NSString *)host path:(NSString *)path queryParams:(NSDictionary *)queryParams secure:(BOOL)secure {
+    return [[[self class] alloc] initWithHost:host path:path queryParams:queryParams secure:secure];
 }
 
 - (NSString *)description {

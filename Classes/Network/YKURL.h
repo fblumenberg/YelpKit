@@ -48,6 +48,15 @@
 - (id)initWithURLString:(NSString *)URLString;
 
 /*!
+ Create YKURL.
+ @param host
+ @param path
+ @param queryParams
+ @param secure
+ */
+- (id)initWithHost:(NSString *)host path:(NSString *)path queryParams:(NSDictionary *)queryParams secure:(BOOL)secure;
+
+/*!
  Create YKURL from string.
  
  @param URLString The URL as a string
@@ -67,10 +76,10 @@
 
  @param host Host
  @param path Path
- @param query Query string; Use GHKit [NSDictionary gh_queryString] to convert NSDictionary to query string
+ @param queryParams Query params
  @param secure If YES, use HTTPS
  */
-+ (YKURL *)URLWithHost:(NSString *)host path:(NSString *)path queryString:(NSString *)queryString secure:(BOOL)secure;
++ (YKURL *)URLWithHost:(NSString *)host path:(NSString *)path queryParams:(NSDictionary *)queryParams secure:(BOOL)secure;
 
 /*!
  Cacheable URL string. Defaults to URLString.
