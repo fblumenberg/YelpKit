@@ -17,12 +17,18 @@
   
   UINavigationController *_navigationController;
   YKTUIViewController *_viewController;
+  
+  BOOL _visible;
+  BOOL _needsRefresh;
 }
 
 @property (readonly, assign, nonatomic) YKTUIViewController *viewController;
 @property (assign, nonatomic) UINavigationController *navigationController;
 
 @property (readonly, nonatomic) YKUINavigationBar *navigationBar;
+
+@property (readonly, nonatomic, getter=isVisible) BOOL visible;
+@property (assign, nonatomic) BOOL needsRefresh;
 
 /*!
  @result Returns UIViewController for this view.
@@ -51,14 +57,24 @@
 - (void)setView:(YKTUIView *)view animated:(BOOL)animated;
 
 /*!
- Pop then push view with transition.
+ Swap the current view with transition.
+ @param view
+ @param transition
+ @param duration
  */
-- (void)popPushView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration cache:(BOOL)cache;
+- (void)swapView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration;
 
 /*!
  Pop to root view.
+ @param animated
  */
 - (void)popToRootViewAnimated:(BOOL)animated;
+
+/*!
+ Pop the current view.
+ @param animated
+ */
+- (void)popViewAnimated:(BOOL)animated;
 
 /*!
  Set navigation title.
@@ -87,15 +103,48 @@
  */
 - (void)applyStyleForNavigationBar:(YKUINavigationBar *)navigationBar;
 
-
-
+/*!
+ View will appear.
+ @param animated
+ */
 - (void)viewWillAppear:(BOOL)animated;
 
+/*!
+ View did appear.
+ @param animated
+ */
 - (void)viewDidAppear:(BOOL)animated;
 
+/*!
+ View will disappear.
+ @param animated
+ */
 - (void)viewWillDisappear:(BOOL)animated;
 
+/*!
+ View did disappear.
+ @param animated
+ */
 - (void)viewDidDisappear:(BOOL)animated;
 
+/*!
+ Refresh. On success, you should call self.needsRefresh = NO;
+ */
+- (void)refresh;
+
+/*!
+ Set needs refresh. If visible, will call refresh.
+ */
+- (void)setNeedsRefresh;
+
+#pragma mark Private
+
+- (void)_viewWillAppear:(BOOL)animated;
+
+- (void)_viewDidAppear:(BOOL)animated;
+
+- (void)_viewWillDisappear:(BOOL)animated;
+
+- (void)_viewDidDisappear:(BOOL)animated;
 
 @end

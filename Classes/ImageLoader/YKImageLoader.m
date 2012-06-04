@@ -94,7 +94,7 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
 
 - (void)setURLString:(NSString *)URLString {
   if (URLString) {
-    YKURL *URL = [YKURL URLString:URLString];
+    YKURL *URL = [YKURL URLWithURLString:URLString];
     self.URL = URL;
   } else {
     self.URL = nil;

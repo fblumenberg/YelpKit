@@ -197,27 +197,19 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-  if ([_view respondsToSelector:@selector(viewWillAppear:)]) {
-    [(id)_view viewWillAppear:animated];
-  }
+  [_view _viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-  if ([_view respondsToSelector:@selector(viewDidAppear:)]) {
-    [(id)_view viewDidAppear:animated];
-  }
+  [_view viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-  if ([_view respondsToSelector:@selector(viewWillDisappear:)]) {
-    [(id)_view viewWillDisappear:animated];
-  }
+  [_view viewWillDisappear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-  if ([_view respondsToSelector:@selector(viewDidDisappear:)]) {
-    [(id)_view viewDidDisappear:animated];
-  }
+  [_view viewDidDisappear:animated];
 }
 
 @end

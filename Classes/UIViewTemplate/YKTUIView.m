@@ -11,17 +11,13 @@
 
 @implementation YKTUIView
 
-@synthesize viewController=_viewController, navigationBar=_navigationBar, navigationController=_navigationController;
+@synthesize viewController=_viewController, navigationBar=_navigationBar, navigationController=_navigationController, visible=_visible, needsRefresh=_needsRefresh;
 
 - (void)sharedInit {
+  [super sharedInit];
   self.backgroundColor = [UIColor blackColor];
   self.opaque = YES;
-  self.layout = [YKLayout layoutForView:self];
-  
-  _navigationBar = [[YKUINavigationBar alloc] init];
-  [self applyStyleForNavigationBar:_navigationBar];
-  [self addSubview:_navigationBar];
-  [_navigationBar release];
+  self.layout = [YKLayout layoutForView:self];  
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
@@ -38,7 +34,23 @@
   return self;
 }
 
+- (void)dealloc {
+  [_navigationBar release];
+  [super dealloc];
+}
+
+- (YKUINavigationBar *)navigationBar {
+  if (!_navigationBar) {
+    _navigationBar = [[YKUINavigationBar alloc] init];
+    [self applyStyleForNavigationBar:_navigationBar];
+  }
+  return _navigationBar;
+}
+
 - (YKTUIViewController *)newViewController {
+  // Add the nav bar if we are being used in a view controller
+  [self addSubview:_navigationBar];
+
   YKTUIViewController *viewController = [[self viewControllerForView] retain];
   _viewController = viewController;
   return _viewController;
@@ -50,7 +62,7 @@
   return [viewController autorelease];
 }
 
-- (void)popPushView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration cache:(BOOL)cache {
+- (void)swapView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration {
   YKTUIViewController *viewController = [view newViewController];
   if (transition != UIViewAnimationTransitionNone) {
     [UIView beginAnimations:nil context:NULL];
@@ -58,7 +70,7 @@
     [UIView setAnimationDelegate:self];
     [UIView setAnimationWillStartSelector:@selector(navigationAnimationWillStart:context:)];
     [UIView setAnimationDidStopSelector:@selector(navigationAnimationDidStop:finished:context:)];
-    [UIView setAnimationTransition:transition forView:_navigationController.view cache:cache];
+    [UIView setAnimationTransition:transition forView:_navigationController.view cache:NO];
   }
   
   [_navigationController popViewControllerAnimated:NO];
@@ -83,6 +95,10 @@
   [_navigationController popToRootViewControllerAnimated:animated];
 }
 
+- (void)popViewAnimated:(BOOL)animated {
+  [_navigationController popViewControllerAnimated:animated];
+}
+
 - (void)setNavigationTitle:(NSString *)title animated:(BOOL)animated {
   [self.navigationBar setTitle:title animated:animated];
 }
@@ -105,6 +121,24 @@
   return button;
 }
 
+- (void)_viewWillAppear:(BOOL)animated { 
+  _visible = YES;
+  [self viewWillAppear:animated];
+}
+
+- (void)_viewDidAppear:(BOOL)animated {
+  [self viewDidAppear:animated];
+}
+
+- (void)_viewWillDisappear:(BOOL)animated {
+  [self viewWillDisappear:animated];
+  _visible = NO;
+}
+
+- (void)_viewDidDisappear:(BOOL)animated {
+  [self _viewDidDisappear:animated];
+}
+
 - (void)viewWillAppear:(BOOL)animated { }
 
 - (void)viewDidAppear:(BOOL)animated { }
@@ -112,6 +146,15 @@
 - (void)viewWillDisappear:(BOOL)animated { }
 
 - (void)viewDidDisappear:(BOOL)animated { }
+
+- (void)refresh { }
+
+- (void)setNeedsRefresh {
+  _needsRefresh = YES;
+  if (_visible) {
+    [self refresh];
+  }
+}
 
 #pragma mark Style
 

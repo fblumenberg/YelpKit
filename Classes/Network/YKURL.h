@@ -61,7 +61,7 @@
  
  @param URLString The URL as a string
  */
-+ (YKURL *)URLString:(NSString *)URLString;
++ (YKURL *)URLWithURLString:(NSString *)URLString;
 
 /*!
  Create YKURL from string.
@@ -69,7 +69,7 @@
  @param URLString The URL as a string
  @param cacheEnabled Hint for whether this resource should be cached
  */
-+ (YKURL *)URLString:(NSString *)URLString cacheEnabled:(BOOL)cacheEnabled;
++ (YKURL *)URLWithURLString:(NSString *)URLString cacheEnabled:(BOOL)cacheEnabled;
 
 /*!
  Create YKURL from host, path, query.
@@ -95,5 +95,12 @@
  @result The URL as a string.
  */
 - (NSString *)URLString;
+
+
+// Deprecated
++ (YKURL *)URLString:(NSString *)URLString;
+
+// Deprecated
++ (YKURL *)URLString:(NSString *)URLString cacheEnabled:(BOOL)cacheEnabled;
 
 @end

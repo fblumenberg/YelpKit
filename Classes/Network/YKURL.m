@@ -33,11 +33,21 @@
   [super dealloc];
 }
 
+// Deprecated
 + (YKURL *)URLString:(NSString *)URLString {
-  return [self URLString:URLString cacheEnabled:YES];
+  return [self URLWithURLString:URLString];
 }
 
+// Deprecated
 + (YKURL *)URLString:(NSString *)URLString cacheEnabled:(BOOL)cacheEnabled {
+  return [self URLWithURLString:URLString cacheEnabled:cacheEnabled];
+}
+
++ (YKURL *)URLWithURLString:(NSString *)URLString {
+  return [self URLWithURLString:URLString cacheEnabled:YES];
+}
+
++ (YKURL *)URLWithURLString:(NSString *)URLString cacheEnabled:(BOOL)cacheEnabled {
   YKURL *URL = [[YKURL alloc] initWithURLString:URLString];
   URL.cacheDisabled = !cacheEnabled;
   return [URL autorelease];
