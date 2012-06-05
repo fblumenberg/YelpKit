@@ -168,6 +168,11 @@ typedef void (^YKUIImageViewStatusBlock)(id<YKUIImageView> imageView, YKUIImageV
 @property (assign, nonatomic) CGFloat cornerRadius;
 
 /*!
+ Border corner radius ratio. For example 1.0 will be the most corner radius (half the height).
+ */
+@property (assign, nonatomic) CGFloat cornerRadiusRatio;
+
+/*!
  Fill background color.
  */
 @property (retain, nonatomic) UIColor *color;

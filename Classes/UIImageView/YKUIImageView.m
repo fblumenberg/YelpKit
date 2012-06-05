@@ -212,7 +212,7 @@
 
 @implementation YKUIImageView
 
-@synthesize strokeColor=_strokeColor, strokeWidth=_strokeWidth, cornerRadius=_cornerRadius, color=_color, color2=_color2, overlayColor=_overlayColor, imageContentMode=_imageContentMode, shadowColor=_shadowColor, shadowBlur=_shadowBlur;
+@synthesize strokeColor=_strokeColor, strokeWidth=_strokeWidth, cornerRadius=_cornerRadius, cornerRadiusRatio=_cornerRadiusRatio, color=_color, color2=_color2, overlayColor=_overlayColor, imageContentMode=_imageContentMode, shadowColor=_shadowColor, shadowBlur=_shadowBlur;
 
 + (dispatch_queue_t)backgroundRenderQueue {
   static dispatch_queue_t BackgroundRenderQueue = NULL;
@@ -305,23 +305,28 @@
   if (self.backgroundColor) {
     YKCGContextDrawRect(context, rect, self.backgroundColor.CGColor, NULL, 0);
   }
+  
+  CGFloat cornerRadius = _cornerRadius;
+  if (_cornerRadiusRatio > 0) {
+    cornerRadius = roundf(rect.size.height/2.0f) * _cornerRadiusRatio;
+  }
 
   UIColor *color = _color;
   if (!color) color = self.backgroundColor;
   
   if (_color && _color2) {
     CGContextSaveGState(context);
-    YKCGContextAddStyledRect(context, rect, YKUIBorderStyleRounded, _strokeWidth, _strokeWidth, _cornerRadius);  
+    YKCGContextAddStyledRect(context, rect, YKUIBorderStyleRounded, _strokeWidth, _strokeWidth, cornerRadius);  
     CGContextClip(context);
     YKCGContextDrawShading(context, _color.CGColor, _color2.CGColor, NULL, NULL, rect.origin, CGPointMake(rect.origin.x, CGRectGetMaxY(rect)), YKUIShadingTypeLinear, NO, NO);
     CGContextRestoreGState(context);
     color = nil;
   }
 
-  YKCGContextDrawRoundedRectImageWithShadow(context, image.CGImage, image.size, rect, _strokeColor.CGColor, _strokeWidth, _cornerRadius, contentMode, color.CGColor, _shadowColor.CGColor, _shadowBlur);
+  YKCGContextDrawRoundedRectImageWithShadow(context, image.CGImage, image.size, rect, _strokeColor.CGColor, _strokeWidth, cornerRadius, contentMode, color.CGColor, _shadowColor.CGColor, _shadowBlur);
 
   if (_overlayColor) {
-    YKCGContextDrawRoundedRect(context, rect, _overlayColor.CGColor, NULL, _strokeWidth, _cornerRadius);
+    YKCGContextDrawRoundedRect(context, rect, _overlayColor.CGColor, NULL, _strokeWidth, cornerRadius);
   }
 }
 
@@ -374,7 +379,7 @@
     imageIdentifier = [NSString stringWithFormat:@"%d", [_image hash]];
   }
 
-  NSString *cacheKey = [imageIdentifier stringByAppendingFormat:@"%@{%d,%d,%d,%d,%d,%.2f,%.2f,%.2f}",
+  NSString *cacheKey = [imageIdentifier stringByAppendingFormat:@"%@{%d,%d,%d,%d,%d,%.2f,%.2f,%.2f,%.2f}",
                         NSStringFromCGSize(self.bounds.size),
                         self.contentMode,
                         [_color hash],
@@ -383,10 +388,11 @@
                         [_strokeColor hash], 
                         _cornerRadius, 
                         _strokeWidth, 
-                        _shadowBlur];
+                        _shadowBlur,
+                        _cornerRadiusRatio];
   // Example cacheKeys for rendered images:
-  // @"http://s3-media1.ak.yelpcdn.com/bphoto/XAfi9DuKxRraiqtw9YPLvQ/ms.jpg{64, 64}{2,0,0,65536,633506,4.00,0.50,3.00}"
-  // @"12215568{64, 64}{2,0,0,65536,633506,4.00,0.50,3.00}"
+  // @"http://s3-media1.ak.yelpcdn.com/bphoto/XAfi9DuKxRraiqtw9YPLvQ/ms.jpg{64, 64}{2,0,0,65536,633506,4.00,0.50,3.00,0}"
+  // @"12215568{64, 64}{2,0,0,65536,633506,4.00,0.50,3.00,0}"
   return cacheKey;
 }
 

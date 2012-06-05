@@ -345,11 +345,10 @@ typedef enum {
  */
 @property (assign, nonatomic) CGFloat highlightedBorderShadowBlur;
 
-
 /*!
  Text shadow color (highlighted).
  */
-@property (assign, nonatomic) UIColor *highlightedTitleShadowColor;
+@property (retain, nonatomic) UIColor *highlightedTitleShadowColor;
 
 /*!
  Text shadow offset (highlighted).
@@ -402,6 +401,16 @@ typedef enum {
  Icon image (selected).
  */
 @property (retain, nonatomic) UIImage *selectedIconImage;
+
+/*!
+ Text shadow color (selected).
+ */
+@property (retain, nonatomic) UIColor *selectedTitleShadowColor;
+
+/*!
+ Text shadow offset (selected).
+ */
+@property (assign, nonatomic) CGSize selectedTitleShadowOffset;
 
 /*!
  Text color for title (selected).

@@ -37,6 +37,8 @@
   UIColor *_topBorderColor;
   UIColor *_bottomBorderColor;
   
+  UILabel *_titleLabel;
+  
   CGSize _defaultContentViewSize;
 }
 
@@ -56,6 +58,11 @@
  @param animated
  */
 - (void)setTitle:(NSString *)title animated:(BOOL)animated;
+
+/*!
+ @result Title label
+ */
+- (UILabel *)titleLabel;
 
 /*!
  Set the content view.
