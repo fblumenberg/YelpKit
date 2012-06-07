@@ -103,20 +103,20 @@
   [self.navigationBar setTitle:title animated:animated];
 }
 
-- (YKUIButton *)setNavigationLeftButtonWithTitle:(NSString *)title animated:(BOOL)animated target:(id)target action:(SEL)action {
+- (YKUIButton *)setNavigationLeftButtonWithTitle:(NSString *)title style:(YKUINavigationButtonStyle)style animated:(BOOL)animated target:(id)target action:(SEL)action {
   YKUIButton *button = [[YKUIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
   button.title = title;
   [button setTarget:target action:action];
-  [self applyStyleForNavigationButton:button];
+  [self applyStyleForNavigationButton:button style:style];
   [self.navigationBar setLeftButton:button animated:animated];
   return button;
 }
 
-- (YKUIButton *)setNavigationRightButtonWithTitle:(NSString *)title animated:(BOOL)animated target:(id)target action:(SEL)action {
+- (YKUIButton *)setNavigationRightButtonWithTitle:(NSString *)title style:(YKUINavigationButtonStyle)style animated:(BOOL)animated target:(id)target action:(SEL)action {
   YKUIButton *button = [[YKUIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
   button.title = title;
   [button setTarget:target action:action];
-  [self applyStyleForNavigationButton:button];
+  [self applyStyleForNavigationButton:button style:style];
   [self.navigationBar setRightButton:button animated:animated];
   return button;
 }
@@ -158,7 +158,7 @@
 
 #pragma mark Style
 
-- (void)applyStyleForNavigationButton:(YKUIButton *)button {
+- (void)applyStyleForNavigationButton:(YKUIButton *)button style:(YKUINavigationButtonStyle)style {
   button.titleFont = [UIFont boldSystemFontOfSize:12];
   button.insets = UIEdgeInsetsMake(0, 8, 0, 8);
   button.titleColor = [UIColor whiteColor];

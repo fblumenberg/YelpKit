@@ -84,18 +84,18 @@
 /*!
  Set left navigation button with title.
  */
-- (YKUIButton *)setNavigationLeftButtonWithTitle:(NSString *)title animated:(BOOL)animated target:(id)target action:(SEL)action;
+- (YKUIButton *)setNavigationLeftButtonWithTitle:(NSString *)title style:(YKUINavigationButtonStyle)style animated:(BOOL)animated target:(id)target action:(SEL)action;
 
 /*!
  Set right navigation button with title.
  */
-- (YKUIButton *)setNavigationRightButtonWithTitle:(NSString *)title animated:(BOOL)animated target:(id)target action:(SEL)action;
+- (YKUIButton *)setNavigationRightButtonWithTitle:(NSString *)title style:(YKUINavigationButtonStyle)style animated:(BOOL)animated target:(id)target action:(SEL)action;
 
 /*!
  Apply style for navigation button.
  Subclasses should override.
  */
-- (void)applyStyleForNavigationButton:(YKUIButton *)button;
+- (void)applyStyleForNavigationButton:(YKUIButton *)button style:(YKUINavigationButtonStyle)style;
 
 /*!
  Apply style for navigation bar.

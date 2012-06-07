@@ -40,7 +40,7 @@
         YKUIButton *backButton = [[YKUIButton alloc] init];
         backButton.title = backTitle;
         backButton.borderStyle = YKUIBorderStyleRoundedBack;
-        [_templateView.view applyStyleForNavigationButton:backButton];
+        [_templateView.view applyStyleForNavigationButton:backButton style:YKUINavigationButtonStyleBack];
         [backButton setTarget:self action:@selector(_back)];
         _templateView.view.navigationBar.leftButton = backButton;
         [backButton release];

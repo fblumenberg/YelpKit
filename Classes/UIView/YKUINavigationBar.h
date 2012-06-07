@@ -27,6 +27,15 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
+typedef enum {
+  YKUINavigationButtonStyleDefault = 0,
+  YKUINavigationButtonStyleBack,
+  YKUINavigationButtonStyleDone,
+  YKUINavigationButtonStyleTranslucentBlack,
+  YKUINavigationButtonStyleNone,
+} YKUINavigationButtonStyle;
+
+
 @interface YKUINavigationBar : UIView {
   UIView *_contentView;
   UIView *_leftButton;
