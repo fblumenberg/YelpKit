@@ -55,6 +55,13 @@
   [super dealloc];
 }
 
++ (void)showAlertWithBlock:(YKUIAlertViewBlock)block title:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitles:(NSString *)otherButtonTitle, ... {
+  va_list args;
+  va_start(args, otherButtonTitle);
+  [self showAlertWithBlock:block title:title message:message cancelButtonTitle:cancelButtonTitle otherButtonTitle:otherButtonTitle args:args];
+  va_end(args);
+}
+
 + (void)showAlertWithBlock:(YKUIAlertViewBlock)block title:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitle:(NSString *)otherButtonTitle args:(va_list)args {
   
   YKUIAlertView *delegate = [[YKUIAlertView alloc] initWithBlock:block]; // Released in alertView:clickedButtonAtIndex:
@@ -95,6 +102,7 @@
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+  if (!_block) return;
   _block(buttonIndex);
   Block_release(_block);
   _block = NULL;

@@ -45,8 +45,9 @@ typedef void (^YKUIAlertViewBlock)(NSInteger index);
  @param message
  @param cancelButtonTitle
  @param otherButtonTitle
- @param args
  */
++ (void)showAlertWithBlock:(YKUIAlertViewBlock)block title:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitles:(NSString *)otherButtonTitle, ... NS_REQUIRES_NIL_TERMINATION;
+
 + (void)showAlertWithBlock:(YKUIAlertViewBlock)block title:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitle:(NSString *)otherButtonTitle args:(va_list)args;
 
 /*!
