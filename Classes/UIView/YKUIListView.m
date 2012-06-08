@@ -43,6 +43,10 @@
   _tagRemovalAnimating = NSNotFound;
 }
 
+- (NSString *)description {
+  return GHDescription(@"views");
+}
+
 - (void)dealloc {
   [_views release];
   [super dealloc];
@@ -64,10 +68,6 @@
   y += _insets.bottom;
   if (![layout isSizing]) [self setNeedsDisplay];
   return CGSizeMake(size.width, y);
-}
-
-- (NSArray *)listSubviews {
-  return _views;
 }
 
 - (NSInteger)count {
