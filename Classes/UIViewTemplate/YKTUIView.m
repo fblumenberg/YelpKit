@@ -11,7 +11,7 @@
 
 @implementation YKTUIView
 
-@synthesize viewController=_viewController, navigationBar=_navigationBar, navigationController=_navigationController, visible=_visible, needsRefresh=_needsRefresh;
+@synthesize viewController=_viewController, navigationBar=_navigationBar, visible=_visible, needsRefresh=_needsRefresh;
 
 - (void)sharedInit {
   [super sharedInit];
@@ -47,6 +47,10 @@
   return _navigationBar;
 }
 
+- (UINavigationController *)navigationController {
+  return _viewController.navigationController;
+}
+
 - (YKTUIViewController *)newViewController {
   // Add the nav bar if we are being used in a view controller
   [self addSubview:_navigationBar];
@@ -70,33 +74,39 @@
     [UIView setAnimationDelegate:self];
     [UIView setAnimationWillStartSelector:@selector(navigationAnimationWillStart:context:)];
     [UIView setAnimationDidStopSelector:@selector(navigationAnimationDidStop:finished:context:)];
-    [UIView setAnimationTransition:transition forView:_navigationController.view cache:NO];
+    [UIView setAnimationTransition:transition forView:self.navigationController.view cache:NO];
   }
   
-  [_navigationController popViewControllerAnimated:NO];
-  [_navigationController pushViewController:viewController animated:NO];
+  [self.navigationController popViewControllerAnimated:NO];
+  [self.navigationController pushViewController:viewController animated:NO];
   
   if (transition != UIViewAnimationTransitionNone) [UIView commitAnimations];
 }
 
 - (void)pushView:(YKTUIView *)view animated:(BOOL)animated {
   YKTUIViewController *viewController = [view newViewController];
-  [_navigationController pushViewController:viewController animated:animated];
+  [self.navigationController pushViewController:viewController animated:animated];
   [viewController release];
 }
 
 - (void)setView:(YKTUIView *)view animated:(BOOL)animated {
   YKTUIViewController *viewController = [view newViewController];
-  [_navigationController setViewControllers:[NSArray arrayWithObject:viewController] animated:animated];
+  [self.navigationController setViewControllers:[NSArray arrayWithObject:viewController] animated:animated];
   [viewController release];
 }
 
 - (void)popToRootViewAnimated:(BOOL)animated {
-  [_navigationController popToRootViewControllerAnimated:animated];
+  [self.navigationController popToRootViewControllerAnimated:animated];
 }
 
 - (void)popViewAnimated:(BOOL)animated {
-  [_navigationController popViewControllerAnimated:animated];
+  [self.navigationController popViewControllerAnimated:animated];
+}
+
+- (void)popToView:(YKTUIView *)view animated:(BOOL)animated {
+  if (view.viewController) {
+    [self.navigationController popToViewController:view.viewController animated:animated];
+  }
 }
 
 - (void)setNavigationTitle:(NSString *)title animated:(BOOL)animated {

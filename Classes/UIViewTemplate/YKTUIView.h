@@ -15,7 +15,6 @@
 @interface YKTUIView : YKUILayoutView {
   YKUINavigationBar *_navigationBar;
   
-  UINavigationController *_navigationController;
   YKTUIViewController *_viewController;
   
   BOOL _visible;
@@ -23,7 +22,6 @@
 }
 
 @property (readonly, assign, nonatomic) YKTUIViewController *viewController;
-@property (assign, nonatomic) UINavigationController *navigationController;
 
 @property (readonly, nonatomic) YKUINavigationBar *navigationBar;
 
@@ -75,6 +73,13 @@
  @param animated
  */
 - (void)popViewAnimated:(BOOL)animated;
+
+/*!
+ Pop to view.
+ @param view
+ @param animated
+ */
+- (void)popToView:(YKTUIView *)view animated:(BOOL)animated;
 
 /*!
  Set navigation title.
