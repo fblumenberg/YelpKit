@@ -80,16 +80,13 @@ extern NSString *const YKErrorServerUnauthorized; // Server returned 401
 @property (readonly, retain, nonatomic) NSString *key;
 
 /*!
- Description for error, to override in userInfo.
+ Description for error, to override userInfo.
  */
 @property (retain, nonatomic) NSString *description;
 
 /*!
- Allows us to override default description if localized message not available.
- For example, if there was an error in talk we might set this to: 
- 
-      "We had trouble getting to Talk.\nPlease try again in a bit."
-
+ Allows us to override default description if localized message is not available.
+ For example, if there was an error in a specific feature that we wanted to customize.
  */
 @property (retain, nonatomic) NSString *unknownDescription;
 
@@ -128,6 +125,12 @@ extern NSString *const YKErrorServerUnauthorized; // Server returned 401
 - (id)initWithKey:(NSString *const)key error:(NSError *)error;
 
 /*!
+ Create with error.
+ @param error
+ */
+- (id)initWithError:(NSError *)error;
+
+/*!
  See initWithKey:.
  
  @param key Key
@@ -162,7 +165,13 @@ extern NSString *const YKErrorServerUnauthorized; // Server returned 401
  Create an error with no key (a general error), with only a description.
  @param description
  */
-+ (id)errorWithDescription:(NSString *)description;;
++ (id)errorWithDescription:(NSString *)description;
+
+/*!
+ Create YKError from NSError.
+ @result Results passed in error if that was already a YKError
+ */
++ (YKError *)errorWithError:(NSError *)error;
 
 /*!
  Get the user info for key.
@@ -187,12 +196,6 @@ extern NSString *const YKErrorServerUnauthorized; // Server returned 401
  @result Localized description for key, by default is NSLocalizedString(key)
  */
 - (NSString *)localizedDescriptionForKey;
-
-/*!
- Create YKError from NSError.
- @result Results passed in error if that was already a YKError
- */
-+ (YKError *)errorForError:(NSError *)error;
 
 /*!
  Fields that caused the error.

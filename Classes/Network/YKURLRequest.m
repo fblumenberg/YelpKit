@@ -124,7 +124,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   return [self requestWithURL:URL method:YPHTTPMethodGet headers:headers postParams:nil keyEnumerator:nil delegate:delegate finishSelector:finishSelector failSelector:failSelector cancelSelector:cancelSelector];
 }
 
-+ (YKURLRequest *)requestWithURL:(YKURL *)URL finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
++ (id)requestWithURL:(YKURL *)URL finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
   YKURLRequest *request = [[[[self class] alloc] init] autorelease];
   if ([request requestWithURL:URL finishBlock:finishBlock failBlock:failBlock]) return request;
   return nil;
@@ -134,13 +134,13 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   return [self requestWithURL:URL method:YPHTTPMethodGet headers:nil postParams:nil keyEnumerator:nil finishBlock:finishBlock failBlock:failBlock];
 }
 
-+ (YKURLRequest *)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method postParams:(NSDictionary *)postParams finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
++ (id)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method postParams:(NSDictionary *)postParams finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
   YKURLRequest *request = [[[[self class] alloc] init] autorelease];
   if ([request requestWithURL:URL method:method postParams:postParams finishBlock:finishBlock failBlock:failBlock]) return request;
   return nil;
 }
 
-+ (YKURLRequest *)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
++ (id)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
   YKURLRequest *request = [[[self class] alloc] init];
   if ([request requestWithURL:URL method:method headers:headers postParams:postParams keyEnumerator:keyEnumerator finishBlock:finishBlock failBlock:failBlock]) return request;
   return nil;
@@ -289,14 +289,23 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 }
 
 - (void)cancel {
+  [self cancel:YES];
+}
+
+- (void)cancel:(BOOL)notify {
   YKDebug(@"Cancel");
   _cancelled = YES;
   if (_stopped) {
     YKDebug(@"Ignoring cancel; Request stopped");
     return;
   } 
-  [self didCancel]; 
-  [self _stop];
+  [self didCancel];
+  if (notify) {
+    YKDebug(@"Cancel (%@/%@)", self.delegate, NSStringFromSelector(_cancelSelector));
+    if (_cancelSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_cancelSelector withObject:self];
+    if (_failBlock != NULL) _failBlock(nil);
+  }
+  [[self gh_proxyOnMainThread:YES] _stop];
 }
 
 - (void)close {
@@ -400,7 +409,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
     NSError *error = nil;
     obj = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:&error];
     if (!obj) {
-      [self didError:[YKError errorForError:error]];
+      [self didError:[YKError errorWithError:error]];
       return;
     }
   }
@@ -410,12 +419,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   [[self gh_proxyOnMainThread:YES] _stop];
 }
 
-- (void)didCancel {
-  YKDebug(@"Cancel (%@/%@)", self.delegate, NSStringFromSelector(_cancelSelector));
-  if (_cancelSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_cancelSelector withObject:self];
-  if (_failBlock != NULL) _failBlock(nil);
-  [[self gh_proxyOnMainThread:YES] _stop];
-}
+- (void)didCancel { }
 
 #pragma mark Debug
  
@@ -618,7 +622,7 @@ static BOOL gAuthProtectionDisabled = NO;
   } else if ([error domain] == NSURLErrorDomain && [error code] == NSURLErrorCannotConnectToHost) {
      [self didError:[YKError errorWithKey:YKErrorCannotConnectToHost error:error]];
   } else {    
-    [self didError:[YKError errorWithKey:YKErrorRequest error:error]];
+    [self didError:[YKError errorWithError:error]];
   }
 }
 

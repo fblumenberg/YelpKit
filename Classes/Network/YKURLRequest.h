@@ -58,6 +58,7 @@ typedef enum {
   YKURLRequestCachePolicyIfModifiedSince, // Currently not implemented
 } YKURLRequestCachePolicy;
 
+
 extern NSString *const kYKURLRequestDefaultContentType;
 extern const double kYKURLRequestExpiresAgeMax;
 
@@ -202,7 +203,7 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
  
  Server errors (status >= 300) are reported as the code of the error object.
  */
-+ (YKURLRequest *)requestWithURL:(YKURL *)URL finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
++ (id)requestWithURL:(YKURL *)URL finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
 
 /*!
  GET the URL.
@@ -261,7 +262,7 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
  
  Server errors (status >= 300) are reported as the code of the error object.
  */
-+ (YKURLRequest *)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
++ (id)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
 
 /*!
  Request URL with method.
@@ -289,7 +290,7 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
  
  Server errors (status >= 300) are reported as the code of the error object.
  */
-+ (YKURLRequest *)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method postParams:(NSDictionary *)postParams finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
++ (id)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method postParams:(NSDictionary *)postParams finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock;
 
 /*!
  Request the URL.
@@ -322,9 +323,16 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
 - (BOOL)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator delegate:(id)delegate finishSelector:(SEL)finishSelector failSelector:(SEL)failSelector cancelSelector:(SEL)cancelSelector;
 
 /*!
- Cancel request. Will issued a cancelled notification to the delegate
+ Cancel request. 
+ Issues a cancelled notification to the delegate's cancelSelector, or call failBlock with a NULL error.
  */
 - (void)cancel;
+
+/*!
+ Cancel request. 
+ @param notify If notify, issues a cancelled notification to the delegate's cancelSelector, or call failBlock with a NULL error.
+ */
+- (void)cancel:(BOOL)notify;
 
 /*!
  Close request. Releases connection and delegate.
@@ -478,7 +486,15 @@ __REQUEST__.delegate = nil; \
 [__REQUEST__ cancel]; \
 [__REQUEST__ release]; \
 __REQUEST__ = nil; \
-} while (0);
+} while (0)
+
+
+#define YKURLRequestCancel(__REQUEST__, __NOTIFY__) \
+do { \
+__REQUEST__.delegate = nil; \
+[__REQUEST__ cancel:__NOTIFY__]; \
+} while (0)
+
 
 
 /*!

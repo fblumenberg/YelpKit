@@ -45,8 +45,15 @@ NSString *const YKErrorServerUnauthorized = @"YPErrorServerUnauthorized";
   return self;
 }
 
-- (id)initWithKey:(NSString *const)key error:(NSError *)error {
-  NSDictionary *userInfo = [NSDictionary dictionaryWithObject:error forKey:NSUnderlyingErrorKey];
+- (id)initWithError:(NSError *)error {
+  if ((self = [super initWithDomain:error.domain code:error.code userInfo:error.userInfo])) { 
+    _key = [error.domain copy];
+  }
+  return self;
+}
+
+- (id)initWithKey:(NSString *const)key error:(NSError *)error {  
+  NSDictionary *userInfo = [NSDictionary gh_dictionaryWithKeysAndObjectsMaybeNil:NSUnderlyingErrorKey, error, nil];
   if ((self = [super initWithDomain:error.domain code:error.code userInfo:userInfo])) { 
     _key = [key copy];
   }
@@ -89,13 +96,14 @@ NSString *const YKErrorServerUnauthorized = @"YPErrorServerUnauthorized";
       
       static NSDictionary *DescriptionsBuiltIn = nil;
       if (!DescriptionsBuiltIn) DescriptionsBuiltIn = [[NSDictionary dictionaryWithObjectsAndKeys:
-                                                        @"There was an error. Please try again later.", @"YPErrorUnknown",
-                                                        @"Sorry, we couldn't complete your request. Please try again in a bit.", @"YPErrorServerResourceNotFound",
-                                                        @"Sorry, we couldn't complete your request. Please try again in a bit. ", @"YPErrorServerResponse",
-                                                        @"Sorry, we're down for maintenance. But don't worry, we'll be back shortly!", @"YPErrorServerMaintenance",
-                                                        @"Sorry, something's funky with your connection. Try again in a bit.", @"YPErrorCannotConnectToHost",
-                                                        @"You're not connected to the Internet. Please connect and retry.", @"YPErrorNotConnectedToInternet",
-                                                        @"You'll need to log in.", @"YPErrorServerUnauthorized",
+                                                        @"There was an error. Please try again later.", YKErrorUnknown,
+                                                        @"Sorry, we couldn't complete your request. Please try again in a bit.", YKErrorRequest,
+                                                        @"Sorry, we couldn't complete your request. Please try again in a bit.", YKErrorServerResourceNotFound,
+                                                        @"Sorry, we couldn't complete your request. Please try again in a bit. ", YKErrorServerResponse,
+                                                        @"Sorry, we're down for maintenance. But don't worry, we'll be back shortly!", YKErrorServerMaintenance,
+                                                        @"Sorry, something's funky with your connection. Try again in a bit.", YKErrorCannotConnectToHost,
+                                                        @"You're not connected to the Internet. Please connect and retry.", YKErrorNotConnectedToInternet,
+                                                        @"You'll need to log in.", YKErrorServerUnauthorized,
                                                         nil] retain];
       
       NSString *keyBuiltIn = [DescriptionsBuiltIn objectForKey:_key];
@@ -157,9 +165,9 @@ NSString *const YKErrorServerUnauthorized = @"YPErrorServerUnauthorized";
   return error;
 }
 
-+ (YKError *)errorForError:(NSError *)error {
++ (YKError *)errorWithError:(NSError *)error {
   if ([error isKindOfClass:[YKError class]]) return (YKError *)error;
-  return [[[YKError alloc] initWithKey:YKErrorUnknown error:error] autorelease];
+  return [[[YKError alloc] initWithError:error] autorelease];
 }
 
 // Abstract
