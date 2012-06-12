@@ -32,16 +32,11 @@
 #import "YKDefines.h"
 #import "YKUILayoutView.h"
 
-@interface YKLayout ()
-- (CGSize)_layout:(CGSize)size apply:(BOOL)apply;
-@end
-
 static NSMutableDictionary *gDebugStats = NULL;
-
 
 @implementation YKLayout
 
-@synthesize sizeThatFits=_sizeThatFits;
+@synthesize sizeThatFits=_sizeThatFits, sizing=_sizing;
 
 - (id)init {
   [NSException raise:NSDestinationInvalidException format:@"Layout must be associated with a view; Use initWithView:"];
@@ -84,22 +79,22 @@ static NSMutableDictionary *gDebugStats = NULL;
   return [[[YKLayout alloc] initWithView:view] autorelease];
 }
 
-- (CGSize)_layout:(CGSize)size apply:(BOOL)apply {
+- (CGSize)_layout:(CGSize)size sizing:(BOOL)sizing {
   if (!_view) return size;
 #if DEBUG
   YKLayoutStats *stats = [YKLayout statsForView:_view];
 #endif
   
-  if (YKCGSizeIsEqual(size, _cachedSize) && ((!_needsSizing && !apply) || (!_needsLayout && apply))) {
+  if (YKCGSizeIsEqual(size, _cachedSize) && ((!_needsSizing && sizing) || (!_needsLayout && !sizing))) {
 #if DEBUG
     stats->_cacheCount++;
 #endif
     return _cachedLayoutSize;
   }
   
-  _apply = apply;
+  _sizing = sizing;
   _cachedSize = size;
-  if (_apply) {
+  if (!_sizing) {
     // Remove previous accessible elements before they're recreated in layout:size:()
     [_accessibleElements removeAllObjects];
   }
@@ -112,11 +107,11 @@ static NSMutableDictionary *gDebugStats = NULL;
   stats->_layoutCount++;
 #endif
   _cachedLayoutSize = layoutSize;
-  if (_apply) {
+  if (!_sizing) {
     _needsLayout = NO;
   }
   _needsSizing = NO;
-  _apply = NO;    
+  _sizing = NO;    
   //[stats.log addObject:[NSString stringWithFormat:@"(%@)=>%@", NSStringFromCGSize(size), NSStringFromCGSize(layoutSize)]];
   return layoutSize;
 }
@@ -128,7 +123,7 @@ static NSMutableDictionary *gDebugStats = NULL;
 }
 
 - (CGSize)layoutSubviews:(CGSize)size {
-  CGSize layoutSize = [self _layout:size apply:YES];  
+  CGSize layoutSize = [self _layout:size sizing:NO];  
   for (id view in _subviews) {
     if ([view respondsToSelector:@selector(layoutIfNeeded)]) [view layoutIfNeeded];
   }
@@ -138,7 +133,7 @@ static NSMutableDictionary *gDebugStats = NULL;
 - (CGSize)sizeThatFits:(CGSize)size {
   if (_sizeThatFits.width > 0 && _sizeThatFits.height > 0) return _sizeThatFits;
   if (_sizeThatFits.width > 0) size = _sizeThatFits;
-  return [self _layout:size apply:NO];
+  return [self _layout:size sizing:YES];
 }
 
 - (CGRect)setFrame:(CGRect)frame view:(UIView *)view sizeToFit:(BOOL)sizeToFit {
@@ -242,7 +237,7 @@ static NSMutableDictionary *gDebugStats = NULL;
 
 - (CGRect)setFrame:(CGRect)frame view:(UIView *)view {
   if (!view) return CGRectZero;
-  if (_apply) {
+  if (!_sizing) {
     view.frame = frame;
     if (view) {
       [_accessibleElements addObject:view];
@@ -253,12 +248,8 @@ static NSMutableDictionary *gDebugStats = NULL;
   }
   // Some stupid views (cough UIPickerView cough) will snap to certain frame
   // values. This makes sure we return the actual frame of the view
-  if (_apply) return view.frame;
+  if (!_sizing) return view.frame;
   return frame;
-}
-
-- (BOOL)isSizing {
-  return !_apply;
 }
 
 - (void)addSubview:(id)view {

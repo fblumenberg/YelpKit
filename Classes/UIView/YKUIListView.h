@@ -57,8 +57,9 @@
 @property (assign, nonatomic) UIEdgeInsets insets;
 @property (assign, nonatomic) UIEdgeInsets lineInsets;
 
-- (NSArray *)listSubviews;
-
+/*!
+ @result Number of subviews.
+ */
 - (NSInteger)count;
 
 /*!

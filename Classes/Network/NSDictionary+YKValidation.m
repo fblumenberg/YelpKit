@@ -40,6 +40,12 @@
   return object;
 }
 
+- (id)yk_objectForKey:(id)key withDefaultObject:(id)defaultObject {
+  id object = [self yk_objectMaybeNilForKey:key];
+  if (object) return object;
+  return defaultObject;
+}
+
 - (id)yk_objectMaybeNilAtLine:(NSInteger)line inFile:(char *)file forKey:(NSString *)key {
   id object = [self yk_objectMaybeNilForKey:key];
   if (object) NSLog(@"HEY! Found an unvalidated field! %s:%d was kind of class %@.", file, line, [object class]);
@@ -84,64 +90,64 @@
 
 - (double)yk_doubleForKey:(id)key withDefault:(double)defaultValue {
   id value = [self yk_NSStringOrNSNumberMaybeNilForKey:key];
-	if (!value) return defaultValue;
-	return [value doubleValue];
+  if (!value) return defaultValue;
+  return [value doubleValue];
 }
 
 - (double)yk_doubleForKey:(id)key {
-	return [self yk_doubleForKey:key withDefault:0];
+  return [self yk_doubleForKey:key withDefault:0];
 }
 
 - (NSInteger)yk_integerForKey:(id)key withDefault:(NSInteger)defaultValue {
-	id value = [self yk_NSStringOrNSNumberMaybeNilForKey:key];
-	if (!value) return defaultValue;
-	return [value integerValue];
+  id value = [self yk_NSStringOrNSNumberMaybeNilForKey:key];
+  if (!value) return defaultValue;
+  return [value integerValue];
 }
 
 - (NSInteger)yk_integerForKey:(id)key {
-	return [self yk_integerForKey:key withDefault:0];
+  return [self yk_integerForKey:key withDefault:0];
 }
 
 - (NSUInteger)yk_unsignedIntegerForKey:(id)key withDefault:(NSUInteger)defaultValue {
-	NSNumber *value = [self yk_validatedObjectMaybeNilForKey:key expectedClass:[NSNumber class]];
-	if (!value) return defaultValue;
-	return [value unsignedIntegerValue];
+  NSNumber *value = [self yk_validatedObjectMaybeNilForKey:key expectedClass:[NSNumber class]];
+  if (!value) return defaultValue;
+  return [value unsignedIntegerValue];
 }
 
 - (NSUInteger)yk_unsignedIntegerForKey:(id)key {
-	return [self yk_unsignedIntegerForKey:key withDefault:0];
+  return [self yk_unsignedIntegerForKey:key withDefault:0];
 }
 
 - (NSNumber *)yk_numberForKey:(id)key withDefaultInteger:(NSInteger)defaultValue {
-	NSNumber *value = [self yk_validatedObjectMaybeNilForKey:key expectedClass:[NSNumber class]];
-	if (!value) return [NSNumber numberWithInteger:defaultValue];
-	return value;
+  NSNumber *value = [self yk_validatedObjectMaybeNilForKey:key expectedClass:[NSNumber class]];
+  if (!value) return [NSNumber numberWithInteger:defaultValue];
+  return value;
 }
 
 - (NSNumber *)yk_numberForKey:(id)key withDefaultDouble:(double)defaultValue {
-	NSNumber *value = [self yk_validatedObjectMaybeNilForKey:key expectedClass:[NSNumber class]];
-	if (!value) return [NSNumber numberWithDouble:defaultValue];
-	return value;
+  NSNumber *value = [self yk_validatedObjectMaybeNilForKey:key expectedClass:[NSNumber class]];
+  if (!value) return [NSNumber numberWithDouble:defaultValue];
+  return value;
 }
 
 - (BOOL)yk_boolForKey:(id)key withDefault:(BOOL)defaultValue {
   id value = [self yk_NSStringOrNSNumberMaybeNilForKey:key];
-	if (!value) return defaultValue;
-	return [value boolValue];
+  if (!value) return defaultValue;
+  return [value boolValue];
 }
 
 - (BOOL)yk_boolForKey:(id)key {
-	return [self yk_boolForKey:key withDefault:NO];
+  return [self yk_boolForKey:key withDefault:NO];
 }
 
 - (NSNumber *)yk_boolValueForKey:(id)key withDefault:(BOOL)defaultValue {
-	id value = [self yk_NSStringOrNSNumberMaybeNilForKey:key];
-	if (!value) return [NSNumber numberWithBool:defaultValue];
-	return [NSNumber numberWithBool:[value boolValue]];
+  id value = [self yk_NSStringOrNSNumberMaybeNilForKey:key];
+  if (!value) return [NSNumber numberWithBool:defaultValue];
+  return [NSNumber numberWithBool:[value boolValue]];
 }
 
 - (NSNumber *)yk_boolValueForKey:(id)key {
-	return [self yk_boolValueForKey:key withDefault:NO];
+  return [self yk_boolValueForKey:key withDefault:NO];
 }
 
 @end

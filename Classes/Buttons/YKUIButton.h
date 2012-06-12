@@ -55,7 +55,7 @@ typedef enum {
   UIFont *_titleFont;
   UITextAlignment _titleAlignment;
   CGSize _titleSize;
-  UIEdgeInsets _titleInsets;
+  UIEdgeInsets __titleInsets;
   
   UIColor *_color;
   UIColor *_color2;
@@ -117,6 +117,7 @@ typedef enum {
   UIImage *_highlightedAccessoryImage;
   
   YKUIButtonIconPosition _iconPosition;
+  UIColor *_iconShadowColor;
   
   UIActivityIndicatorView *_activityIndicatorView;
   
@@ -307,6 +308,11 @@ typedef enum {
  Defaults to YKUIButtonIconPositionLeft.
  */
 @property (assign, nonatomic) YKUIButtonIconPosition iconPosition;
+
+/*!
+ Icon shadow color.
+ */
+@property (retain, nonatomic) UIColor *iconShadowColor;
 
 /*!
  Text color for title (highlighted).

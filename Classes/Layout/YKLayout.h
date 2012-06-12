@@ -271,7 +271,7 @@ typedef enum {
   CGSize _cachedLayoutSize;
   NSMutableArray *_accessibleElements;
   
-  BOOL _apply;
+  BOOL _sizing;
   
   NSMutableArray *_subviews; // For manual subview handling
   
@@ -279,6 +279,7 @@ typedef enum {
 }
 
 @property (readonly, retain, nonatomic) NSArray *accessibleElements;
+@property (readonly, nonatomic, getter=isSizing) BOOL sizing;
 
 /*!
  Set a custon/fixed size that fits.

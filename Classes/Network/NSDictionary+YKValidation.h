@@ -41,6 +41,15 @@
 - (id)yk_objectMaybeNilForKey:(id)key;
 
 /*!
+ Get object for key. Return default object if the key does not exist or is NSNull.
+
+ @param key Key
+ @param defaultObject Object to default to
+ @result object
+ */
+- (id)yk_objectForKey:(id)key withDefaultObject:(id)defaultObject;
+
+/*!
  Get object for key. This method can log the line and filename of the caller method. It is useful for logging types received at runtime for later validation.
 
  @param line Line number of the calling method, usually __LINE__.
