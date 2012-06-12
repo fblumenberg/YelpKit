@@ -55,7 +55,7 @@ typedef enum {
   UIFont *_titleFont;
   UITextAlignment _titleAlignment;
   CGSize _titleSize;
-  UIEdgeInsets _titleInsets;
+  UIEdgeInsets __titleInsets;
   
   UIColor *_color;
   UIColor *_color2;

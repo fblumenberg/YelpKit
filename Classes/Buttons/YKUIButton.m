@@ -181,12 +181,13 @@
   CGFloat y = 0;
 
   y += _insets.top;
-  y += _titleInsets.top;
+  UIEdgeInsets titleInsets = [self _titleInsets];
+  y += titleInsets.top;
   
   if (_title) {
     CGSize constrainedToSize = size;
     // Subtract insets
-    constrainedToSize.width -= (_titleInsets.left + _titleInsets.right);
+    constrainedToSize.width -= (titleInsets.left + titleInsets.right);
     constrainedToSize.width -= (_insets.left + _insets.right);
     
     // Subtract icon width
@@ -222,10 +223,18 @@
     y += _titleSize.height;
   }
   
-  y += _titleInsets.bottom;
+  y += titleInsets.bottom;
   y += _insets.bottom;
 
   return CGSizeMake(size.width, y);
+}
+
+- (UIEdgeInsets)_titleInsets {
+  UIEdgeInsets titleInsets = _titleInsets;
+  if (_borderStyle == YKUIBorderStyleRoundedBack) {
+    titleInsets.left += 4;
+  }
+  return titleInsets;
 }
 
 - (CGSize)sizeThatFitsTitle:(CGSize)size minWidth:(CGFloat)minWidth {
@@ -241,7 +250,8 @@
     accessoryImageSize = _accessoryImage.size;
     accessoryImageSize.width += 10;
   }
-  return CGSizeMake(titleSize.width + _insets.left + _insets.right + _titleInsets.left + _titleInsets.right + accessoryImageSize.width, titleSize.height + _titleInsets.top + _titleInsets.bottom + _insets.top + _insets.bottom);
+  UIEdgeInsets titleInsets = [self _titleInsets];
+  return CGSizeMake(titleSize.width + _insets.left + _insets.right + titleInsets.left + titleInsets.right + accessoryImageSize.width, titleSize.height + titleInsets.top + titleInsets.bottom + _insets.top + _insets.bottom);
 }
 
 - (CGSize)sizeThatFitsTitleAndIcon:(CGSize)size {
@@ -558,8 +568,9 @@
     iconSize = icon.size;
   }
   
+  UIEdgeInsets titleInsets = [self _titleInsets];
   if (!_titleHidden) {
-    CGFloat lineWidth = titleSize.width + _titleInsets.left + _titleInsets.right;
+    CGFloat lineWidth = titleSize.width + titleInsets.left + titleInsets.right;
     if (showIcon && _iconPosition == YKUIButtonIconPositionLeft) lineWidth += iconSize.width;
     CGFloat x = bounds.origin.x + _insets.left;
     
@@ -606,12 +617,12 @@
       }
     }
     
-    y += _titleInsets.top;
+    y += titleInsets.top;
 
     [textColor setFill];
     CGContextSetShadowWithColor(context, titleShadowOffset, 0.0, titleShadowColor.CGColor);
 
-    x += _titleInsets.left;
+    x += titleInsets.left;
 
     // Draw title. If we have a secondary title, we'll need to adjust for alignment.
     if (!_secondaryTitle) {
@@ -625,10 +636,10 @@
         x += titleSizeAdjusted.width;
         [_secondaryTitle drawAtPoint:CGPointMake(x, y) withFont:font];  
       } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionBottom) {
-        x = _insets.left + _titleInsets.left;
+        x = _insets.left + titleInsets.left;
         y += titleSizeAdjusted.height;
         // TODO(gabe): Needed to put "+ _insets.bottom" so secondary text would wrap
-        CGRect secondaryTitleRect = CGRectMake(x, y, size.width - x - _insets.right - _titleInsets.right, size.height - y + _insets.bottom);
+        CGRect secondaryTitleRect = CGRectMake(x, y, size.width - x - _insets.right - titleInsets.right, size.height - y + _insets.bottom);
         [_secondaryTitle drawInRect:secondaryTitleRect withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];  
       }
     }
