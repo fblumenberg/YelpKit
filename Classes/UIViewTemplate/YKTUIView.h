@@ -38,7 +38,13 @@
 /*!
  @result Returns UIViewController for this view. Subclasses can override this method.
  */
-- (YKTUIViewController *)viewControllerForView;
+- (YKTUIViewController *)createViewControllerForView;
+
+/*!
+ @param create If YES, will create the view controller if it hasn't been created already.
+ @result View controller
+ */
+- (YKTUIViewController *)viewController:(BOOL)create;
 
 /*!
  Push view.
@@ -57,10 +63,11 @@
 /*!
  Swap the current view with transition.
  @param view
+ @param fromView View to swap from or nil for previous view
  @param transition
  @param duration
  */
-- (void)swapView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration;
+- (void)swapView:(YKTUIView *)view fromView:(YKTUIView *)fromView transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration;
 
 /*!
  Pop to root view.

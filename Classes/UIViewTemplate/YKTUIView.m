@@ -48,6 +48,7 @@
 }
 
 - (UINavigationController *)navigationController {
+  //NSAssert(_viewController, @"No view controller!");
   return _viewController.navigationController;
 }
 
@@ -55,30 +56,40 @@
   // Add the nav bar if we are being used in a view controller
   [self addSubview:_navigationBar];
 
-  YKTUIViewController *viewController = [[self viewControllerForView] retain];
+  YKTUIViewController *viewController = [self createViewControllerForView];
   _viewController = viewController;
   return _viewController;
 }
 
-- (YKTUIViewController *)viewControllerForView {
+- (YKTUIViewController *)createViewControllerForView {
   YKTUIViewController *viewController = [[YKTUIViewController alloc] init];  
   [viewController setContentView:self];
-  return [viewController autorelease];
+  return viewController;
 }
 
-- (void)swapView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration {
-  YKTUIViewController *viewController = [view newViewController];
+- (YKTUIViewController *)viewController:(BOOL)create {
+  if (!create || _viewController) return _viewController;
+  return [self newViewController];
+}
+
+- (void)swapView:(YKTUIView *)view fromView:(YKTUIView *)fromView transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration {
+  YKTUIViewController *viewController = [view viewController:YES];
+  UINavigationController *navigationController = self.navigationController;
+  
   if (transition != UIViewAnimationTransitionNone) {
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:duration];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationWillStartSelector:@selector(navigationAnimationWillStart:context:)];
-    [UIView setAnimationDidStopSelector:@selector(navigationAnimationDidStop:finished:context:)];
-    [UIView setAnimationTransition:transition forView:self.navigationController.view cache:NO];
+    [UIView setAnimationTransition:transition forView:navigationController.view cache:NO];
   }
   
-  [self.navigationController popViewControllerAnimated:NO];
-  [self.navigationController pushViewController:viewController animated:NO];
+  if (fromView) {
+    [navigationController popToViewController:[fromView viewController:NO] animated:NO];
+  } else {
+    [navigationController popViewControllerAnimated:NO];
+  }
+  
+  [navigationController pushViewController:viewController animated:NO];
+  
   
   if (transition != UIViewAnimationTransitionNone) [UIView commitAnimations];
 }
