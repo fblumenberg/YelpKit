@@ -10,7 +10,7 @@
 
 @implementation YKUIControl 
 
-@synthesize target=_target, action=_action, highlightedEnabled=_highlightedEnabled, selectedEnabled=_selectedEnabled, delayActionEnabled=_delayActionEnabled, layout=_layout, context=_context, targetBlock=_targetBlock;
+@synthesize target=_target, action=_action, highlightedEnabled=_highlightedEnabled, selectedEnabled=_selectedEnabled, delayActionEnabled=_delayActionEnabled, layout=_layout, context=_context, targetBlock=_targetBlock, valueForCopy=_valueForCopy;
 
 + (void)removeAllTargets:(UIControl *)control {
   for (id target in [control allTargets]) {
@@ -169,6 +169,51 @@
     self.highlighted = NO;
     [self setNeedsDisplay];
   }  
+}
+
+#pragma mark Editing Menu
+
+- (void)setValueForCopy:(NSString *)valueForCopy {
+  [valueForCopy retain];
+  [_valueForCopy release];
+  _valueForCopy = valueForCopy;
+  if (valueForCopy) {
+    if (!_longPressGestureRecognizer) {
+      _longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_showEditingMenu:)];
+      [self addGestureRecognizer:_longPressGestureRecognizer];
+      [_longPressGestureRecognizer release];
+    }
+  } else {
+    if (_longPressGestureRecognizer) {
+      [self removeGestureRecognizer:_longPressGestureRecognizer];
+    }
+  }
+}
+
+- (void)_showEditingMenu:(UILongPressGestureRecognizer *)gestureRecognizer {
+  if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
+    CGPoint location = [gestureRecognizer locationInView:[gestureRecognizer view]];
+    UIMenuController *menuController = [UIMenuController sharedMenuController];
+    [self becomeFirstResponder];
+    [menuController setTargetRect:CGRectMake(location.x, location.y, 0.0f, 0.0f) inView:[gestureRecognizer view]];
+    [menuController setMenuVisible:YES animated:YES];
+  }
+}
+
+- (void)copy:(id)sender {
+  UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+  pasteboard.string = _valueForCopy;
+}
+
+- (BOOL)canPerformAction:(SEL)selector withSender:(id) sender {
+  if (selector == @selector(copy:) && _valueForCopy) {
+    return YES;
+  }
+  return NO;
+}
+
+- (BOOL)canBecomeFirstResponder {
+  return (!!_valueForCopy);
 }
 
 @end

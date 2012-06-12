@@ -29,6 +29,9 @@ typedef void (^UIControlTargetBlock)();
   UIControlTargetBlock _targetBlock;
   
   id<YKLayout> _layout;
+  
+  NSString *_valueForCopy;
+  UILongPressGestureRecognizer *_longPressGestureRecognizer;
 }
 
 @property (readonly, nonatomic) id target;
@@ -39,6 +42,7 @@ typedef void (^UIControlTargetBlock)();
 @property (retain, nonatomic) id<YKLayout> layout;
 @property (assign, nonatomic) id context;
 @property (copy, nonatomic) UIControlTargetBlock targetBlock;
+@property (retain, nonatomic) NSString *valueForCopy;
 
 /*!
  This method gets called by both initWithFrame and initWithCoder. Subclasses taking advantage of
