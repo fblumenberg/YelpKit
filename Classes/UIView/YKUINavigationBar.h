@@ -35,6 +35,11 @@ typedef enum {
   YKUINavigationButtonStyleNone,
 } YKUINavigationButtonStyle;
 
+typedef enum {
+  YKUINavigationPositionLeft = 0,
+  YKUINavigationPositionRight = 1,
+} YKUINavigationPosition;
+
 
 @interface YKUINavigationBar : UIView {
   UIView *_contentView;
