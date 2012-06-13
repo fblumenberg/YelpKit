@@ -173,6 +173,9 @@ extern NSString *const YKErrorServerUnauthorized; // Server returned 401
  */
 + (YKError *)errorWithError:(NSError *)error;
 
+// Deprecated, use errorWithError:
++ (YKError *)errorForError:(NSError *)error;
+
 /*!
  Get the user info for key.
  */

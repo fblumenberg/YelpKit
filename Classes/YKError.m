@@ -170,6 +170,10 @@ NSString *const YKErrorServerUnauthorized = @"YPErrorServerUnauthorized";
   return [[[YKError alloc] initWithError:error] autorelease];
 }
 
++ (YKError *)errorForError:(NSError *)error {
+  return [YKError errorWithError:error];
+}
+
 // Abstract
 - (NSArray *)fields { return nil; }
 
