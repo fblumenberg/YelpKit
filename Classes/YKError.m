@@ -130,7 +130,7 @@ NSString *const YKErrorServerUnauthorized = @"YPErrorServerUnauthorized";
 }
 
 + (id)errorWithKey:(NSString *const)key localizedDescription:(NSString *)localizedDescription {
-  NSDictionary *userInfo = [NSDictionary dictionaryWithObject:localizedDescription forKey:NSLocalizedDescriptionKey];  
+  NSDictionary *userInfo = (localizedDescription ? [NSDictionary dictionaryWithObject:localizedDescription forKey:NSLocalizedDescriptionKey] : nil);
   return [self errorWithKey:key userInfo:userInfo];
 }
 
@@ -186,12 +186,32 @@ NSString *const YKErrorServerUnauthorized = @"YPErrorServerUnauthorized";
 
 @implementation YKHTTPError
 
-@synthesize HTTPStatus=_HTTPStatus;
+@synthesize HTTPStatus=_HTTPStatus, data=_data;
+
+- (id)initWithHTTPStatus:(NSInteger)HTTPStatus data:(NSData *)data {
+  return [self initWithHTTPStatus:HTTPStatus data:data localizedDescription:nil];
+}
+
+- (id)initWithHTTPStatus:(NSInteger)HTTPStatus data:(NSData *)data localizedDescription:(NSString *)localizedDescription {
+  NSDictionary *userInfo = (localizedDescription ? [NSDictionary dictionaryWithObject:localizedDescription forKey:NSLocalizedDescriptionKey] : nil);
+  if ((self = [self initWithKey:[[self class] keyForHTTPStatus:HTTPStatus] userInfo:userInfo])) {
+    _HTTPStatus = HTTPStatus;
+    _data = [data retain];
+  }
+  return self;
+}
+
+- (void)dealloc {
+  [_data release];
+  [super dealloc];
+}
 
 + (YKHTTPError *)errorWithHTTPStatus:(NSInteger)HTTPStatus {
-  YKHTTPError *error = [super errorWithKey:[self keyForHTTPStatus:HTTPStatus] userInfo:nil];
-  error->_HTTPStatus = HTTPStatus;
-  return error; 
+  return [self errorWithHTTPStatus:HTTPStatus data:nil];
+}
+
++ (YKHTTPError *)errorWithHTTPStatus:(NSInteger)HTTPStatus data:(NSData *)data {
+  return [[[self alloc] initWithHTTPStatus:HTTPStatus data:data] autorelease];
 }
 
 + (NSString *const)keyForHTTPStatus:(NSInteger)HTTPStatus {
