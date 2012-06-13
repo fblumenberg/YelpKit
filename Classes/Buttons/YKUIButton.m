@@ -597,7 +597,7 @@
         case YKUIButtonIconPositionTop: {
           CGPoint iconTop = YKCGPointToCenter(iconSize, size);
           [icon drawInRect:CGRectMake(iconTop.x, _insets.top, iconSize.width, iconSize.height)];
-          y = _insets.top + iconSize.height;
+          y = _insets.top + iconSize.height + titleInsets.top;
           break;
         }
         case YKUIButtonIconPositionCenter: {
@@ -605,7 +605,7 @@
           if (_iconOrigin.x != CGFLOAT_MAX) iconTop.x = _iconOrigin.x;
           if (_iconOrigin.y != CGFLOAT_MAX) iconTop.y = _iconOrigin.y;
           [icon drawInRect:CGRectMake(iconTop.x, iconTop.y + _insets.top, iconSize.width, iconSize.height)];
-          y = iconTop.y + _insets.top + iconSize.height;
+          y = iconTop.y + _insets.top + iconSize.height + titleInsets.top;
           break;
         }
       }
@@ -617,8 +617,6 @@
       }
     }
     
-    y += titleInsets.top;
-
     [textColor setFill];
     CGContextSetShadowWithColor(context, titleShadowOffset, 0.0, titleShadowColor.CGColor);
 
