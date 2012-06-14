@@ -319,12 +319,12 @@ CGRect YKCGRectWithInsets(CGSize size, UIEdgeInsets insets);
 //
 //
 //   YKUIBorderStyleTopLeftRight
-//   -------  (alternate stroke on top)
+//   -------  
 //   |     |
 //
 //  
 //   YKUIBorderStyleRoundedBottom
-//   -------  (alternate stroke on top)
+//   -------
 //   |     |
 //   ╰----╯
 //
@@ -336,7 +336,8 @@ typedef enum {
   YKUIBorderStyleBottomOnly, // Bottom (straight) only
   YKUIBorderStyleTopBottom, // Top and bottom only
   YKUIBorderStyleRoundedTop, // Rounded top with left and right sides (no bottom)
-  YKUIBorderStyleTopLeftRight, // Left and right sides (no bottom)
+  YKUIBorderStyleTopLeftRight, // Top, left and right sides (no bottom)
+  YKUIBorderStyleBottomLeftRight, // Bottom, left and right sides (no top)
   YKUIBorderStyleRoundedBottom, // Rounded bottom with left and right sides
   //YKUIBorderStyleTopBottomRight, // Top bottom and right sides in strokeWidth
   YKUIBorderStyleRoundedTopOnly, // Rounded top with no sides
@@ -345,7 +346,7 @@ typedef enum {
   YKUIBorderStyleRoundedBack, // Rounded back button
 } YKUIBorderStyle;
 
-CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius);
+CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat cornerRadius);
 
 /*!
  Create path for line.
@@ -356,13 +357,11 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
  */
 CGPathRef YKCGPathCreateLine(CGFloat x1, CGFloat y1, CGFloat x2, CGFloat y2);
 
-void YKCGContextAddStyledRect(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius);
+void YKCGContextAddStyledRect(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat cornerRadius);
 
-BOOL YKCGContextAddAlternateBorderToPath(CGContextRef context, CGRect rect, YKUIBorderStyle style);
+void YKCGContextDrawBorder(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat cornerRadius);
 
-void YKCGContextDrawBorder(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius);
-
-void YKCGContextDrawBorderWithShadow(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius, CGColorRef shadowColor, CGFloat shadowBlur, BOOL saveRestore);
+void YKCGContextDrawBorderWithShadow(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat cornerRadius, CGColorRef shadowColor, CGFloat shadowBlur, BOOL saveRestore);
 
 void YKCGContextDrawRect(CGContextRef context, CGRect rect, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth);
 

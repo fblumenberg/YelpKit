@@ -99,7 +99,6 @@ typedef enum {
 
   UIColor *_borderColor;
   CGFloat _borderWidth;
-  CGFloat _borderAlternateWidth;
   YKUIBorderStyle _borderStyle;
   CGFloat _cornerRadius;
   CGFloat _cornerRadiusRatio;
@@ -201,12 +200,6 @@ typedef enum {
  Border width (stroke).
  */
 @property (assign, nonatomic) CGFloat borderWidth;
-
-/*!
- Border width (alternate). Used with custom border styles like YKUIBorderStyleTopLeftRight.
- Defaults to 1.
- */
-@property (assign, nonatomic) CGFloat borderAlternateWidth;
 
 /*!
  Border corner radius.
@@ -569,10 +562,9 @@ typedef enum {
  @param borderStyle Border style
  @param color Color
  @param width Width
- @param alternateWidth Alternate width
  @param cornerRadius Corner radius
  */
-- (void)setBorderStyle:(YKUIBorderStyle)borderStyle color:(UIColor *)color width:(CGFloat)width alternateWidth:(CGFloat)alternateWidth cornerRadius:(CGFloat)cornerRadius;
+- (void)setBorderStyle:(YKUIBorderStyle)borderStyle color:(UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)cornerRadius;
 
 /*!
  Activity indicator view.

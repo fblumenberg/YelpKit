@@ -106,11 +106,25 @@ typedef enum {
  If we are calculating sizeThatFits, this doesn't actually set the views frame.
  Use this value instead of view.frame since the views frame might not have been set.
  
+ @param frame Frame
  @param view View
  @param options Options for setFrame; See YKLayoutOptions for more info
  @result The view frame. 
  */
 - (CGRect)setFrame:(CGRect)frame view:(UIView *)view options:(YKLayoutOptions)options;
+
+/*!
+ Set the (sub)view frame.
+ If we are calculating sizeThatFits, this doesn't actually set the views frame.
+ Use this value instead of view.frame since the views frame might not have been set.
+ 
+ @param frame Frame
+ @param inRect Rect to optionally position in for YKLayoutOptionsCenter, YKLayoutOptionsCenterVertical, YKLayoutOptionsRightAlign, etc.
+ @param view View
+ @param options Options for setFrame; See YKLayoutOptions for more info
+ @result The view frame. 
+ */
+- (CGRect)setFrame:(CGRect)frame inRect:(CGRect)inRect view:(UIView *)view options:(YKLayoutOptions)options;
 
 /*!
  Set origin for the (sub)view (for views with fixed sizes).

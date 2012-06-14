@@ -172,7 +172,7 @@ void _YKCGContextDrawImage(CGContextRef context, CGImageRef image, CGSize imageS
   }
   
   if (shadowColor != NULL) {
-    YKCGContextDrawBorderWithShadow(context, rect, YKUIBorderStyleRounded, NULL, strokeColor, strokeWidth, 0, cornerRadius, shadowColor, shadowBlur, YES);
+    YKCGContextDrawBorderWithShadow(context, rect, YKUIBorderStyleRounded, NULL, strokeColor, strokeWidth, cornerRadius, shadowColor, shadowBlur, YES);
   } else if (strokeColor != NULL && strokeWidth > 0) {    
     YKCGContextDrawRoundedRect(context, rect, NULL, strokeColor, strokeWidth, cornerRadius);
   }
@@ -381,15 +381,15 @@ CGRect YKCGRectWithInsets(CGSize size, UIEdgeInsets insets) {
 
 #pragma mark Border Styles
 
-void YKCGContextAddStyledRect(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius) {  
-  CGPathRef path = YKCGPathCreateStyledRect(rect, style, strokeWidth, alternateStrokeWidth, cornerRadius);
+void YKCGContextAddStyledRect(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat cornerRadius) {  
+  CGPathRef path = YKCGPathCreateStyledRect(rect, style, strokeWidth, cornerRadius);
   if (path != NULL) {
     CGContextAddPath(context, path);  
   }
   CGPathRelease(path);
 }
 
-CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius) {  
+CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat cornerRadius) {  
   
   CGFloat fw, fh;
   CGFloat cornerWidth = cornerRadius, cornerHeight = cornerRadius;
@@ -406,17 +406,20 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
   }
   
   CGFloat strokeInset = strokeWidth/2.0;
-  CGFloat alternateStrokeInset = alternateStrokeWidth/2.0;
   
   // Need to adjust path rect to inset (since the stroke is drawn from the middle of the path)
   CGRect insetBounds;
   switch(style) {
     case YKUIBorderStyleRoundedBottom:
-      insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y + alternateStrokeInset, rect.size.width - (strokeInset * 2), rect.size.height - strokeInset - alternateStrokeInset);
+      insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y + strokeInset, rect.size.width - (strokeInset * 2), rect.size.height - (strokeInset * 2));
       break;
       
     case YKUIBorderStyleTopLeftRight:
-      insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y + alternateStrokeInset, rect.size.width - (strokeInset * 2), rect.size.height - alternateStrokeInset);
+      insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y + strokeInset, rect.size.width - (strokeInset * 2), rect.size.height - strokeInset);
+      break;
+      
+    case YKUIBorderStyleBottomLeftRight:
+      insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y, rect.size.width - (strokeInset * 2), rect.size.height - strokeInset);
       break;
       
     case YKUIBorderStyleRoundedTop:
@@ -465,12 +468,13 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
   
   switch(style) {
     case YKUIBorderStyleRoundedBottom:
-      CGPathMoveToPoint(path, &transform, fw, 0); 
+      CGPathMoveToPoint(path, &transform, -1, 0); // Fill in missing line end cap
+      CGPathAddLineToPoint(path, &transform, fw, 0);
       CGPathAddLineToPoint(path, &transform, fw, fh/2);
       CGPathAddArcToPoint(path, &transform, fw, fh, fw/2, fh, 1);
       CGPathAddArcToPoint(path, &transform, 0, fh, 0, fh/2, 1);
       CGPathAddLineToPoint(path, &transform, 0, 0);
-      CGPathMoveToPoint(path, &transform, fw, 0); // Don't draw top border
+      CGPathMoveToPoint(path, &transform, fw, 0);
       break;
       
     case YKUIBorderStyleRoundedTop:
@@ -507,12 +511,17 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
       break;
       
     case YKUIBorderStyleTopLeftRight:
-      // Go +/- 2 in order to clip the top and bottom border; Only draw left, right border
-      CGPathMoveToPoint(path, &transform, 0, fh + 2);
-      CGPathAddLineToPoint(path, &transform, 0, -2);
-      CGPathAddLineToPoint(path, &transform, fw, -2);
-      CGPathAddLineToPoint(path, &transform, fw, fh + 2);
-      CGPathAddLineToPoint(path, &transform, 0, fh + 2);
+      CGPathMoveToPoint(path, &transform, 0, fh);
+      CGPathAddLineToPoint(path, &transform, 0, 0);
+      CGPathAddLineToPoint(path, &transform, fw, 0);
+      CGPathAddLineToPoint(path, &transform, fw, fh);
+      break;
+      
+    case YKUIBorderStyleBottomLeftRight:
+      CGPathMoveToPoint(path, &transform, fw, 0);
+      CGPathAddLineToPoint(path, &transform, fw, fh);
+      CGPathAddLineToPoint(path, &transform, 0, fh);
+      CGPathAddLineToPoint(path, &transform, 0, 0);
       break;
       
     case YKUIBorderStyleNormal:
@@ -567,26 +576,6 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
   return path;
 }
 
-BOOL YKCGContextAddAlternateBorderToPath(CGContextRef context, CGRect rect, YKUIBorderStyle style) {
-  // Skip styles that don't have alternate border path
-  if (style != YKUIBorderStyleRoundedBottom &&
-      style != YKUIBorderStyleTopLeftRight) {
-    return NO;
-  }
-  
-  CGFloat cornerWidth = 10, cornerHeight = 10;
-  
-  CGContextSaveGState(context);
-  CGContextTranslateCTM(context, CGRectGetMinX(rect), CGRectGetMinY(rect));
-  CGContextScaleCTM (context, cornerWidth, cornerHeight);
-  CGFloat fw = CGRectGetWidth(rect) / cornerWidth;
-  
-  CGContextMoveToPoint(context, 0, 0);
-  CGContextAddLineToPoint(context, fw, 0);
-  CGContextRestoreGState(context);
-  return YES;
-}
-
 void _YKCGContextDrawStyledRect(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat cornerRadius) {
 
   // If style is not a complete path, then we need to fill the rect as a separate operation
@@ -598,7 +587,7 @@ void _YKCGContextDrawStyledRect(CGContextRef context, CGRect rect, YKUIBorderSty
   
   CGContextSetLineWidth(context, strokeWidth);
 
-  YKCGContextAddStyledRect(context, rect, style, strokeWidth, 0, cornerRadius); 
+  YKCGContextAddStyledRect(context, rect, style, strokeWidth, cornerRadius); 
   
   if (strokeColor != NULL) CGContextSetStrokeColorWithColor(context, strokeColor);  
   if (fillColor != NULL) CGContextSetFillColorWithColor(context, fillColor);
@@ -612,22 +601,14 @@ void _YKCGContextDrawStyledRect(CGContextRef context, CGRect rect, YKUIBorderSty
   } 
 }
 
-void YKCGContextDrawBorder(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius) {
-  
+void YKCGContextDrawBorder(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat cornerRadius) {  
   _YKCGContextDrawStyledRect(context, rect, style, fillColor, strokeColor, strokeWidth, cornerRadius);
-  
-  if (alternateStrokeWidth > 0) {
-    CGContextSetLineWidth(context, alternateStrokeWidth);
-    CGContextBeginPath(context);
-    if (YKCGContextAddAlternateBorderToPath(context, rect, style))
-      CGContextDrawPath(context, kCGPathStroke);
-  }
 }
 
-void YKCGContextDrawBorderWithShadow(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat alternateStrokeWidth, CGFloat cornerRadius, CGColorRef shadowColor, CGFloat shadowBlur, BOOL saveRestore) {
+void YKCGContextDrawBorderWithShadow(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat cornerRadius, CGColorRef shadowColor, CGFloat shadowBlur, BOOL saveRestore) {
   if (saveRestore) CGContextSaveGState(context);
   CGContextSetShadowWithColor(context, CGSizeZero, shadowBlur, shadowColor);
-  YKCGContextDrawBorder(context, rect, style, fillColor, strokeColor, strokeWidth, alternateStrokeWidth, cornerRadius);
+  YKCGContextDrawBorder(context, rect, style, fillColor, strokeColor, strokeWidth, cornerRadius);
   if (saveRestore) CGContextRestoreGState(context);
 }
 

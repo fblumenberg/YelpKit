@@ -55,14 +55,16 @@
 - (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size {
   if ([_views count] == 0) return CGSizeMake(size.width, 0);
 
+  CGFloat lineHeight = (_lineSeparatorColor ? 1 : 0);
+  
   CGFloat x = _insets.left;
-  CGFloat y = _insets.top + 1;
+  CGFloat y = _insets.top + lineHeight;
   for (UIView *view in _views) {
     // If a tag is animating removal then lets return size without them
     BOOL skip = (_tagRemovalAnimating != NSNotFound && view.tag == _tagRemovalAnimating);
     if (!skip) {
       CGRect viewRect = [layout setFrame:CGRectMake(x, y, size.width - x - _insets.right, 0) view:view sizeToFit:YES];
-      y += viewRect.size.height + 1 + _insets.bottom;
+      y += viewRect.size.height + lineHeight + _insets.bottom;
     }
   }
   y += _insets.bottom;

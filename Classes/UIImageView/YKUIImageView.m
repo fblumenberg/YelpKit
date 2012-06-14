@@ -316,7 +316,7 @@
   
   if (_color && _color2) {
     CGContextSaveGState(context);
-    YKCGContextAddStyledRect(context, rect, YKUIBorderStyleRounded, _strokeWidth, _strokeWidth, cornerRadius);  
+    YKCGContextAddStyledRect(context, rect, YKUIBorderStyleRounded, _strokeWidth, cornerRadius);  
     CGContextClip(context);
     YKCGContextDrawShading(context, _color.CGColor, _color2.CGColor, NULL, NULL, rect.origin, CGPointMake(rect.origin.x, CGRectGetMaxY(rect)), YKUIShadingTypeLinear, NO, NO);
     CGContextRestoreGState(context);

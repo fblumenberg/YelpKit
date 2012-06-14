@@ -31,7 +31,7 @@
 
 @implementation YKTableViewDataSource
 
-@synthesize sectionIndexTitles=_sectionIndexTitles;
+@synthesize sectionIndexTitles=_sectionIndexTitles, sectionHeaderViewBlock=_sectionHeaderViewBlock;
 
 - (id)init {
   if ((self = [super init])) {
@@ -53,6 +53,7 @@
   [_sectionHeaderTitles release];
   [_sectionHeaderViews release];
   [_sectionFooterViews release];
+  Block_release(_sectionHeaderViewBlock);
   [super dealloc];
 }
 
@@ -251,7 +252,6 @@
 }
 
 - (void)setSectionHeaderTitle:(NSString *)title section:(NSInteger)section {
-  _headersExist = YES;
   if (title) {
     [[self _sectionHeaderTitles] setObject:title forKey:[NSNumber numberWithInteger:section]];
   } else {
@@ -260,7 +260,6 @@
 }
 
 - (void)setSectionHeaderTitles:(NSArray *)titles {
-  _headersExist = YES;
   NSInteger i = 0;
   for (NSString *title in titles) {
     [[self _sectionHeaderTitles] setObject:title forKey:[NSNumber numberWithInteger:i++]];
@@ -268,7 +267,6 @@
 }
 
 - (void)setSectionHeaderView:(UIView *)view section:(NSInteger)section {
-  _headersExist = YES;
   if (view) {
     if (!_sectionHeaderViews) _sectionHeaderViews = [[NSMutableDictionary alloc] init];
     [_sectionHeaderViews setObject:view forKey:[NSNumber numberWithInteger:section]];
@@ -287,7 +285,6 @@
 }
 
 - (BOOL)hasSectionHeaderForSection:(NSInteger)section {
-  if (!_headersExist) return NO;
   if ([self countForSection:section] > 0) 
     return ([_sectionHeaderTitles objectForKey:[NSNumber numberWithInteger:section]] != nil);
   return NO;  
@@ -351,19 +348,21 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-  if (!_headersExist) return nil;
   return [_sectionHeaderTitles objectForKey:[NSNumber numberWithInteger:section]];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-  if (!_headersExist) return nil;
-
   // Only show view if we have cells
-  if ([self countForSection:section] == 0) return nil;
+  //if ([self countForSection:section] == 0) return nil;
   
   NSString *sectionTitle = [self tableView:tableView titleForHeaderInSection:section];
-  if (!sectionTitle) return nil;
+
+  if (_sectionHeaderViewBlock) {
+    return _sectionHeaderViewBlock(section, sectionTitle);
+  }
   
+  if (!sectionTitle) return nil;
+    
   UIView *sectionHeaderView = [_sectionHeaderViews objectForKey:[NSNumber numberWithInteger:section]];  
 
   if ([sectionHeaderView respondsToSelector:@selector(setText:)]) {
@@ -374,10 +373,11 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-  if (!_headersExist) return 0.0f;
   UIView *sectionHeaderView = [self tableView:tableView viewForHeaderInSection:section];
   if (sectionHeaderView) {
-    return sectionHeaderView.frame.size.height;
+    CGFloat height = sectionHeaderView.frame.size.height;
+    if (height == 0) height = 24.0f; // Return a sane default, so we can at least debug
+    return height;
   }
   return 0.0f;
 }

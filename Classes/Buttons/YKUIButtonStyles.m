@@ -54,7 +54,7 @@
       button.disabledColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
       button.disabledColor2 = [UIColor colorWithRed:0.675 green:0.675 blue:0.675 alpha:1.0];
 
-      [button setBorderStyle:YKUIBorderStyleNone color:nil width:0 alternateWidth:0 cornerRadius:0];
+      [button setBorderStyle:YKUIBorderStyleNone color:nil width:0 cornerRadius:0];
       break;
 
     case YKUIButtonStyleBasic:
@@ -79,7 +79,7 @@
       button.disabledColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
       button.disabledColor2 = [UIColor colorWithRed:0.675 green:0.675 blue:0.675 alpha:1.0];
 
-      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor colorWithRed:0.659 green:0.671 blue:0.678 alpha:1.0] width:1.0 alternateWidth:0 cornerRadius:10.0];
+      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor colorWithRed:0.659 green:0.671 blue:0.678 alpha:1.0] width:1.0 cornerRadius:10.0];
       break;
 
     case YKUIButtonStyleBasicGrouped:
@@ -104,7 +104,7 @@
       button.disabledColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
       button.disabledColor2 = [UIColor colorWithRed:0.675 green:0.675 blue:0.675 alpha:1.0];
 
-      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor colorWithRed:0.659 green:0.671 blue:0.678 alpha:1.0] width:1.0 alternateWidth:0 cornerRadius:10.0];
+      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor colorWithRed:0.659 green:0.671 blue:0.678 alpha:1.0] width:1.0 cornerRadius:10.0];
       break;
 
     case YKUIButtonStyleDarkBlue:
@@ -130,7 +130,7 @@
       [button setBorderStyle:YKUIBorderStyleRounded
                      color:[UIColor blackColor]
                      width:0.5
-            alternateWidth:0
+           
               cornerRadius:6.0];
       break;
 
@@ -158,7 +158,7 @@
       [button setBorderStyle:YKUIBorderStyleRounded
                      color:[UIColor blackColor]
                      width:0.5
-            alternateWidth:0
+           
               cornerRadius:10.0];
       break;
 
@@ -185,7 +185,7 @@
       [button setBorderStyle:YKUIBorderStyleRounded
                      color:[UIColor blackColor]
                      width:0.5
-            alternateWidth:0
+           
               cornerRadius:6.0];
       break;
 
@@ -212,7 +212,7 @@
       [button setBorderStyle:YKUIBorderStyleRounded
                      color:[UIColor blackColor]
                      width:0
-            alternateWidth:0
+           
               cornerRadius:10.0];
       break;
 
@@ -238,7 +238,7 @@
       [button setBorderStyle:YKUIBorderStyleRounded
                      color:[UIColor blackColor]
                      width:0.5
-            alternateWidth:0
+           
               cornerRadius:6.0];
       break;
 
@@ -265,7 +265,7 @@
       [button setBorderStyle:YKUIBorderStyleRounded
                      color:[UIColor blackColor]
                      width:0.5
-            alternateWidth:0
+           
               cornerRadius:10.0];
 
       break;
@@ -312,7 +312,7 @@
       button.disabledColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
       button.disabledColor2 = [UIColor colorWithRed:0.675 green:0.675 blue:0.675 alpha:1.0];
 
-      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor colorWithWhite:0.78 alpha:1.0] width:1.0 alternateWidth:0 cornerRadius:10.0];
+      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor colorWithWhite:0.78 alpha:1.0] width:1.0 cornerRadius:10.0];
       button.borderShadowColor = [UIColor colorWithWhite:0 alpha:0.15];
       button.borderShadowBlur = 5;
       break;
@@ -341,7 +341,7 @@
       [button setBorderStyle:YKUIBorderStyleRounded
                      color:[UIColor blackColor]
                      width:1.0
-            alternateWidth:0
+           
               cornerRadius:6.0];
       break;
 
@@ -350,7 +350,7 @@
       [button setBorderStyle:YKUIBorderStyleNone
                      color:nil
                      width:0.0
-            alternateWidth:0
+           
               cornerRadius:0.0];
 
       button.color = [UIColor colorWithWhite:0.773 alpha:1.0];
@@ -387,7 +387,7 @@
       [button setBorderStyle:YKUIBorderStyleNone
                        color:nil
                        width:0.0
-              alternateWidth:0
+             
                 cornerRadius:0.0];
 
       button.color = [UIColor whiteColor];
@@ -441,7 +441,7 @@
       button.disabledColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
       button.disabledColor2 = [UIColor colorWithRed:0.675 green:0.675 blue:0.675 alpha:1.0];
 
-      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor whiteColor] width:3.5 alternateWidth:0 cornerRadius:20.0];
+      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor whiteColor] width:3.5 cornerRadius:20.0];
       break;
 
     case YKUIButtonStyleSkinnyYellow:
@@ -470,7 +470,7 @@
       button.disabledColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
       button.disabledColor2 = [UIColor colorWithRed:0.675 green:0.675 blue:0.675 alpha:1.0];
 
-      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor whiteColor] width:3.0 alternateWidth:0 cornerRadius:10.0];
+      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor whiteColor] width:3.0 cornerRadius:10.0];
       break;
 
     case YKUIButtonStyleGreen:
@@ -497,7 +497,7 @@
       button.disabledColor2 = [UIColor colorWithRed:0.675 green:0.675 blue:0.675 alpha:1.0];
 
       [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor blackColor] width:0.5
-            alternateWidth:0 cornerRadius:10.0];
+            cornerRadius:10.0];
       break;
 
     case YKUIButtonStyleBasicCellDisclosure:
@@ -523,7 +523,7 @@
       button.accessoryImage = [UIImage imageNamed:@"disclosure.png"];
       button.highlightedAccessoryImage = [UIImage imageNamed:@"disclosure_selected.png"];
 
-      [button setBorderStyle:YKUIBorderStyleBottomOnly color:[UIColor grayColor] width:0.5 alternateWidth:0 cornerRadius:0];
+      [button setBorderStyle:YKUIBorderStyleBottomOnly color:[UIColor grayColor] width:0.5 cornerRadius:0];
       break;
 
     case YKUIButtonStyleLightGray:
@@ -550,7 +550,7 @@
       button.disabledColor = [UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0];
       button.disabledColor2 = [UIColor colorWithRed:0.675 green:0.675 blue:0.675 alpha:1.0];
 
-      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor colorWithRed:0.82f green:0.82f blue:0.82f alpha:1.0f] width:1.0 alternateWidth:0 cornerRadius:10.0];
+      [button setBorderStyle:YKUIBorderStyleRounded color:[UIColor colorWithRed:0.82f green:0.82f blue:0.82f alpha:1.0f] width:1.0 cornerRadius:10.0];
       break;
   }
 

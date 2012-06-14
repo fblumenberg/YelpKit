@@ -32,13 +32,12 @@
 
 @implementation YKUIBorder
 
-@synthesize cornerRadius=_cornerRadius, color=_color, strokeWidth=_strokeWidth, alternateStrokeWidth=_alternateStrokeWidth, fillColor=_fillColor, highlightedColor=_highlightedColor, highlighted=_highlighted, style=_style, shadowColor=_shadowColor, shadowBlur=_shadowBlur, insets=_insets, shadingType=_shadingType, shadingColor=_shadingColor, shadingAlternateColor=_shadingAlternateColor, cornerColor=_cornerColor;
+@synthesize cornerRadius=_cornerRadius, color=_color, strokeWidth=_strokeWidth, fillColor=_fillColor, highlightedColor=_highlightedColor, highlighted=_highlighted, style=_style, shadowColor=_shadowColor, shadowBlur=_shadowBlur, insets=_insets, shadingType=_shadingType, shadingColor=_shadingColor, shadingAlternateColor=_shadingAlternateColor, cornerColor=_cornerColor;
 
 - (void)sharedInit {
   self.opaque = NO;
   _cornerRadius = 10.0;
   _strokeWidth = 1.0;
-  _alternateStrokeWidth = 1.0;
   _shadingType = YKUIShadingTypeNone;
   _shadowBlur = 3.0;
   _insets = UIEdgeInsetsZero;
@@ -58,7 +57,6 @@
     [self sharedInit];
     _color = [color retain];
     _strokeWidth = stroke;
-    _alternateStrokeWidth = stroke;
     _style = style;
   }
   return self;
@@ -102,7 +100,7 @@
     CGContextSaveGState(context);
     [_cornerColor setFill];
     CGPathRef rectPath = CGPathCreateWithRect(rect, NULL);
-    CGPathRef roundPath = YKCGPathCreateStyledRect(insetRect, _style, _strokeWidth, _alternateStrokeWidth, _cornerRadius);
+    CGPathRef roundPath = YKCGPathCreateStyledRect(insetRect, _style, _strokeWidth, _cornerRadius);
     CGContextAddPath(context, rectPath);  
     CGContextAddPath(context, roundPath);
     CGContextEOClip(context);  
@@ -113,13 +111,13 @@
   }
   
   if (_shadowColor) {
-    CGPathRef path = YKCGPathCreateStyledRect(insetRect, _style, _strokeWidth, _alternateStrokeWidth, _cornerRadius);
+    CGPathRef path = YKCGPathCreateStyledRect(insetRect, _style, _strokeWidth, _cornerRadius);
     CGContextAddPath(context, path);
     CGContextClip(context);
-    YKCGContextDrawBorderWithShadow(context, insetRect, _style, (self.highlighted ? _highlightedColor.CGColor : _fillColor.CGColor), _color.CGColor, _strokeWidth, _alternateStrokeWidth, _cornerRadius, _shadowColor.CGColor, _shadowBlur, YES);
+    YKCGContextDrawBorderWithShadow(context, insetRect, _style, (self.highlighted ? _highlightedColor.CGColor : _fillColor.CGColor), _color.CGColor, _strokeWidth, _cornerRadius, _shadowColor.CGColor, _shadowBlur, YES);
     CGPathRelease(path);
   } else {
-    YKCGContextDrawBorder(context, insetRect, _style, (self.highlighted ? _highlightedColor.CGColor : _fillColor.CGColor), _color.CGColor, _strokeWidth, _alternateStrokeWidth, _cornerRadius);
+    YKCGContextDrawBorder(context, insetRect, _style, (self.highlighted ? _highlightedColor.CGColor : _fillColor.CGColor), _color.CGColor,_strokeWidth, _cornerRadius);
   }
 }
 

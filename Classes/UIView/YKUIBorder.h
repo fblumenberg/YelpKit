@@ -44,7 +44,6 @@
   CGFloat _cornerRadius;
   UIColor *_color;
   CGFloat _strokeWidth;
-  CGFloat _alternateStrokeWidth;
   UIColor *_fillColor;
   UIColor *_highlightedColor;
   UIColor *_cornerColor;
@@ -64,7 +63,6 @@
 @property (assign, nonatomic) CGFloat cornerRadius;
 @property (retain, nonatomic) UIColor *color;
 @property (assign, nonatomic) CGFloat strokeWidth;
-@property (assign, nonatomic) CGFloat alternateStrokeWidth;
 @property (retain, nonatomic) UIColor *fillColor;
 @property (retain, nonatomic) UIColor *cornerColor;
 @property (retain, nonatomic) UIColor *highlightedColor;

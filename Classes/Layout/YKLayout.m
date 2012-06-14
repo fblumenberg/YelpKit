@@ -141,6 +141,10 @@ static NSMutableDictionary *gDebugStats = NULL;
 }
 
 - (CGRect)setFrame:(CGRect)frame view:(UIView *)view options:(YKLayoutOptions)options {
+  return [self setFrame:frame inRect:CGRectZero view:view options:options];
+}
+
+- (CGRect)setFrame:(CGRect)frame inRect:(CGRect)inRect view:(UIView *)view options:(YKLayoutOptions)options {
   CGRect originalFrame = frame;
   BOOL sizeToFit = ((options & YKLayoutOptionsSizeToFit) == YKLayoutOptionsSizeToFit)
   || ((options & YKLayoutOptionsVariableWidth) == YKLayoutOptionsVariableWidth)
@@ -196,16 +200,19 @@ static NSMutableDictionary *gDebugStats = NULL;
   }
   
   CGSize sizeForAlign = frame.size;
+  CGRect rect = originalFrame;
+  if (!CGRectIsEmpty(inRect)) rect = inRect;
+
   if ((options & YKLayoutOptionsCenter) == YKLayoutOptionsCenter) {
-    frame = YKCGRectToCenterInRect(sizeForAlign, originalFrame);
+    frame = YKCGRectToCenterInRect(sizeForAlign, rect);
   }
   
   if ((options & YKLayoutOptionsCenterVertical) == YKLayoutOptionsCenterVertical) {
-    frame = YKCGRectToCenterY(CGRectMake(frame.origin.x, frame.origin.y, sizeForAlign.width, sizeForAlign.height), originalFrame);
+    frame = YKCGRectToCenterY(CGRectMake(frame.origin.x, frame.origin.y, sizeForAlign.width, sizeForAlign.height), rect);
   }
 
   if ((options & YKLayoutOptionsRightAlign) == YKLayoutOptionsRightAlign) {
-    frame = YKCGRectRightAlignWithRect(frame, originalFrame);
+    frame = YKCGRectRightAlignWithRect(frame, rect);
   }
 
   [self setFrame:frame view:view];

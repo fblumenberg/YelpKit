@@ -29,6 +29,11 @@
 
 #import "YKTableViewCellDataSource.h"
 
+/*!
+ Fail block. If error is nil, it means the request was cancelled.
+ */
+typedef UIView * (^YKTableViewSectionHeaderViewBlock)(NSInteger section, NSString *sectionTitle);
+
 
 @interface YKTableViewDataSource : NSObject <UITableViewDelegate, UITableViewDataSource> {  
   NSMutableDictionary */*Row -> NSMutableArray of id<YKTableViewCellDataSource>*/_cellDataSourceSections;
@@ -40,11 +45,11 @@
   
   NSInteger _sectionCount; // We need to keep section count stable since row animating requires tht we don't add or remove sections while animating.
   
-  // We can optimize away *forHeaderInSection by tracking if we've ever had headers set
-  BOOL _headersExist;
+  YKTableViewSectionHeaderViewBlock _sectionHeaderViewBlock;
 }
 
 @property (retain, nonatomic) NSArray *sectionIndexTitles;
+@property (copy, nonatomic) YKTableViewSectionHeaderViewBlock sectionHeaderViewBlock;
 
 /*!
  Create empty data source.
