@@ -34,9 +34,15 @@
 #import "UIImage+YKUtils.h"
 #import "YKImageMemoryCache.h"
 
+static BOOL gYKUIImageViewDisableRenderInBackground = NO;
+
 @implementation YKUIImageBaseView
 
 @synthesize image=_image, status=_status, delegate=_delegate, imageLoader=_imageLoader, statusBlock=_statusBlock, renderInBackground=_renderInBackground;
+
++ (void)setDisableRenderInBackground:(BOOL)disableRenderInBackground {
+  gYKUIImageViewDisableRenderInBackground = disableRenderInBackground;
+}
 
 - (void)sharedInit {
   self.opaque = NO;
@@ -123,8 +129,8 @@
   [image retain];
   [_image release];
   _image = image;
-  
-  if (_renderInBackground) {
+
+  if (_renderInBackground && !gYKUIImageViewDisableRenderInBackground) {
     if (image) {
       [self renderInBackgroundWithCompletion:^{
         [self didLoadImage:image];
@@ -345,7 +351,7 @@
   } else if (_renderedBlankContents) {
     // If we have a rendered blank version of ourself, draw that
     CGContextDrawImage(context, rect, _renderedBlankContents.CGImage);
-  } else if (_renderInBackground) {
+  } else if (_renderInBackground && !gYKUIImageViewDisableRenderInBackground) {
     // Render, save, and draw a blank version of ourself
     UIImage *renderedImage = [UIImage imageFromDrawOperations:^(CGContextRef context) {
       [self drawImage:nil inRect:YKCGRectZeroOrigin(rect) contentMode:contentMode];
