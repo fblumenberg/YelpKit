@@ -213,6 +213,7 @@ extern NSString *const YKErrorServerUnauthorized; // Server returned 401
  */
 @interface YKHTTPError : YKError {
   NSInteger _HTTPStatus;
+  NSData *_data;
 }
 
 /*!
@@ -221,10 +222,37 @@ extern NSString *const YKErrorServerUnauthorized; // Server returned 401
 @property (readonly, assign, nonatomic) NSInteger HTTPStatus;
 
 /*!
+ Response data.
+ */
+@property (readonly, retain, nonatomic) NSData *data;
+
+/*!
+ Create error with HTTP status and response data.
+ @param HTTPStatus HTTP status
+ @param data Response data
+ */
+- (id)initWithHTTPStatus:(NSInteger)HTTPStatus data:(NSData *)data;
+
+/*!
+ Create error with HTTP status and response data.
+ @param HTTPStatus HTTP status
+ @param data Response data
+ @param localizedDescription Custom description
+ */
+- (id)initWithHTTPStatus:(NSInteger)HTTPStatus data:(NSData *)data localizedDescription:(NSString *)localizedDescription;
+
+/*!
  Create error with HTTP status.
  @param HTTPStatus HTTP status
  */
 + (YKHTTPError *)errorWithHTTPStatus:(NSInteger)HTTPStatus;
+
+/*!
+ Create error with HTTP status and response data.
+ @param HTTPStatus HTTP status
+ @param data Response data
+ */
++ (YKHTTPError *)errorWithHTTPStatus:(NSInteger)HTTPStatus data:(NSData *)data;
 
 /*!
  YKError key for HTTP status.

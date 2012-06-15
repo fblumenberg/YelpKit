@@ -94,14 +94,14 @@
 - (void)setNavigationTitle:(NSString *)title animated:(BOOL)animated;
 
 /*!
- Set left navigation button with title.
+ Set navigation button with title.
+ @param title
+ @param iconImage
+ @param position
+ @param style
+ @param animated
  */
-- (YKUIButton *)setNavigationLeftButtonWithTitle:(NSString *)title style:(YKUINavigationButtonStyle)style animated:(BOOL)animated target:(id)target action:(SEL)action;
-
-/*!
- Set right navigation button with title.
- */
-- (YKUIButton *)setNavigationRightButtonWithTitle:(NSString *)title style:(YKUINavigationButtonStyle)style animated:(BOOL)animated target:(id)target action:(SEL)action;
+- (YKUIButton *)setNavigationButtonWithTitle:(NSString *)title iconImage:(UIImage *)iconImage position:(YKUINavigationPosition)position style:(YKUINavigationButtonStyle)style animated:(BOOL)animated target:(id)target action:(SEL)action;
 
 /*!
  Apply style for navigation button.

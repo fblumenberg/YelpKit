@@ -132,8 +132,6 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
   
   NSTimer *_timer;
   
-  BOOL _JSONEnabled; // To enable JSON parsing (iOS5)
-  
   BOOL _detachOnThread; //! Experimental!
   
   // Response data
@@ -176,8 +174,6 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
 @property (readonly, nonatomic) NSUInteger bytesWritten;
 
 @property (assign, nonatomic) BOOL detachOnThread;
-
-@property (assign, nonatomic, getter=isJSONEnabled) BOOL JSONEnabled;
 
 @property (readonly, retain, nonatomic) NSData *responseData;
 
@@ -455,6 +451,27 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
  @result YES if cache policy enabled 
  */
 - (BOOL)shouldStoreInCache;
+
+/*!
+ Object for data. 
+
+ By default this returns the same data object passed in.
+ 
+ Subclasses can override to create an object from the data.
+ For example, a JSON request might implement this method to parse the 
+ NSData and return an NSArray or NSDictionary.
+ */
+- (id)objectForData:(NSData *)data error:(YKError **)error;
+
+/*!
+ Error for status and response data.
+ 
+ By default this returns a YKHTTPError instance.
+ 
+ @param HTTPStatus HTTP status
+ @param data Data
+ */
+- (YKHTTPError *)errorForHTTPStatus:(NSInteger)HTTPStatus data:(NSData *)data;
 
 /*!
  The shared cache used by this request.

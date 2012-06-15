@@ -52,7 +52,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 
 @implementation YKURLRequest
 
-@synthesize connection=_connection, timeout=_timeout, request=_request, response=_response, delegate=__delegate, finishSelector=_finishSelector, failSelector=_failSelector, cancelSelector=_cancelSelector, expiresAge=_expiresAge, URL=_URL, cacheName=_cacheName, cachePolicy=_cachePolicy, mockResponse=_mockResponse, mockResponseDelayInterval=_mockResponseDelayInterval, dataInterval=_dataInterval, totalInterval=_totalInterval, start=_start, downloadedData=_downloadedData, cacheHit=_cacheHit, inCache=_inCache, stopped=_stopped, error=_error, detachOnThread=_detachOnThread, started=_started, responseInterval=_responseInterval, runLoop=_runLoop, sentInterval=_sentInterval, bytesWritten=_bytesWritten, JSONEnabled=_JSONEnabled;
+@synthesize connection=_connection, timeout=_timeout, request=_request, response=_response, delegate=__delegate, finishSelector=_finishSelector, failSelector=_failSelector, cancelSelector=_cancelSelector, expiresAge=_expiresAge, URL=_URL, cacheName=_cacheName, cachePolicy=_cachePolicy, mockResponse=_mockResponse, mockResponseDelayInterval=_mockResponseDelayInterval, dataInterval=_dataInterval, totalInterval=_totalInterval, start=_start, downloadedData=_downloadedData, cacheHit=_cacheHit, inCache=_inCache, stopped=_stopped, error=_error, detachOnThread=_detachOnThread, started=_started, responseInterval=_responseInterval, runLoop=_runLoop, sentInterval=_sentInterval, bytesWritten=_bytesWritten;
 @synthesize responseData=_responseData, finishBlock=_finishBlock, failBlock=_failBlock; // Private properties
 
 
@@ -396,23 +396,23 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   [[self gh_proxyOnMainThread:YES] _stop];
 }
 
+- (id)objectForData:(NSData *)data error:(YKError **)error {
+  return data;
+}
+
 - (void)didFinishWithData:(NSData *)data cacheKey:(NSString *)cacheKey {   
   self.responseData = data;
   // TODO(gabe): In experimental threaded request, caching isn't thread safe (so this call isn't completely safe)
   [self cacheDataIfEnabled:data cacheKey:cacheKey];
   
   if (_stopped) return;
-  
-  id obj = data;
 
-  if (_JSONEnabled && NSClassFromString(@"NSJSONSerialization")) {
-    NSError *error = nil;
-    obj = [NSJSONSerialization JSONObjectWithData:self.responseData options:0 error:&error];
-    if (!obj) {
-      [self didError:[YKError errorWithError:error]];
-      return;
-    }
-  }
+  YKError *error = nil;
+  id obj = [self objectForData:data error:&error];
+  if (error) {
+    [self didError:error];
+    return;
+  }  
   
   if (_finishSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_finishSelector withObject:self withObject:obj];
   if (_finishBlock != NULL) _finishBlock(obj);
@@ -591,6 +591,10 @@ static BOOL gAuthProtectionDisabled = NO;
   }
 }
 
+- (YKHTTPError *)errorForHTTPStatus:(NSInteger)HTTPStatus data:(NSData *)data {
+  return [YKHTTPError errorWithHTTPStatus:HTTPStatus data:data];
+}
+
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
   if (_stopped) {
     YKDebug(@"Ignoring connectionDidFinishLoading:, stopped");
@@ -606,7 +610,7 @@ static BOOL gAuthProtectionDisabled = NO;
     if (_downloadedData) {
       YKDebug(@"Error: %@", [self downloadedDataAsString]);
     }
-    [self didError:[YKHTTPError errorWithHTTPStatus:status]];
+    [self didError:[self errorForHTTPStatus:status data:_downloadedData]];
   } else {
     [self didLoadData:_downloadedData withResponse:_response cacheKey:_URL.cacheableURLString];
   }
