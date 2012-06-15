@@ -91,13 +91,13 @@ typedef enum {
  @param rightButton
  @param animated
  */
-- (void)setRightButton:(UIView *)rightButton animated:(BOOL)animated;
+- (void)setRightButton:(UIView *)rightButton style:(YKUINavigationButtonStyle)style animated:(BOOL)animated;
 
 /*!
  Set left button.
  @param leftButton
  @param animated
  */
-- (void)setLeftButton:(UIView *)leftButton animated:(BOOL)animated;
+- (void)setLeftButton:(UIView *)leftButton style:(YKUINavigationButtonStyle)style animated:(BOOL)animated;
 
 @end

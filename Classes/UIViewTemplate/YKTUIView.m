@@ -132,10 +132,10 @@
   [self applyStyleForNavigationButton:button style:style];
   switch (position) {
     case YKUINavigationPositionLeft:
-      [self.navigationBar setLeftButton:button animated:animated];
+      [self.navigationBar setLeftButton:button style:YKUINavigationButtonStyleDefault animated:animated];
       break;
     case YKUINavigationPositionRight:
-      [self.navigationBar setRightButton:button animated:animated];
+      [self.navigationBar setRightButton:button style:YKUINavigationButtonStyleDefault animated:animated];
       break;
   }
 
