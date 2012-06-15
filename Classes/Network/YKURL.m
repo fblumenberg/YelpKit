@@ -54,7 +54,7 @@
 }
 
 + (YKURL *)URLWithHost:(NSString *)host path:(NSString *)path queryParams:(NSDictionary *)queryParams secure:(BOOL)secure {
-    return [[[self class] alloc] initWithHost:host path:path queryParams:queryParams secure:secure];
+  return [[[[self class] alloc] initWithHost:host path:path queryParams:queryParams secure:secure] autorelease];
 }
 
 - (NSString *)description {

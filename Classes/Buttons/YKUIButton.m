@@ -572,7 +572,7 @@
   if (!_titleHidden) {
     CGFloat lineWidth = titleSize.width + titleInsets.left + titleInsets.right;
     if (showIcon && _iconPosition == YKUIButtonIconPositionLeft) lineWidth += iconSize.width;
-    CGFloat x = bounds.origin.x + _insets.left;
+    CGFloat x = 0;
     
     if (_titleAlignment == UITextAlignmentCenter) {
       CGFloat width = size.width - _insets.left - _insets.right;

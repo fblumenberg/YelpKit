@@ -56,7 +56,7 @@
   // Add the nav bar if we are being used in a view controller
   [self addSubview:_navigationBar];
 
-  YKTUIViewController *viewController = [self createViewControllerForView];
+  YKTUIViewController *viewController = [[self createViewControllerForView] retain];
   _viewController = viewController;
   return _viewController;
 }
@@ -64,12 +64,12 @@
 - (YKTUIViewController *)createViewControllerForView {
   YKTUIViewController *viewController = [[YKTUIViewController alloc] init];  
   [viewController setContentView:self];
-  return viewController;
+  return [viewController autorelease];
 }
 
 - (YKTUIViewController *)viewController:(BOOL)create {
   if (!create || _viewController) return _viewController;
-  return [self newViewController];
+  return [[self newViewController] autorelease];
 }
 
 - (void)swapView:(YKTUIView *)view fromView:(YKTUIView *)fromView transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration {
@@ -130,7 +130,7 @@
   [button setTarget:target action:action];
   [self applyStyleForNavigationButton:button style:style];
   [self.navigationBar setLeftButton:button animated:animated];
-  return button;
+  return [button autorelease];
 }
 
 - (YKUIButton *)setNavigationRightButtonWithTitle:(NSString *)title style:(YKUINavigationButtonStyle)style animated:(BOOL)animated target:(id)target action:(SEL)action {
@@ -139,7 +139,7 @@
   [button setTarget:target action:action];
   [self applyStyleForNavigationButton:button style:style];
   [self.navigationBar setRightButton:button animated:animated];
-  return button;
+  return [button autorelease];
 }
 
 - (void)_viewWillAppear:(BOOL)animated { 

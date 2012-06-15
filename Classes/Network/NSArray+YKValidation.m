@@ -36,7 +36,7 @@
   if (index >= [self count]) {
     NSString *reason = [NSString stringWithFormat:@"Object out of range at index %d (%d elements in array).", index, [self count]];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self forKey:@"array"];
-    @throw [[YKValidationException alloc] initWithName:@"YKValidationException" reason:reason userInfo:userInfo];
+    @throw [[[YKValidationException alloc] initWithName:@"YKValidationException" reason:reason userInfo:userInfo] autorelease];
   }
   id object = [self objectAtIndex:index];
   if (object == [NSNull null] || [object isEqual:[NSNull null]])
@@ -49,7 +49,7 @@
   if (object && ![object isKindOfClass:expectedClass]) {
     NSString *reason = [NSString stringWithFormat:@"Object at index '%d' should have been %@ but was %@.", index, NSStringFromClass(expectedClass), NSStringFromClass([object class])];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self forKey:@"array"];
-    @throw [[YKValidationException alloc] initWithName:@"YKValidationException" reason:reason userInfo:userInfo];
+    @throw [[[YKValidationException alloc] initWithName:@"YKValidationException" reason:reason userInfo:userInfo] autorelease];
   }
   return object;
 }
@@ -60,7 +60,9 @@
 
 - (id)yk_NSStringOrNSNumberMaybeNilAtIndex:(NSInteger)index {
   id object = [self yk_objectAtIndex:index];
-  if (object && ![object isKindOfClass:[NSString class]] && ![object isKindOfClass:[NSNumber class]]) @throw [[YKValidationException alloc] initWithName:@"YKValidationException" reason:[NSString stringWithFormat:@"Object was supposed to be NSString or NSNumber but was %@", NSStringFromClass([object class])] userInfo:nil];
+  if (object && ![object isKindOfClass:[NSString class]] && ![object isKindOfClass:[NSNumber class]]) {
+    @throw [[[YKValidationException alloc] initWithName:@"YKValidationException" reason:[NSString stringWithFormat:@"Object was supposed to be NSString or NSNumber but was %@", NSStringFromClass([object class])] userInfo:nil] autorelease];
+  }
   return object;
 }
 

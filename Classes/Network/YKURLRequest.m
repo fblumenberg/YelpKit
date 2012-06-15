@@ -141,7 +141,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 }
 
 + (id)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
-  YKURLRequest *request = [[[self class] alloc] init];
+  YKURLRequest *request = [[[[self class] alloc] init] autorelease];
   if ([request requestWithURL:URL method:method headers:headers postParams:postParams keyEnumerator:keyEnumerator finishBlock:finishBlock failBlock:failBlock]) return request;
   return nil;
 }
