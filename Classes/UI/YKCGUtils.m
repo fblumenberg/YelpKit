@@ -70,15 +70,20 @@ CGPathRef YKCGPathCreateRoundedRect(CGRect rect, CGFloat strokeWidth, CGFloat co
   
   CGFloat fw, fh;
   
-  CGRect insetRect = CGRectInset(rect, strokeWidth/2.0, strokeWidth/2.0);
+  CGRect insetRect = CGRectInset(rect, strokeWidth/2.0f, strokeWidth/2.0f);
   CGFloat cornerWidth = cornerRadius, cornerHeight = cornerRadius;
   
   CGAffineTransform transform = CGAffineTransformIdentity;
   transform = CGAffineTransformTranslate(transform, CGRectGetMinX(insetRect), CGRectGetMinY(insetRect));
-  transform = CGAffineTransformScale(transform, cornerWidth, cornerHeight);
+  if (cornerWidth > 0 && cornerHeight > 0) {
+    transform = CGAffineTransformScale(transform, cornerWidth, cornerHeight);
+    fw = CGRectGetWidth(insetRect) / cornerWidth;
+    fh = CGRectGetHeight(insetRect) / cornerHeight;
+  } else {
+    fw = CGRectGetWidth(insetRect);
+    fh = CGRectGetHeight(insetRect);
+  }
   
-  fw = CGRectGetWidth(insetRect) / cornerWidth;
-  fh = CGRectGetHeight(insetRect) / cornerHeight;
   CGPathMoveToPoint(path, &transform, fw, fh/2); 
   CGPathAddArcToPoint(path, &transform, fw, fh, fw/2, fh, 1);
   CGPathAddArcToPoint(path, &transform, 0, fh, 0, fh/2, 1);
