@@ -106,6 +106,12 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
   [self setURL:URL queue:[YKImageLoaderQueue sharedQueue]];
 }
 
++ (void)preloadImageWithURLString:(NSString *)URLString {
+  YKImageLoader *imageLoader = [[YKImageLoader alloc] initWithLoadingImage:nil defaultImage:nil errorImage:nil delegate:nil];
+  [imageLoader setURLString:URLString];
+  [imageLoader autorelease];
+}
+
 - (void)setURL:(YKURL *)URL queue:(YKImageLoaderQueue *)queue {  
   YKAssertMainThread();
   [self cancel];
