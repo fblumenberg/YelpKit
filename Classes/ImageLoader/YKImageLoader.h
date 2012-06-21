@@ -142,39 +142,12 @@ typedef enum {
 @end
 
 
-/*!
- Image loader queue.
- */
-@interface YKImageLoaderQueue : NSObject {
-  NSMutableArray *_waitingQueue;
-  NSMutableArray *_loadingQueue;
-  
-  NSInteger _maxLoadingCount;
+@interface YKImageLoaders : NSObject <YKImageLoaderDelegate> {
+  NSMutableArray *_imageLoaders;
 }
 
-+ (YKImageLoaderQueue *)sharedQueue;
++ (YKImageLoaders *)shared;
 
-/*!
- Enqueue an image loader.
- @param imageLoader Image laoder to enqueue
- */
-- (void)enqueue:(YKImageLoader *)imageLoader;
-
-/*!
- Dequeue an image loader.
- @param imageLoader Image laoder to dequeue
- */
-- (void)dequeue:(YKImageLoader *)imageLoader;
-
-/*!
- Check the queue.
- */
-- (void)check;
-
-/*!
- Called when the image loader finished.
- @param imageLoader Image loader that finished
- */
-- (void)imageLoaderDidEnd:(YKImageLoader *)imageLoader;
+- (void)add:(YKImageLoader *)imageLoader;
 
 @end
