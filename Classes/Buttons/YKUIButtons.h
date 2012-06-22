@@ -39,8 +39,9 @@ typedef enum {
 
 typedef enum {
   YKUIButtonsSelectionModeNone = 0, // Default
-  YKUIButtonsSelectionModeSingle,
-  YKUIButtonsSelectionModeMultiple,
+  YKUIButtonsSelectionModeSingle, // Only select 1 (no toggle)
+  YKUIButtonsSelectionModeMultiple, // Can toggle multiple on and off
+  YKUIButtonsSelectionModeSingleToggle, // Only select 1 (toggle)
 } YKUIButtonsSelectionMode;
 
 typedef void (^YKUIButtonsApplyBlock)(YKUIButton *button, NSInteger index);
