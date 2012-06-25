@@ -285,7 +285,8 @@
 }
 
 - (void)setSelected:(BOOL)selected index:(NSInteger)index {
-  YKUIButton *button = [_buttons objectAtIndex:index];
+  YKUIButton *button = [_buttons gh_objectAtIndex:index];
+  if (!button) return;
   [self setSelected:selected button:button];
 }
 
@@ -297,7 +298,8 @@
 }
 
 - (BOOL)isSelectedAtIndex:(NSInteger)index {
-  YKUIButton *button = [_buttons objectAtIndex:index];
+  YKUIButton *button = [_buttons gh_objectAtIndex:index];
+  if (!button) return NO;
   return button.isSelected;
 }
 
