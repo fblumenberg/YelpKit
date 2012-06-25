@@ -303,11 +303,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   if (notify) {
     YKDebug(@"Cancel (%@/%@)", self.delegate, NSStringFromSelector(_cancelSelector));
     if (_cancelSelector != NULL) {
-      if ([NSThread isMainThread]) {
-        [__delegate performSelector:_cancelSelector withObject:self];
-      } else {
-        [[__delegate gh_proxyOnMainThread:YES] performSelector:_cancelSelector withObject:self];
-      }
+      [[__delegate gh_proxyOnMainThread:YES] performSelector:_cancelSelector withObject:self];
     }
     if (_failBlock != NULL) _failBlock(nil);
   }
@@ -398,11 +394,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   [_error release];
   _error = error;
   if (_failSelector != NULL) {
-    if ([NSThread isMainThread]) {
-       [__delegate performSelector:_failSelector withObject:self withObject:error];
-    } else {
-      [[__delegate gh_proxyOnMainThread:YES] performSelector:_failSelector withObject:self withObject:error];
-    }
+    [[__delegate gh_proxyOnMainThread:YES] performSelector:_failSelector withObject:self withObject:error];
   }
   if (_failBlock != NULL) _failBlock(error);
   [self _stop];
@@ -427,11 +419,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   }  
   
   if (_finishSelector != NULL) {
-    if ([NSThread isMainThread]) {
-      [__delegate performSelector:_finishSelector withObject:self withObject:obj];
-    } else {
-      [[__delegate gh_proxyOnMainThread:YES] performSelector:_finishSelector withObject:self withObject:obj];
-    }
+    [[__delegate gh_proxyOnMainThread:YES] performSelector:_finishSelector withObject:self withObject:obj];
   }
   if (_finishBlock != NULL) _finishBlock(obj);
   [self _stop];
