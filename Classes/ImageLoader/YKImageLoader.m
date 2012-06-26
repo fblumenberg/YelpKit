@@ -32,6 +32,7 @@
 #import "YKImageMemoryCache.h"
 #import "YKResource.h"
 #import "YKDefines.h"
+#import "YKImageLoaderQueue.h"
 
 @interface YKImageLoader ()
 @property (retain, nonatomic) YKURL *URL;
@@ -99,6 +100,13 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
   } else {
     self.URL = nil;
   }
+}
+
++ (void)preloadImageWithURLString:(NSString *)URLString {
+  YKImageLoader *imageLoader = [[YKImageLoader alloc] init];
+  [imageLoader setURLString:URLString];
+  [[YKImageLoaders shared] add:imageLoader];
+  [imageLoader autorelease];
 }
 
 - (void)setURL:(YKURL *)URL {
@@ -257,77 +265,46 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
 
 @end
 
-@implementation YKImageLoaderQueue
+@implementation YKImageLoaders
 
-- (id)init {
-  if ((self = [super init])) {
-    _waitingQueue = [[NSMutableArray alloc] initWithCapacity:40];
-    _loadingQueue = [[NSMutableArray alloc] initWithCapacity:40];
-    _maxLoadingCount = 2;
-  }
-  return self;
-}
-
-- (void)dealloc {  
-  for (YKImageLoader *imageLoader in _waitingQueue)
-    imageLoader.queue = nil;
-
-  for (YKImageLoader *imageLoader in _loadingQueue)
-    imageLoader.queue = nil;
-
-  [_waitingQueue release];
-  [_loadingQueue release];  
+- (void)dealloc {
+  [_imageLoaders release];
   [super dealloc];
 }
 
-+ (YKImageLoaderQueue *)sharedQueue {
-  static YKImageLoaderQueue *gSharedQueue = NULL;
-  @synchronized([YKImageLoaderQueue class]) {
-    if (gSharedQueue == NULL) gSharedQueue = [[YKImageLoaderQueue alloc] init];
-  }
-  return gSharedQueue;
-}
-
-- (void)_updateIndicator {
-  if ([_waitingQueue count] == 0 && [_loadingQueue count] == 0) [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-  else [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-}
-
-- (void)enqueue:(YKImageLoader *)imageLoader {
-  YKAssertMainThread();
-  if (![_waitingQueue containsObject:imageLoader]) {
-    [_waitingQueue addObject:imageLoader];
-    [self check];
-    [self _updateIndicator];
-  }
-}
-
-- (void)dequeue:(YKImageLoader *)imageLoader {
-  YKAssertMainThread();  
-  imageLoader.queue = nil;
-  [_waitingQueue removeObject:imageLoader];
-  [_loadingQueue removeObject:imageLoader];
-  [self _updateIndicator];
-}
-
-- (void)check {
-  if ([_loadingQueue count] < _maxLoadingCount && [_waitingQueue count] > 0) {    
-    YKImageLoader *imageLoader = [_waitingQueue objectAtIndex:0];
-    [_loadingQueue addObject:imageLoader];
-    [_waitingQueue removeObjectAtIndex:0];
-    imageLoader.queue = self;
-    [imageLoader load];
-    [self _updateIndicator];
-  }
-}
-
-- (void)imageLoaderDidEnd:(YKImageLoader *)imageLoader {
-  imageLoader.queue = nil;
-  [_loadingQueue removeObject:imageLoader];
-  [self _updateIndicator];
-  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-    [self check];
++ (YKImageLoaders *)shared {
+  static dispatch_once_t predicate;
+  static YKImageLoaders *gShared = nil;
+  
+  dispatch_once(&predicate, ^{
+    gShared = [[self alloc] init];
   });
+  return gShared;
+}
+
+- (void)add:(YKImageLoader *)imageLoader {
+  YKAssert(!imageLoader.delegate, @"Delegate shouldn't be set already");
+  if (!_imageLoaders) _imageLoaders = [[NSMutableArray alloc] init];
+  [_imageLoaders addObject:imageLoader];
+  imageLoader.delegate = self;
+}
+
+- (void)remove:(YKImageLoader *)imageLoader {
+  imageLoader.delegate = nil;
+  [imageLoader retain];
+  [_imageLoaders removeObject:imageLoader];
+  [imageLoader autorelease];
+}
+
+- (void)imageLoader:(YKImageLoader *)imageLoader didUpdateStatus:(YKImageLoaderStatus)status image:(UIImage *)image {
+  switch (status) {
+    case YKImageLoaderStatusLoaded:
+    case YKImageLoaderStatusErrored:
+      [self remove:imageLoader];
+      break;
+    default:
+      break;
+  }
 }
 
 @end

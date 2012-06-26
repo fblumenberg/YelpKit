@@ -163,10 +163,10 @@
 }
 
 - (void)setLeftButton:(UIView *)leftButton {
-  [self setLeftButton:leftButton animated:NO];
+  [self setLeftButton:leftButton style:YKUINavigationButtonStyleDefault animated:NO];
 }
 
-- (void)setLeftButton:(UIView *)leftButton animated:(BOOL)animated {
+- (void)setLeftButton:(UIView *)leftButton style:(YKUINavigationButtonStyle)style animated:(BOOL)animated {
   if (animated) {
     UIView *oldLeftButton = _leftButton;
     _leftButton = leftButton;
@@ -195,10 +195,10 @@
 }
 
 - (void)setRightButton:(UIView *)rightButton {
-  [self setRightButton:rightButton animated:NO];
+  [self setRightButton:rightButton style:YKUINavigationButtonStyleDefault animated:NO];
 }
 
-- (void)setRightButton:(UIView *)rightButton animated:(BOOL)animated {
+- (void)setRightButton:(UIView *)rightButton style:(YKUINavigationButtonStyle)style animated:(BOOL)animated {
   if (animated) {
     UIView *oldRightButton = _rightButton;
     _rightButton = rightButton;

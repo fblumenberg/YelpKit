@@ -141,7 +141,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 }
 
 + (id)requestWithURL:(YKURL *)URL method:(YPHTTPMethod)method headers:(NSDictionary *)headers postParams:(NSDictionary *)postParams keyEnumerator:(NSEnumerator *)keyEnumerator finishBlock:(YKURLRequestFinishBlock)finishBlock failBlock:(YKURLRequestFailBlock)failBlock {
-  YKURLRequest *request = [[[self class] alloc] init];
+  YKURLRequest *request = [[[[self class] alloc] init] autorelease];
   if ([request requestWithURL:URL method:method headers:headers postParams:postParams keyEnumerator:keyEnumerator finishBlock:finishBlock failBlock:failBlock]) return request;
   return nil;
 }
@@ -302,7 +302,9 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   [self didCancel];
   if (notify) {
     YKDebug(@"Cancel (%@/%@)", self.delegate, NSStringFromSelector(_cancelSelector));
-    if (_cancelSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_cancelSelector withObject:self];
+    if (_cancelSelector != NULL) {
+      [[__delegate gh_proxyOnMainThread:YES] performSelector:_cancelSelector withObject:self];
+    }
     if (_failBlock != NULL) _failBlock(nil);
   }
   [self _stop];
@@ -391,7 +393,9 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   [error retain];
   [_error release];
   _error = error;
-  if (_failSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_failSelector withObject:self withObject:error];
+  if (_failSelector != NULL) {
+    [[__delegate gh_proxyOnMainThread:YES] performSelector:_failSelector withObject:self withObject:error];
+  }
   if (_failBlock != NULL) _failBlock(error);
   [self _stop];
 }
@@ -414,7 +418,9 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
     return;
   }  
   
-  if (_finishSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_finishSelector withObject:self withObject:obj];
+  if (_finishSelector != NULL) {
+    [[__delegate gh_proxyOnMainThread:YES] performSelector:_finishSelector withObject:self withObject:obj];
+  }
   if (_finishBlock != NULL) _finishBlock(obj);
   [self _stop];
 }

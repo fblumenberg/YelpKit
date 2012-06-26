@@ -91,6 +91,12 @@ typedef enum {
 + (YKImageLoader *)imageLoaderWithURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage errorImage:(UIImage *)errorImage delegate:(id<YKImageLoaderDelegate>)delegate;
 
 /*!
+ Preload image with URLString.
+ @param URLString
+ */
++ (void)preloadImageWithURLString:(NSString *)URLString;
+
+/*!
  Set a global mock image.
  If the mock image is set to something non-nil, all instances of YKImageLoader
  will return the mock image instead of loading the image specified by the URL.
@@ -136,39 +142,12 @@ typedef enum {
 @end
 
 
-/*!
- Image loader queue.
- */
-@interface YKImageLoaderQueue : NSObject {
-  NSMutableArray *_waitingQueue;
-  NSMutableArray *_loadingQueue;
-  
-  NSInteger _maxLoadingCount;
+@interface YKImageLoaders : NSObject <YKImageLoaderDelegate> {
+  NSMutableArray *_imageLoaders;
 }
 
-+ (YKImageLoaderQueue *)sharedQueue;
++ (YKImageLoaders *)shared;
 
-/*!
- Enqueue an image loader.
- @param imageLoader Image laoder to enqueue
- */
-- (void)enqueue:(YKImageLoader *)imageLoader;
-
-/*!
- Dequeue an image loader.
- @param imageLoader Image laoder to dequeue
- */
-- (void)dequeue:(YKImageLoader *)imageLoader;
-
-/*!
- Check the queue.
- */
-- (void)check;
-
-/*!
- Called when the image loader finished.
- @param imageLoader Image loader that finished
- */
-- (void)imageLoaderDidEnd:(YKImageLoader *)imageLoader;
+- (void)add:(YKImageLoader *)imageLoader;
 
 @end

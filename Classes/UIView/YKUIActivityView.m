@@ -63,15 +63,14 @@
   _activityEnabled = activityEnabled;
   if (!_activityEnabled) {
     [_activityIndicator stopAnimating];
-    _activityIndicator.hidden = YES;  
   } else {
     if (!_activityIndicator) {
       _activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:_activityStyle];
       _activityIndicator.frame = YKCGRectToCenter(_activityIndicator.frame.size, self.frame.size);
+      _activityIndicator.hidesWhenStopped = YES;
       [self addSubview:_activityIndicator];
     } 
     [_activityIndicator startAnimating];
-    _activityIndicator.hidden = NO;
   }
 }
 
@@ -121,13 +120,11 @@
 }
 
 - (void)start {
-  self.hidden = NO;
   [self _setActivityEnabled:YES];
   [self setText:nil];
 }
 
 - (void)stop {
-  self.hidden = YES;
   [self _setActivityEnabled:NO];
   [self setText:nil];
 }

@@ -88,6 +88,7 @@ typedef enum {
   UIColor *_disabledBorderColor;
   YKUIShadingType _disabledShadingType;
   UIImage *_disabledIconImage;
+  CGFloat _disabledAlpha;
   
   UIColor *_selectedTitleColor;
   UIColor *_selectedColor;
@@ -442,6 +443,11 @@ typedef enum {
  Icon (disabled).
  */
 @property (retain, nonatomic) UIImage *disabledIconImage;
+
+/*!
+ Alpha (disabled). Defaults to 50%.
+ */
+@property (assign, nonatomic) CGFloat disabledAlpha;
 
 /*!
  Secondary title, that appears next to title.

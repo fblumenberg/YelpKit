@@ -64,8 +64,7 @@
 
 + (void)showAlertWithBlock:(YKUIAlertViewBlock)block title:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitle:(NSString *)otherButtonTitle args:(va_list)args {
   
-  YKUIAlertView *delegate = [[YKUIAlertView alloc] initWithBlock:block]; // Released in alertView:clickedButtonAtIndex:
-  // Autoreleased in alertView:clickedButtonAtIndex
+  YKUIAlertView *delegate = [[YKUIAlertView alloc] initWithBlock:block]; // Released in alertView:clickedButtonAtIndex: ([self autorelease])
   
   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:delegate cancelButtonTitle:cancelButtonTitle otherButtonTitles:nil];
   
@@ -87,8 +86,7 @@
 
 + (void)showAlertWithTarget:(id)target action:(SEL)action context:(id)context title:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitle:(NSString *)otherButtonTitle args:(va_list)args {
   
-  YKUIAlertView *delegate = [[YKUIAlertView alloc] initWithTarget:target action:action context:context]; // Released in alertView:clickedButtonAtIndex:
-  // Autoreleased in alertView:clickedButtonAtIndex
+  YKUIAlertView *delegate = [[YKUIAlertView alloc] initWithTarget:target action:action context:context]; // Released in alertView:clickedButtonAtIndex: ([self autorelease])
   
   UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:delegate cancelButtonTitle:cancelButtonTitle otherButtonTitles:nil];
   

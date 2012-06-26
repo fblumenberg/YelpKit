@@ -267,7 +267,7 @@
 }
 
 - (void)setSelected:(BOOL)selected button:(YKUIButton *)button {  
-  if (_selectionMode == YKUIButtonsSelectionModeSingle) {
+  if (_selectionMode == YKUIButtonsSelectionModeSingle || _selectionMode == YKUIButtonsSelectionModeSingleToggle) {
     for (YKUIButton *b in _buttons) {
       if (b != button) {
         [b setSelected:NO];
@@ -285,7 +285,8 @@
 }
 
 - (void)setSelected:(BOOL)selected index:(NSInteger)index {
-  YKUIButton *button = [_buttons objectAtIndex:index];
+  YKUIButton *button = [_buttons gh_objectAtIndex:index];
+  if (!button) return;
   [self setSelected:selected button:button];
 }
 
@@ -297,7 +298,8 @@
 }
 
 - (BOOL)isSelectedAtIndex:(NSInteger)index {
-  YKUIButton *button = [_buttons objectAtIndex:index];
+  YKUIButton *button = [_buttons gh_objectAtIndex:index];
+  if (!button) return NO;
   return button.isSelected;
 }
 
@@ -362,12 +364,23 @@
   
   YKUIButton *previousButton = [self selectedButton];
   
-  if (_selectionMode == YKUIButtonsSelectionModeSingle) {
-    [self setSelected:YES button:sender];
-  } else if (_selectionMode != YKUIButtonsSelectionModeNone) {
-    [self setSelected:![sender isSelected] button:sender];
+  switch (_selectionMode) {
+    case YKUIButtonsSelectionModeSingleToggle:
+      if ([self selectedIndex] == index) {
+        [self setSelected:NO button:sender];
+      } else {
+        [self setSelected:YES button:sender];  
+      }
+      break;
+    case YKUIButtonsSelectionModeSingle:
+      [self setSelected:YES button:sender];
+      break;
+    case YKUIButtonsSelectionModeMultiple:
+      [self setSelected:![sender isSelected] button:sender];
+      break;
+    case YKUIButtonsSelectionModeNone:
+      break;
   }
-  
 
   if ([_delegate respondsToSelector:@selector(buttons:didSelectButton:index:previousButton:)]) {
     [_delegate buttons:self didSelectButton:sender index:index previousButton:previousButton];

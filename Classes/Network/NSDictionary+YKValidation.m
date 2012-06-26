@@ -57,7 +57,7 @@
   if (object && ![object isKindOfClass:expectedClass]) {
     NSString *reason = [NSString stringWithFormat:@"Object for key '%@' should have been %@ but was %@.", key, NSStringFromClass(expectedClass), NSStringFromClass([object class])];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self forKey:@"dictionary"];
-    @throw [[YKValidationException alloc] initWithName:@"YKValidationException" reason:reason userInfo:userInfo];
+    @throw [[[YKValidationException alloc] initWithName:@"YKValidationException" reason:reason userInfo:userInfo] autorelease];
   }
   return object;
 }
@@ -71,7 +71,7 @@
   if (object && ![object isKindOfClass:[NSString class]] && ![object isKindOfClass:[NSNumber class]]) {
     NSString *reason = [NSString stringWithFormat:@"Object was supposed to be NSString or NSNumber but was %@", NSStringFromClass([object class])];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObject:self forKey:@"dictionary"];
-    @throw [[YKValidationException alloc] initWithName:@"YKValidationException" reason:reason userInfo:userInfo];
+    @throw [[[YKValidationException alloc] initWithName:@"YKValidationException" reason:reason userInfo:userInfo] autorelease];
   }
   return object;
 }

@@ -61,7 +61,7 @@
   [viewController setContentView:self];
   return [viewController autorelease];
 }
- 
+
 - (void)swapView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration {
   UINavigationController *navigationController = self.navigationController;
   YKTUIViewController *viewController = [view newViewController:navigationController];
@@ -134,17 +134,17 @@
   button.title = title;
   button.iconImage = iconImage;
   [button setTarget:target action:action];
-  [self applyStyleForNavigationButton:button style:style];  
+  [self applyStyleForNavigationButton:button style:style];
   switch (position) {
     case YKUINavigationPositionLeft:
-      [self.navigationBar setLeftButton:button animated:animated];
+      [self.navigationBar setLeftButton:button style:YKUINavigationButtonStyleDefault animated:animated];
       break;
     case YKUINavigationPositionRight:
-      [self.navigationBar setRightButton:button animated:animated];
+      [self.navigationBar setRightButton:button style:YKUINavigationButtonStyleDefault animated:animated];
       break;
   }
-  
-  return button;
+
+  return [button autorelease];
 }
 
 - (void)_viewWillAppear:(BOOL)animated { 

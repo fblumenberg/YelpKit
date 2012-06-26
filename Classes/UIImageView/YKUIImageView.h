@@ -91,6 +91,8 @@ typedef void (^YKUIImageViewStatusBlock)(id<YKUIImageView> imageView, YKUIImageV
 @property (readonly, nonatomic) CGSize size;
 
 
++ (void)setDisableRenderInBackground:(BOOL)disableRenderInBackground;
+
 - (id)initWithImage:(UIImage *)image;
 
 - (id)initWithURLString:(NSString *)URLString loadingImage:(UIImage *)loadingImage defaultImage:(UIImage *)defaultImage;
