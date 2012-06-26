@@ -305,7 +305,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
     if (_cancelSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_cancelSelector withObject:self];
     if (_failBlock != NULL) _failBlock(nil);
   }
-  [[self gh_proxyOnMainThread:YES] _stop];
+  [self _stop];
 }
 
 - (void)close {
@@ -393,7 +393,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   _error = error;
   if (_failSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_failSelector withObject:self withObject:error];
   if (_failBlock != NULL) _failBlock(error);
-  [[self gh_proxyOnMainThread:YES] _stop];
+  [self _stop];
 }
 
 - (id)objectForData:(NSData *)data error:(YKError **)error {
@@ -416,7 +416,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   
   if (_finishSelector != NULL) [[__delegate gh_proxyOnMainThread:YES] performSelector:_finishSelector withObject:self withObject:obj];
   if (_finishBlock != NULL) _finishBlock(obj);
-  [[self gh_proxyOnMainThread:YES] _stop];
+  [self _stop];
 }
 
 - (void)didCancel { }

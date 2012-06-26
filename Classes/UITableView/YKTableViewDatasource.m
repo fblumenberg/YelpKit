@@ -31,7 +31,7 @@
 
 @implementation YKTableViewDataSource
 
-@synthesize sectionIndexTitles=_sectionIndexTitles, sectionHeaderViewBlock=_sectionHeaderViewBlock;
+@synthesize sectionIndexTitles=_sectionIndexTitles, sectionHeaderViewBlock=_sectionHeaderViewBlock, sectionFooterViewBlock=_sectionFooterViewBlock, tableViewDidScrollToBottomBlock=_tableViewDidScrollToBottomBlock, scrollViewDelegate=_scrollViewDelegate;
 
 - (id)init {
   if ((self = [super init])) {
@@ -51,9 +51,8 @@
 - (void)dealloc {
   [_cellDataSourceSections release];
   [_sectionHeaderTitles release];
-  [_sectionHeaderViews release];
-  [_sectionFooterViews release];
   Block_release(_sectionHeaderViewBlock);
+  Block_release(_tableViewDidScrollToBottomBlock);
   [super dealloc];
 }
 
@@ -75,8 +74,6 @@
 - (void)clearHeaders {
   [_sectionHeaderTitles release];
   _sectionHeaderTitles = nil;
-  [_sectionHeaderViews release];
-  _sectionHeaderViews = nil;
 }
 
 - (NSMutableArray *)dataSourceForSection:(NSInteger)section create:(BOOL)create {
@@ -266,25 +263,7 @@
   }
 }
 
-- (void)setSectionHeaderView:(UIView *)view section:(NSInteger)section {
-  if (view) {
-    if (!_sectionHeaderViews) _sectionHeaderViews = [[NSMutableDictionary alloc] init];
-    [_sectionHeaderViews setObject:view forKey:[NSNumber numberWithInteger:section]];
-  } else {
-    [_sectionHeaderViews removeObjectForKey:[NSNumber numberWithInteger:section]];
-  } 
-}
-
-- (void)setSectionFooterView:(UIView *)view section:(NSInteger)section {
-  if (view) {
-    if (!_sectionFooterViews) _sectionFooterViews = [[NSMutableDictionary alloc] init];
-    [_sectionFooterViews setObject:view forKey:[NSNumber numberWithInteger:section]];
-  } else {
-    [_sectionFooterViews removeObjectForKey:[NSNumber numberWithInteger:section]];
-  } 
-}
-
-- (BOOL)hasSectionHeaderForSection:(NSInteger)section {
+- (BOOL)hasSectionHeaderTitleForSection:(NSInteger)section {
   if ([self countForSection:section] > 0) 
     return ([_sectionHeaderTitles objectForKey:[NSNumber numberWithInteger:section]] != nil);
   return NO;  
@@ -357,19 +336,10 @@
   
   NSString *sectionTitle = [self tableView:tableView titleForHeaderInSection:section];
 
-  if (_sectionHeaderViewBlock) {
-    return _sectionHeaderViewBlock(section, sectionTitle);
-  }
+  if (!_sectionHeaderViewBlock) return nil;
   
-  if (!sectionTitle) return nil;
-    
-  UIView *sectionHeaderView = [_sectionHeaderViews objectForKey:[NSNumber numberWithInteger:section]];  
-
-  if ([sectionHeaderView respondsToSelector:@selector(setText:)]) {
-    [(id)sectionHeaderView setText:sectionTitle];
-  }
-
-  return sectionHeaderView;
+  NSInteger rowCount = [self tableView:tableView numberOfRowsInSection:section];
+  return _sectionHeaderViewBlock(section, sectionTitle, rowCount);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -383,10 +353,9 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-  // Only show view if we have cells
-  if ([self countForSection:section] == 0) return nil;
-  
-  return [_sectionFooterViews objectForKey:[NSNumber numberWithInteger:section]]; 
+  if (!_sectionFooterViewBlock) return nil;
+  NSInteger rowCount = [self tableView:tableView numberOfRowsInSection:section];
+  return _sectionFooterViewBlock(section, rowCount);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
@@ -406,6 +375,28 @@
 	return index;
 }
 
+#pragma mark Delegates (YKTableScrollViewDelegate/UIScrollView)
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+  if ([_scrollViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
+    [_scrollViewDelegate scrollViewDidScroll:scrollView];
+  }
+  
+  // Only notify once per scrollViewDidEndDecelerating: cycle
+  if (_scrollDidNotify) return;
+  // Notify the delegate 100 px before actually reaching the bottom of the scrollview
+  if (scrollView.contentOffset.y > (scrollView.contentSize.height - scrollView.frame.size.height - 100)) {
+    _scrollDidNotify = YES;
+    if (_tableViewDidScrollToBottomBlock != NULL) _tableViewDidScrollToBottomBlock(self);
+  }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+  if ([_scrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+    [_scrollViewDelegate scrollViewDidEndDecelerating:scrollView];
+  }
+  _scrollDidNotify = NO;
+}
 
 @end
 

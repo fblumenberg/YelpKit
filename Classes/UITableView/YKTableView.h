@@ -28,13 +28,48 @@
 //
 
 #import "YKTableViewDataSource.h"
+#import "YKUIActivityCell.h"
 
 @interface YKTableView : UITableView {
   YKTableViewDataSource *dataSource_;
+  
+  // For activity
+  YKUIActivityCell *_activityCell;
+  BOOL _activitySection;
 }
+
+@property (assign, nonatomic) YKTableViewDataSource *dataSource; // Has to match superclass dataSource assign property
+@property (readonly, nonatomic) YKUIActivityCell *activityCell;
+@property (assign, nonatomic) BOOL touchesShouldCancelInContentView;
 
 - (void)sharedInit;
 
-@property (nonatomic, assign) YKTableViewDataSource *dataSource;
+/*!
+ Set activity enabled.
+ @param section
+ @param animated
+ */
+- (void)setActivityEnabledWithSection:(NSInteger)section animated:(BOOL)animated;
+
+/*!
+ Set activity disabled.
+ @param animated
+ */
+- (void)setActivityDisabledAnimated:(BOOL)animated;
+
+/*!
+ @result YES if activity enabled
+ */
+- (BOOL)activityEnabled;
+
+/*!
+ Set empty section headers of height.
+ */
+- (void)setEmptySectionHeaderWithHeight:(CGFloat)height;
+
+/*!
+ Set empty section footer of height.
+ */
+- (void)setEmptySectionFooterWithHeight:(CGFloat)height;
 
 @end

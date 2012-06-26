@@ -36,7 +36,6 @@
 
 - (id)initWithFrame:(CGRect)frame {
   if ((self = [super initWithFrame:frame])) {
-    self.opaque = YES;
     self.backgroundColor = [UIColor blackColor];
   }
   return self;
@@ -53,6 +52,11 @@
   _activityIndicator.frame = YKCGRectToCenter(_activityIndicator.frame.size, self.frame.size);
   _label.frame = CGRectMake(10, 0, self.frame.size.width - 20, self.frame.size.height);
   [_label setNeedsDisplay];
+}
+
+- (CGSize)sizeThatFits:(CGSize)size {
+  // TODO: Size based on activity style and label height
+  return CGSizeMake(size.width, 60);
 }
 
 - (void)_setActivityEnabled:(BOOL)activityEnabled {  
@@ -105,6 +109,10 @@
   }
   [self setNeedsDisplay];
   [self setNeedsLayout];
+}
+
+- (BOOL)isAnimating {
+  return _activityIndicator.isAnimating;
 }
 
 - (void)setAnimating:(BOOL)animating {

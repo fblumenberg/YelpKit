@@ -39,6 +39,8 @@
  */
 - (void)setContentView:(YKTUIView *)view;
 
+- (BOOL)isContentView:(YKTUIView *)view;
+
 @end
 
 

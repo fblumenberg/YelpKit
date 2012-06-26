@@ -11,7 +11,7 @@
 
 @implementation YKTUIView
 
-@synthesize viewController=_viewController, navigationBar=_navigationBar, visible=_visible, needsRefresh=_needsRefresh;
+@synthesize navigationBar=_navigationBar, visible=_visible, needsRefresh=_needsRefresh, navigationController=_navigationController;
 
 - (void)sharedInit {
   [super sharedInit];
@@ -47,34 +47,24 @@
   return _navigationBar;
 }
 
-- (UINavigationController *)navigationController {
-  //NSAssert(_viewController, @"No view controller!");
-  return _viewController.navigationController;
-}
-
-- (YKTUIViewController *)newViewController {
+- (YKTUIViewController *)newViewController:(UINavigationController *)navigationController {
+  self.navigationController = navigationController;
   // Add the nav bar if we are being used in a view controller
   [self addSubview:_navigationBar];
 
-  YKTUIViewController *viewController = [self createViewControllerForView];
-  _viewController = viewController;
-  return _viewController;
-}
-
-- (YKTUIViewController *)createViewControllerForView {
-  YKTUIViewController *viewController = [[YKTUIViewController alloc] init];  
-  [viewController setContentView:self];
+  YKTUIViewController *viewController = [[self _viewControllerForView] retain];
   return viewController;
 }
 
-- (YKTUIViewController *)viewController:(BOOL)create {
-  if (!create || _viewController) return _viewController;
-  return [self newViewController];
+- (YKTUIViewController *)_viewControllerForView {
+  YKTUIViewController *viewController = [[YKTUIViewController alloc] init];  
+  [viewController setContentView:self];
+  return [viewController autorelease];
 }
-
-- (void)swapView:(YKTUIView *)view fromView:(YKTUIView *)fromView transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration {
-  YKTUIViewController *viewController = [view viewController:YES];
+ 
+- (void)swapView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration {
   UINavigationController *navigationController = self.navigationController;
+  YKTUIViewController *viewController = [view newViewController:navigationController];
   
   if (transition != UIViewAnimationTransitionNone) {
     [UIView beginAnimations:nil context:NULL];
@@ -82,41 +72,56 @@
     [UIView setAnimationTransition:transition forView:navigationController.view cache:NO];
   }
   
-  if (fromView) {
-    [navigationController popToViewController:[fromView viewController:NO] animated:NO];
-  } else {
-    [navigationController popViewControllerAnimated:NO];
-  }
-  
-  [navigationController pushViewController:viewController animated:NO];
-  
+  [navigationController popViewControllerAnimated:NO];  
+  [navigationController pushViewController:viewController animated:NO];  
   
   if (transition != UIViewAnimationTransitionNone) [UIView commitAnimations];
 }
 
 - (void)pushView:(YKTUIView *)view animated:(BOOL)animated {
-  YKTUIViewController *viewController = [view newViewController];
-  [self.navigationController pushViewController:viewController animated:animated];
+  UINavigationController *navigationController = self.navigationController;
+  YKTUIViewController *viewController = [view newViewController:navigationController];
+  
+  [navigationController pushViewController:viewController animated:animated];
   [viewController release];
 }
 
 - (void)setView:(YKTUIView *)view animated:(BOOL)animated {
-  YKTUIViewController *viewController = [view newViewController];
-  [self.navigationController setViewControllers:[NSArray arrayWithObject:viewController] animated:animated];
+  UINavigationController *navigationController = self.navigationController;
+  YKTUIViewController *viewController = [view newViewController:navigationController];
+
+  [navigationController setViewControllers:[NSArray arrayWithObject:viewController] animated:animated];
   [viewController release];
 }
 
 - (void)popToRootViewAnimated:(BOOL)animated {
-  [self.navigationController popToRootViewControllerAnimated:animated];
+  UINavigationController *navigationController = self.navigationController;
+  self.navigationController = nil;
+  [navigationController popToRootViewControllerAnimated:animated];
 }
 
 - (void)popViewAnimated:(BOOL)animated {
-  [self.navigationController popViewControllerAnimated:animated];
+  UINavigationController *navigationController = self.navigationController;
+  self.navigationController = nil;
+  [navigationController popViewControllerAnimated:animated];
 }
 
 - (void)popToView:(YKTUIView *)view animated:(BOOL)animated {
-  if (view.viewController) {
-    [self.navigationController popToViewController:view.viewController animated:animated];
+  UINavigationController *navigationController = self.navigationController;
+  if (view != self) {
+    self.navigationController = nil;
+  }
+
+  YKTUIViewController *viewController = nil;
+  for (YKTUIViewController *checkViewController in [navigationController viewControllers]) {
+    if ([checkViewController isContentView:view]) {
+      viewController = checkViewController;
+      break;
+    }
+  }
+  
+  if (viewController) {
+    [navigationController popToViewController:viewController animated:animated];
   }
 }
 

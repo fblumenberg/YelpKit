@@ -32,24 +32,35 @@
 /*!
  Fail block. If error is nil, it means the request was cancelled.
  */
-typedef UIView * (^YKTableViewSectionHeaderViewBlock)(NSInteger section, NSString *sectionTitle);
+typedef UIView * (^YKTableViewSectionHeaderViewBlock)(NSInteger section, NSString *sectionTitle, NSInteger rowCount);
+typedef UIView * (^YKTableViewSectionFooterViewBlock)(NSInteger section, NSInteger rowCount);
 
+@class YKTableViewDataSource;
+
+typedef void (^YKTableViewDidScrollToBottomBlock)(YKTableViewDataSource *dataSource);
 
 @interface YKTableViewDataSource : NSObject <UITableViewDelegate, UITableViewDataSource> {  
   NSMutableDictionary */*Row -> NSMutableArray of id<YKTableViewCellDataSource>*/_cellDataSourceSections;
     
   NSMutableDictionary */*Row -> NSString*/_sectionHeaderTitles;
-  NSMutableDictionary */*Row -> UIView*/_sectionHeaderViews;  
-  NSMutableDictionary */*Row -> UIView*/_sectionFooterViews;
   NSArray *_sectionIndexTitles;
   
   NSInteger _sectionCount; // We need to keep section count stable since row animating requires tht we don't add or remove sections while animating.
   
   YKTableViewSectionHeaderViewBlock _sectionHeaderViewBlock;
+  YKTableViewSectionFooterViewBlock _sectionFooterViewBlock;  
+  YKTableViewDidScrollToBottomBlock _tableViewDidScrollToBottomBlock;
+  
+  BOOL _scrollDidNotify;
+  
+  id<UIScrollViewDelegate> _scrollViewDelegate;
 }
 
 @property (retain, nonatomic) NSArray *sectionIndexTitles;
 @property (copy, nonatomic) YKTableViewSectionHeaderViewBlock sectionHeaderViewBlock;
+@property (copy, nonatomic) YKTableViewSectionFooterViewBlock sectionFooterViewBlock;  
+@property (copy, nonatomic) YKTableViewDidScrollToBottomBlock tableViewDidScrollToBottomBlock;
+@property (assign, nonatomic) id<UIScrollViewDelegate> scrollViewDelegate;
 
 /*!
  Create empty data source.
@@ -88,10 +99,14 @@ typedef UIView * (^YKTableViewSectionHeaderViewBlock)(NSInteger section, NSStrin
  */
 - (NSInteger)countForSection:(NSInteger)section;
 
+/*!
+ Count for all sections.
+ */
+- (NSInteger)count;
+
 - (void)clearSection:(NSInteger)section indexPaths:(NSMutableArray **)indexPaths;
 
 - (void)setSectionHeaderTitle:(NSString *)title section:(NSInteger)section;
-- (void)setSectionHeaderView:(UIView *)view section:(NSInteger)section;
 
 - (void)setSectionHeaderTitles:(NSArray *)titles;
 
@@ -104,9 +119,6 @@ typedef UIView * (^YKTableViewSectionHeaderViewBlock)(NSInteger section, NSStrin
  Clear header views and titles.
  */
 - (void)clearHeaders;
-
-- (void)setSectionHeaderView:(UIView *)view section:(NSInteger)section;
-- (void)setSectionFooterView:(UIView *)view section:(NSInteger)section;
 
 - (id<YKTableViewCellDataSource>)cellDataSourceAtIndexPath:(NSIndexPath *)indexPath;
 

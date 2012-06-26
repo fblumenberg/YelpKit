@@ -31,12 +31,19 @@
 
 @implementation YKTableView
 
+@synthesize activityCell=_activityCell, touchesShouldCancelInContentView=_touchesShouldCancelInContentView;
+
 @dynamic dataSource;
 
 - (void)sharedInit {
   dataSource_ = [[YKTableViewDataSource alloc] init];
   self.dataSource = dataSource_;
   self.delegate = dataSource_;
+  
+  _activityCell = [[YKUIActivityCell alloc] init];
+  _activityCell.view.activityStyle = UIActivityIndicatorViewStyleGray;
+  
+  self.touchesShouldCancelInContentView = YES;
 }
 
 - (id)initWithCoder:(NSCoder *)coder {
@@ -55,11 +62,55 @@
 
 - (void)dealloc {
   [dataSource_ release];
+  [_activityCell release];
   [super dealloc];
 }
 
 - (YKTableViewDataSource *)tableViewDataSource {
   return dataSource_;
+}
+
+- (BOOL)activityEnabled {
+  return _activityCell.view.isAnimating;
+}
+
+- (void)setActivityEnabledWithSection:(NSInteger)section animated:(BOOL)animated {
+  // TODO: Animated
+  [_activityCell.view setAnimating:YES];
+  _activitySection = section;
+  [dataSource_ setCellDataSources:[NSArray arrayWithObject:_activityCell] section:_activitySection];
+  [self reloadData];
+}
+
+- (void)setActivityDisabledAnimated:(BOOL)animated {
+  // TODO: Animated
+  [_activityCell.view setAnimating:NO];
+  [dataSource_ clearSection:_activitySection indexPaths:nil];
+  [self reloadData];
+}
+
+- (void)setEmptySectionHeaderWithHeight:(CGFloat)height {
+  self.dataSource.sectionHeaderViewBlock = ^UIView *(NSInteger section, NSString *sectionTitle, NSInteger rowCount) {
+    if (rowCount == 0) return nil;
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];
+    view.opaque = NO;
+    view.backgroundColor = [UIColor clearColor];
+    return view;
+  };
+}
+
+- (void)setEmptySectionFooterWithHeight:(CGFloat)height {
+  self.dataSource.sectionFooterViewBlock = ^UIView *(NSInteger section, NSInteger rowCount) {
+    if (rowCount == 0) return nil;
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];
+    view.opaque = NO;
+    view.backgroundColor = [UIColor clearColor];
+    return view;
+  };
+}
+
+- (BOOL)touchesShouldCancelInContentView:(UIView *)view {
+  return _touchesShouldCancelInContentView;
 }
 
 @end

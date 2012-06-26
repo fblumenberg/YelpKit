@@ -15,13 +15,13 @@
 @interface YKTUIView : YKUILayoutView {
   YKUINavigationBar *_navigationBar;
   
-  YKTUIViewController *_viewController;
+  UINavigationController *_navigationController;
   
   BOOL _visible;
   BOOL _needsRefresh;
 }
 
-@property (readonly, assign, nonatomic) YKTUIViewController *viewController;
+@property (assign, nonatomic) UINavigationController *navigationController;
 
 @property (readonly, nonatomic) YKUINavigationBar *navigationBar;
 
@@ -33,18 +33,13 @@
  Do not override. For a custom view controller, use viewControllerForView.
  This method registers the view controller.
  */
-- (YKTUIViewController *)newViewController;
-
-/*!
- @result Returns UIViewController for this view. Subclasses can override this method.
- */
-- (YKTUIViewController *)createViewControllerForView;
+- (YKTUIViewController *)newViewController:(UINavigationController *)navigationController;
 
 /*!
  @param create If YES, will create the view controller if it hasn't been created already.
  @result View controller
  */
-- (YKTUIViewController *)viewController:(BOOL)create;
+//- (YKTUIViewController *)viewController:(BOOL)create;
 
 /*!
  Push view.
@@ -63,11 +58,10 @@
 /*!
  Swap the current view with transition.
  @param view
- @param fromView View to swap from or nil for previous view
  @param transition
  @param duration
  */
-- (void)swapView:(YKTUIView *)view fromView:(YKTUIView *)fromView transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration;
+- (void)swapView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration;
 
 /*!
  Pop to root view.

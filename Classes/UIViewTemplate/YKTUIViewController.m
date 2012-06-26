@@ -81,6 +81,10 @@
   [_templateView setView:view];
 }
 
+- (BOOL)isContentView:(YKTUIView *)view {
+  return ([view isEqual:[_templateView view]]);
+}
+
 @end
 
 

@@ -49,6 +49,7 @@
 - (void)setText:(NSString *)text;
 
 - (void)setAnimating:(BOOL)animating;
+- (BOOL)isAnimating;
 
 - (void)start;
 - (void)stop;
