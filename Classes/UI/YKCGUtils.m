@@ -229,17 +229,17 @@ BOOL YKCGRectIsEqual(CGRect rect1, CGRect rect2) {
 }
 
 CGPoint YKCGPointToCenterY(CGSize size, CGSize inSize) {
-  CGPoint p = CGPointMake(0, roundf((inSize.height - size.height) / 2.0));
-  if (p.y < 0) p.y = 0;
+  CGPoint p = CGPointMake(0, roundf((inSize.height - size.height) / 2.0f));
+  if (p.y < 0.0f) p.y = 0.0f;
   return p;
 }
 
 CGPoint YKCGPointToCenter(CGSize size, CGSize inSize) {
   // We round otherwise views will anti-alias
-  CGPoint p = CGPointMake(roundf((inSize.width - size.width) / 2.0), roundf((inSize.height - size.height) / 2.0));
+  CGPoint p = CGPointMake(roundf((inSize.width - size.width) / 2.0), roundf((inSize.height - size.height) / 2.0f));
   // Allowing negative values here allows us to center a larger view on a smaller view.
   // Though set to 0 if inSize.height was 0
-  if (inSize.height == 0) p.y = 0;
+  if (inSize.height == 0.0f) p.y = 0.0f;
   return p;
 }
 

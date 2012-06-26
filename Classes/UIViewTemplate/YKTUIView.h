@@ -36,6 +36,11 @@
 - (YKTUIViewController *)newViewController:(UINavigationController *)navigationController;
 
 /*!
+ @result View controller for this view.
+ */
+- (YKTUIViewController *)viewController;
+
+/*!
  @param create If YES, will create the view controller if it hasn't been created already.
  @result View controller
  */
@@ -64,10 +69,27 @@
 - (void)swapView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration;
 
 /*!
+ Swap the current view, animated.
+ @param view
+ @param animated If YES, will flip
+ */
+- (void)swapView:(YKTUIView *)view animated:(BOOL)animated;
+
+/*!
  Pop to root view.
  @param animated
  */
 - (void)popToRootViewAnimated:(BOOL)animated;
+
+/*!
+ @result YES if root view
+ */
+- (BOOL)isRootView;
+
+/*!
+ @result YES if top view
+ */
+- (BOOL)isTopView;
 
 /*!
  Pop the current view.

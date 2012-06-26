@@ -28,6 +28,11 @@
 @property (assign, nonatomic) id<YKUIRefreshScrollViewDelegate> refreshDelegate;
 
 /*!
+ Shared init.
+ */
+- (void)sharedInit;
+
+/*!
  Set refreshing indicator.
  
  @param refreshing YES if refreshing

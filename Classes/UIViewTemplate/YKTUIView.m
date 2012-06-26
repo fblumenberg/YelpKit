@@ -62,6 +62,14 @@
   return [viewController autorelease];
 }
 
+- (void)swapView:(YKTUIView *)view animated:(BOOL)animated {
+  if (animated) {
+    [self swapView:view transition:UIViewAnimationTransitionFlipFromRight duration:1.0];
+  } else {
+    [self swapView:view transition:UIViewAnimationTransitionNone duration:0];
+  }
+}
+
 - (void)swapView:(YKTUIView *)view transition:(UIViewAnimationTransition)transition duration:(NSTimeInterval)duration {
   UINavigationController *navigationController = self.navigationController;
   YKTUIViewController *viewController = [view newViewController:navigationController];
@@ -94,34 +102,57 @@
   [viewController release];
 }
 
+- (BOOL)isRootView {
+  YKTUIViewController *viewController = [self.navigationController.viewControllers gh_firstObject];
+  if (!viewController) return NO;
+  return [viewController isContentView:self];
+}
+
+- (BOOL)isTopView {
+  YKTUIViewController *viewController = (YKTUIViewController *)[self.navigationController topViewController];
+  if (!viewController) return NO;
+  return [viewController isContentView:self];
+}
+
 - (void)popToRootViewAnimated:(BOOL)animated {
   UINavigationController *navigationController = self.navigationController;
-  self.navigationController = nil;
+  if (![self isRootView]) {
+    self.navigationController = nil;
+  }
   [navigationController popToRootViewControllerAnimated:animated];
 }
 
 - (void)popViewAnimated:(BOOL)animated {
+  if ([self isRootView]) return;
+
   UINavigationController *navigationController = self.navigationController;
   self.navigationController = nil;
   [navigationController popViewControllerAnimated:animated];
 }
 
+- (YKTUIViewController *)viewController {
+  UINavigationController *navigationController = self.navigationController;
+  YKTUIViewController *viewController = nil;
+  for (YKTUIViewController *checkViewController in [navigationController viewControllers]) {
+    if ([checkViewController isContentView:self]) {
+      viewController = checkViewController;
+      break;
+    }
+  }
+  return viewController;
+}
+
 - (void)popToView:(YKTUIView *)view animated:(BOOL)animated {
+  YKTUIViewController *currentViewController = [self viewController];
+  if (!currentViewController) return;
+
   UINavigationController *navigationController = self.navigationController;
   if (view != self) {
     self.navigationController = nil;
   }
 
-  YKTUIViewController *viewController = nil;
-  for (YKTUIViewController *checkViewController in [navigationController viewControllers]) {
-    if ([checkViewController isContentView:view]) {
-      viewController = checkViewController;
-      break;
-    }
-  }
-  
-  if (viewController) {
-    [navigationController popToViewController:viewController animated:animated];
+  if (currentViewController) {
+    [navigationController popToViewController:currentViewController animated:animated];
   }
 }
 

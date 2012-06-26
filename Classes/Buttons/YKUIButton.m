@@ -174,6 +174,8 @@
 - (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size {
   if (_contentView) {
     CGFloat y = _insets.top;
+
+    // TODO: UILabel sizeToFit with 0 height will not work? Special case it?
     CGRect contentViewFrame = [layout setFrame:CGRectMake(_insets.left, y, size.width - _insets.left - _insets.right, 0) view:_contentView options:YKLayoutOptionsSizeToFit|YKLayoutOptionsVariableWidth];
     y += contentViewFrame.size.height;
     return CGSizeMake(size.width, y + _insets.bottom);
@@ -302,6 +304,13 @@
   [_title release];
   _title = title;
   [self didChangeValueForKey:@"title"];
+}
+
+- (void)setSecondaryTitle:(NSString *)secondaryTitle {
+  [secondaryTitle retain];
+  [_secondaryTitle release];
+  _secondaryTitle = secondaryTitle;
+  [self didChangeValueForKey:@"secondaryTitle"];
 }
 
 - (void)setTitleHidden:(BOOL)titleHidden {
@@ -626,6 +635,7 @@
     CGContextSetShadowWithColor(context, titleShadowOffset, 0.0, titleShadowColor.CGColor);
 
     x += titleInsets.left;
+    if (y < _insets.top) y = _insets.top + titleInsets.top;
 
     // Draw title. If we have a secondary title, we'll need to adjust for alignment.
     if (!_secondaryTitle) {
@@ -640,7 +650,7 @@
         [_secondaryTitle drawAtPoint:CGPointMake(x, y) withFont:font];  
       } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionBottom) {
         x = _insets.left + titleInsets.left;
-        y += titleSizeAdjusted.height;
+        y += titleSizeAdjusted.height + titleInsets.bottom;
         // TODO(gabe): Needed to put "+ _insets.bottom" so secondary text would wrap
         CGRect secondaryTitleRect = CGRectMake(x, y, size.width - x - _insets.right - titleInsets.right, size.height - y + _insets.bottom);
         [_secondaryTitle drawInRect:secondaryTitleRect withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];  
