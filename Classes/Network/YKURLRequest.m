@@ -37,7 +37,11 @@ NSString *const kYKURLRequestDefaultContentType = @"application/octet-stream";
 
 const double kYKURLRequestExpiresAgeMax = DBL_MAX;
 
+#if DEBUG
+static NSTimeInterval gYKURLRequestDefaultTimeout = 90.0;
+#else
 static NSTimeInterval gYKURLRequestDefaultTimeout = 25.0;
+#endif
 static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 
 

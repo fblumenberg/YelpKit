@@ -49,6 +49,7 @@
 
 - (void)dealloc {
   [_views release];
+  [_lineSeparatorColor release];
   [super dealloc];
 }
 
