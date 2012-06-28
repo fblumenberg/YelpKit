@@ -56,7 +56,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 
 @implementation YKURLRequest
 
-@synthesize connection=_connection, timeout=_timeout, request=_request, response=_response, delegate=__delegate, finishSelector=_finishSelector, failSelector=_failSelector, cancelSelector=_cancelSelector, expiresAge=_expiresAge, URL=_URL, cacheName=_cacheName, cachePolicy=_cachePolicy, mockResponse=_mockResponse, mockResponseDelayInterval=_mockResponseDelayInterval, dataInterval=_dataInterval, totalInterval=_totalInterval, start=_start, downloadedData=_downloadedData, cacheHit=_cacheHit, inCache=_inCache, stopped=_stopped, error=_error, detachOnThread=_detachOnThread, started=_started, responseInterval=_responseInterval, runLoop=_runLoop, sentInterval=_sentInterval, bytesWritten=_bytesWritten;
+@synthesize connection=_connection, timeout=_timeout, request=_request, response=_response, delegate=__delegate, finishSelector=_finishSelector, failSelector=_failSelector, cancelSelector=_cancelSelector, expiresAge=_expiresAge, URL=_URL, cacheName=_cacheName, cachePolicy=_cachePolicy, mockResponse=_mockResponse, mockResponseDelayInterval=_mockResponseDelayInterval, dataInterval=_dataInterval, totalInterval=_totalInterval, start=_start, downloadedData=_downloadedData, cacheHit=_cacheHit, inCache=_inCache, stopped=_stopped, error=_error, started=_started, responseInterval=_responseInterval, runLoop=_runLoop, sentInterval=_sentInterval, bytesWritten=_bytesWritten;
 @synthesize responseData=_responseData, finishBlock=_finishBlock, failBlock=_failBlock; // Private properties
 
 
@@ -265,12 +265,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
     _timer = [NSTimer scheduledTimerWithTimeInterval:_timeout target:self selector:@selector(_timeout) userInfo:nil repeats:NO];
   }
   _connection = [[connectionClass alloc] initWithRequest:_request delegate:self startImmediately:NO];   
-  if (_detachOnThread) {
-    YKDebug(@"Request will detach on thread");
-    [[self gh_proxyDetachThreadWithCallback:nil action:NULL context:nil] _start];
-  } else {
-    [self _start];
-  }
+  [self _start];
   return YES;
 }
 

@@ -132,8 +132,6 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
   
   NSTimer *_timer;
   
-  BOOL _detachOnThread; //! Experimental!
-  
   // Response data
   NSData *_responseData;
   
@@ -172,8 +170,6 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
 @property (readonly, nonatomic) NSTimeInterval sentInterval;
 @property (readonly, nonatomic) NSTimeInterval responseInterval;
 @property (readonly, nonatomic) NSUInteger bytesWritten;
-
-@property (assign, nonatomic) BOOL detachOnThread;
 
 @property (readonly, retain, nonatomic) NSData *responseData;
 

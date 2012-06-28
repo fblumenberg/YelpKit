@@ -236,18 +236,22 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
 #pragma mark Delegates (YKURLRequest)
 
 - (void)requestDidFinish:(YKURLRequest *)request {
-  UIImage *image = [UIImage imageWithData:request.responseData];
-  
-  if (!image) {
-    // Image data was not recognized or was invalid, we'll error
-    [self setError:[YKError errorWithKey:YKErrorRequest]];
-  } else {
-    if (image && request.URL.cacheableURLString) {
-      [[YKImageMemoryCache sharedCache] cacheImage:image forKey:request.URL.cacheableURLString];
-    }
-    [self setImage:image status:YKImageLoaderStatusLoaded];
-  }
-  [_queue imageLoaderDidEnd:self];
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    UIImage *image = [UIImage imageWithData:request.responseData];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{  
+      if (!image) {
+        // Image data was not recognized or was invalid, we'll error
+        [self setError:[YKError errorWithKey:YKErrorRequest]];
+      } else {
+        if (image && request.URL.cacheableURLString) {
+          [[YKImageMemoryCache sharedCache] cacheImage:image forKey:request.URL.cacheableURLString];
+        }
+        [self setImage:image status:YKImageLoaderStatusLoaded];
+      }
+      [_queue imageLoaderDidEnd:self];
+    });
+  });
 }
 
 - (void)request:(YKURLRequest *)request failedWithError:(NSError *)error {

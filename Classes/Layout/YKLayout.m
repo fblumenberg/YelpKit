@@ -136,11 +136,11 @@ static NSMutableDictionary *gDebugStats = NULL;
   return [self _layout:size sizing:YES];
 }
 
-- (CGRect)setFrame:(CGRect)frame view:(UIView *)view sizeToFit:(BOOL)sizeToFit {
+- (CGRect)setFrame:(CGRect)frame view:(id)view sizeToFit:(BOOL)sizeToFit {
   return [self setFrame:frame view:view options:(sizeToFit ? YKLayoutOptionsSizeToFit : 0)];
 }
 
-- (CGRect)setFrame:(CGRect)frame view:(UIView *)view options:(YKLayoutOptions)options {
+- (CGRect)setFrame:(CGRect)frame view:(id)view options:(YKLayoutOptions)options {
   CGRect originalFrame = frame;
   BOOL sizeToFit = ((options & YKLayoutOptionsSizeToFit) == YKLayoutOptionsSizeToFit)
   || ((options & YKLayoutOptionsVariableWidth) == YKLayoutOptionsVariableWidth)
@@ -212,43 +212,44 @@ static NSMutableDictionary *gDebugStats = NULL;
   return frame;  
 }
 
-- (CGRect)setX:(CGFloat)x frame:(CGRect)frame view:(UIView *)view {
+- (CGRect)setX:(CGFloat)x frame:(CGRect)frame view:(id)view {
   frame.origin.x = x;
   return [self setFrame:frame view:view];
 }
 
-- (CGRect)setY:(CGFloat)y frame:(CGRect)frame view:(UIView *)view {
+- (CGRect)setY:(CGFloat)y frame:(CGRect)frame view:(id)view {
   frame.origin.y = y;
   return [self setFrame:frame view:view];
 }
 
-- (CGRect)setOrigin:(CGPoint)origin frame:(CGRect)frame view:(UIView *)view {
+- (CGRect)setOrigin:(CGPoint)origin frame:(CGRect)frame view:(id)view {
   frame.origin = origin;
   return [self setFrame:frame view:view];
 }
 
-- (CGRect)setOrigin:(CGPoint)origin view:(UIView *)view {
-  return [self setOrigin:origin frame:(view ? view.frame : CGRectZero) view:view];
+- (CGRect)setOrigin:(CGPoint)origin view:(id)view {
+  return [self setOrigin:origin frame:(view ? [view frame] : CGRectZero) view:view];
 }
 
-- (CGRect)setY:(CGFloat)y view:(UIView *)view {
-  return [self setY:y frame:(view ? view.frame : CGRectZero) view:view];
+- (CGRect)setY:(CGFloat)y view:(id)view {
+  return [self setY:y frame:(view ? [view frame] : CGRectZero) view:view];
 }
 
-- (CGRect)setFrame:(CGRect)frame view:(UIView *)view {
+- (CGRect)setFrame:(CGRect)frame view:(id)view {
   if (!view) return CGRectZero;
   if (!_sizing) {
-    view.frame = frame;
+    BOOL sizeChanged = !YKCGSizeIsEqual(frame.size, [view frame].size);
+    [view setFrame:frame];
     if (view) {
       [_accessibleElements addObject:view];
     }
     // Since we are applying the frame, the subview will need to
     // apply their layout next at this frame
-    [view setNeedsLayout];
+    if (sizeChanged) [view setNeedsLayout];
   }
   // Some stupid views (cough UIPickerView cough) will snap to certain frame
   // values. This makes sure we return the actual frame of the view
-  if (!_sizing) return view.frame;
+  if (!_sizing) return [view frame];
   return frame;
 }
 
@@ -289,7 +290,7 @@ static NSMutableDictionary *gDebugStats = NULL;
   }
 }
 
-void YKLayoutAssert(UIView *view, id<YKLayout> layout) {
+void YKLayoutAssert(UIView *view, YKLayout *layout) {
 #if DEBUG
   BOOL hasLayoutMethod = ([view respondsToSelector:@selector(layout:size:)]);
   

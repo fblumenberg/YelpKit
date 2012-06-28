@@ -139,6 +139,11 @@
   [self setNeedsLayout];
 }
 
+- (void)setHidesWhenStopped:(BOOL)hidesWhenStopped {
+  _hidesWhenStopped = hidesWhenStopped;
+  if (_hidesWhenStopped && !_activityIndicator.isAnimating) self.hidden = YES;
+}
+
 - (void)setAnimating:(BOOL)animating {
   if (animating) [self startAnimating];
   else [self stopAnimating];

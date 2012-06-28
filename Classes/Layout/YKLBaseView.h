@@ -32,10 +32,12 @@
  */
 @interface YKLBaseView : NSObject {
   CGRect _frame;
+  BOOL _hidden;
 }
 
 @property (assign, nonatomic) CGRect frame;
 @property (assign, nonatomic) CGPoint origin;
+@property (assign, nonatomic, getter=isHidden) BOOL hidden;
 
 /*!
  Size that fits for this view.
@@ -50,6 +52,11 @@
  @result Size that fits
  */
 - (CGRect)sizeThatFitsInRect:(CGRect)rect contentMode:(UIViewContentMode)contentMode;
+
+/*!
+ Does nothing. For compatibility with UIViews.
+ */
+- (void)setNeedsLayout;
 
 /*!
  Draw view in rect.
