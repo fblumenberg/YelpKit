@@ -99,6 +99,16 @@ typedef enum {
 - (CGRect)setFrame:(CGRect)frame view:(id)view;
 
 /*!
+ Set frame for the (sub)view.
+ If we are calculating sizeThatFits, this doesn't actually set the views frame.
+ 
+ @param frame Frame
+ @param view View should conform to YKLView informal protocol.
+ @param needsLayout If YES, calls setNeedsLayout on view.
+ */
+- (CGRect)setFrame:(CGRect)frame view:(id)view needsLayout:(BOOL)needsLayout;
+
+/*!
  Set the (sub)view frame, then size to fit the view.
  If we are calculating sizeThatFits, this doesn't actually set the views frame.
  Use this value instead of view.frame since the views frame might not have been set.

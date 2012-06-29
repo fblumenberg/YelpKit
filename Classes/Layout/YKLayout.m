@@ -214,17 +214,17 @@ static NSMutableDictionary *gDebugStats = NULL;
 
 - (CGRect)setX:(CGFloat)x frame:(CGRect)frame view:(id)view {
   frame.origin.x = x;
-  return [self setFrame:frame view:view];
+  return [self setFrame:frame view:view needsLayout:NO];
 }
 
 - (CGRect)setY:(CGFloat)y frame:(CGRect)frame view:(id)view {
   frame.origin.y = y;
-  return [self setFrame:frame view:view];
+  return [self setFrame:frame view:view needsLayout:NO];
 }
 
 - (CGRect)setOrigin:(CGPoint)origin frame:(CGRect)frame view:(id)view {
   frame.origin = origin;
-  return [self setFrame:frame view:view];
+  return [self setFrame:frame view:view needsLayout:NO];
 }
 
 - (CGRect)setOrigin:(CGPoint)origin view:(id)view {
@@ -236,16 +236,19 @@ static NSMutableDictionary *gDebugStats = NULL;
 }
 
 - (CGRect)setFrame:(CGRect)frame view:(id)view {
+  return [self setFrame:frame view:view needsLayout:YES];
+}
+
+- (CGRect)setFrame:(CGRect)frame view:(id)view needsLayout:(BOOL)needsLayout {
   if (!view) return CGRectZero;
   if (!_sizing) {
-    BOOL sizeChanged = !YKCGSizeIsEqual(frame.size, [view frame].size);
     [view setFrame:frame];
     if (view) {
       [_accessibleElements addObject:view];
     }
     // Since we are applying the frame, the subview will need to
     // apply their layout next at this frame
-    if (sizeChanged) [view setNeedsLayout];
+    if (needsLayout) [view setNeedsLayout];
   }
   // Some stupid views (cough UIPickerView cough) will snap to certain frame
   // values. This makes sure we return the actual frame of the view
