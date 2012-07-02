@@ -50,6 +50,7 @@ typedef enum {
   UIColor *_backgroundColor2;
   UIColor *_topBorderColor;
   UIColor *_bottomBorderColor;
+  CGFloat _borderWidth;
   
   UILabel *_titleLabel;
   
@@ -64,6 +65,7 @@ typedef enum {
 @property (retain, nonatomic) UIColor *backgroundColor2;
 @property (retain, nonatomic) UIColor *topBorderColor;
 @property (retain, nonatomic) UIColor *bottomBorderColor;
+@property (assign, nonatomic) CGFloat borderWidth;
 
 
 /*!

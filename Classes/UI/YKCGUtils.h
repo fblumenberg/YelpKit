@@ -330,7 +330,7 @@ CGRect YKCGRectWithInsets(CGSize size, UIEdgeInsets insets);
 //
 typedef enum {
   YKUIBorderStyleNone = 0,
-  YKUIBorderStyleNormal,
+  YKUIBorderStyleNormal, // Straight top, right, botton, left
   YKUIBorderStyleRounded, // Rounded top, right, bottom, left
   YKUIBorderStyleTopOnly, // Top (straight) only
   YKUIBorderStyleBottomOnly, // Bottom (straight) only
@@ -338,12 +338,15 @@ typedef enum {
   YKUIBorderStyleRoundedTop, // Rounded top with left and right sides (no bottom)
   YKUIBorderStyleTopLeftRight, // Top, left and right sides (no bottom)
   YKUIBorderStyleBottomLeftRight, // Bottom, left and right sides (no top)
-  YKUIBorderStyleRoundedBottom, // Rounded bottom with left and right sides
-  //YKUIBorderStyleTopBottomRight, // Top bottom and right sides in strokeWidth
+  YKUIBorderStyleRoundedBottom, // Rounded bottom
+
   YKUIBorderStyleRoundedTopOnly, // Rounded top with no sides
   YKUIBorderStyleRoundedLeftCap, // Rounded left segment
   YKUIBorderStyleRoundedRightCap, // Rounded right segment
   YKUIBorderStyleRoundedBack, // Rounded back button
+  
+  YKUIBorderStyleRoundedTopWithBotton, // Rounded top with left and right sides (with bottom)
+  YKUIBorderStyleRoundedBottomLeftRight, // Rounded bottom (no top)
 } YKUIBorderStyle;
 
 CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat strokeWidth, CGFloat cornerRadius);

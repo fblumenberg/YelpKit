@@ -33,7 +33,25 @@
 
 @implementation YKUINavigationBar
 
-@synthesize leftButton=_leftButton, rightButton=_rightButton, contentView=_contentView, backgroundColor1=_backgroundColor1, backgroundColor2=_backgroundColor2, topBorderColor=_topBorderColor, bottomBorderColor=_bottomBorderColor;
+@synthesize leftButton=_leftButton, rightButton=_rightButton, contentView=_contentView, backgroundColor1=_backgroundColor1, backgroundColor2=_backgroundColor2, topBorderColor=_topBorderColor, bottomBorderColor=_bottomBorderColor, borderWidth=_borderWidth;
+
+- (void)sharedInit { 
+  _borderWidth = 0.5;
+}
+
+- (id)initWithFrame:(CGRect)frame {
+  if ((self = [super initWithFrame:frame])) {
+    [self sharedInit];
+  }
+  return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+  if ((self = [super initWithCoder:aDecoder])) {
+    [self sharedInit];
+  }
+  return self;
+}
 
 - (void)dealloc {
   [_backgroundColor1 release];
@@ -232,12 +250,12 @@
     YKCGContextDrawShading(context, _backgroundColor1.CGColor, _backgroundColor2.CGColor, NULL, NULL, CGPointZero, CGPointMake(0, self.frame.size.height), YKUIShadingTypeLinear, NO, NO);
   }
   if (_topBorderColor) {
-    // Border is actually 0.5px since the top half is cut off (this is on purpose).
-    YKCGContextDrawLine(context, 0, 0, self.frame.size.width, 0, _topBorderColor.CGColor, 1.0);
+    // Border is actually halved since the top half is cut off (this is on purpose).
+    YKCGContextDrawLine(context, 0, 0, self.frame.size.width, 0, _topBorderColor.CGColor, _borderWidth * 2);
   }
   if (_bottomBorderColor) {
-    // Border is actually 0.5px since the bottom half is cut off (this is on purpose).
-    YKCGContextDrawLine(context, 0, self.frame.size.height, self.frame.size.width, self.frame.size.height, _bottomBorderColor.CGColor, 1.0);
+    // Border is actually halved since the bottom half is cut off (this is on purpose).
+    YKCGContextDrawLine(context, 0, self.frame.size.height, self.frame.size.width, self.frame.size.height, _bottomBorderColor.CGColor, _borderWidth * 2);
   }
   [super drawRect:rect];
 }

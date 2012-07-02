@@ -415,37 +415,39 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
   // Need to adjust path rect to inset (since the stroke is drawn from the middle of the path)
   CGRect insetBounds;
   switch(style) {
-    case YKUIBorderStyleRoundedBottom:
-      insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y + strokeInset, rect.size.width - (strokeInset * 2), rect.size.height - (strokeInset * 2));
-      break;
-      
-    case YKUIBorderStyleTopLeftRight:
-      insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y + strokeInset, rect.size.width - (strokeInset * 2), rect.size.height - strokeInset);
-      break;
-      
+      // Borders with only bottom and sides
     case YKUIBorderStyleBottomLeftRight:
+    case YKUIBorderStyleRoundedBottomLeftRight:
       insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y, rect.size.width - (strokeInset * 2), rect.size.height - strokeInset);
       break;
       
+    // Borders with only top and sides
     case YKUIBorderStyleRoundedTop:
     case YKUIBorderStyleRoundedTopOnly:
+    case YKUIBorderStyleTopLeftRight:
       insetBounds = CGRectMake(rect.origin.x + strokeInset, rect.origin.y + strokeInset, rect.size.width - (strokeInset * 2), rect.size.height - strokeInset);
-      break;
+      break;      
       
+    // Borders with only top
     case YKUIBorderStyleTopOnly:
       insetBounds = CGRectMake(rect.origin.x, rect.origin.y + strokeInset, rect.size.width, rect.size.height - strokeInset);
       break;
       
+    // Borders with only top and bottom
     case YKUIBorderStyleTopBottom:
       insetBounds = CGRectMake(rect.origin.x, rect.origin.y + strokeInset, rect.size.width, rect.size.height - (strokeInset * 2));
       break;
       
+    // Borders with only bottom
     case YKUIBorderStyleBottomOnly:
       insetBounds = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height - strokeInset);
       break;
       
+    // Borders with all 4 sides
     case YKUIBorderStyleNormal:
     case YKUIBorderStyleRounded:
+    case YKUIBorderStyleRoundedBottom:
+    case YKUIBorderStyleRoundedTopWithBotton:
     case YKUIBorderStyleRoundedLeftCap:
     case YKUIBorderStyleRoundedRightCap:
     case YKUIBorderStyleRoundedBack:
@@ -491,6 +493,15 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
       CGPathMoveToPoint(path, &transform, 0, fh); // Don't draw bottom border
       break;
       
+    case YKUIBorderStyleRoundedTopWithBotton:
+      CGPathMoveToPoint(path, &transform, 0, fh);
+      CGPathAddLineToPoint(path, &transform, 0, fh/2);
+      CGPathAddArcToPoint(path, &transform, 0, 0, fw/2, 0, 1);
+      CGPathAddArcToPoint(path, &transform, fw, 0, fw, fh/2, 1);      
+      CGPathAddLineToPoint(path, &transform, fw, fh);
+      CGPathAddLineToPoint(path, &transform, 0, fh);
+      break;
+      
     case YKUIBorderStyleRoundedTopOnly:
       CGPathMoveToPoint(path, &transform, 0, 1);
       CGPathAddArcToPoint(path, &transform, 0, 0, fw/2, 0, 1);
@@ -527,6 +538,15 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
       CGPathAddLineToPoint(path, &transform, fw, fh);
       CGPathAddLineToPoint(path, &transform, 0, fh);
       CGPathAddLineToPoint(path, &transform, 0, 0);
+      break;
+      
+    case YKUIBorderStyleRoundedBottomLeftRight:
+      CGPathMoveToPoint(path, &transform, fw, 0);
+      CGPathAddLineToPoint(path, &transform, fw, fh/2);
+      CGPathAddArcToPoint(path, &transform, fw, fh, fw/2, fh, 1);
+      CGPathAddArcToPoint(path, &transform, 0, fh, 0, fh/2, 1);
+      CGPathAddLineToPoint(path, &transform, 0, 0);      
+      CGPathMoveToPoint(path, &transform, fw, 0);
       break;
       
     case YKUIBorderStyleNormal:

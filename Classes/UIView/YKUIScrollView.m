@@ -31,6 +31,24 @@
 
 @implementation YKUIScrollView
 
+- (void)sharedInit { 
+  self.alwaysBounceVertical = YES;
+}
+
+- (id)initWithFrame:(CGRect)frame {
+  if ((self = [super initWithFrame:frame])) {
+    [self sharedInit];
+  }
+  return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+  if ((self = [super initWithCoder:aDecoder])) {
+    [self sharedInit];
+  }
+  return self;
+}
+
 - (BOOL)touchesShouldCancelInContentView:(UIView *)view {
   return YES;
 }

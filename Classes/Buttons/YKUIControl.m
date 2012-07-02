@@ -10,7 +10,7 @@
 
 @implementation YKUIControl 
 
-@synthesize target=_target, action=_action, highlightedEnabled=_highlightedEnabled, selectedEnabled=_selectedEnabled, delayActionEnabled=_delayActionEnabled, layout=_layout, context=_context, targetBlock=_targetBlock, valueForCopy=_valueForCopy;
+@synthesize target=_target, action=_action, highlightedEnabled=_highlightedEnabled, selectedEnabled=_selectedEnabled, delayActionEnabled=_delayActionEnabled, layout=_layout, context=_context, targetBlock=_targetBlock, valueForCopy=_valueForCopy, targetDisabled=_targetDisabled;
 
 + (void)removeAllTargets:(UIControl *)control {
   for (id target in [control allTargets]) {
@@ -84,9 +84,15 @@
   [self addTarget:target action:action forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)_didTouchUpInside {
+- (void)callTarget {
   [_target performSelector:_action withObject:(_context ? _context : self)];
   if (_targetBlock != NULL) _targetBlock(self, _context);
+}
+
+- (void)_didTouchUpInside {
+  if (!_targetDisabled) {
+    [self callTarget];
+  }
 }
 
 //

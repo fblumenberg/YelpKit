@@ -48,6 +48,7 @@
 #import "YKUIRefreshScrollView.h"
 #import "YKUIScrollView.h"
 #import "YKUIBorder.h"
+#import "YKUISwitchButton.h"
 
 #import "YKTableIndexedView.h"
 #import "YKTableViewCell.h"

@@ -27,6 +27,7 @@ typedef void (^UIControlTargetBlock)();
   id _context;
   
   UIControlTargetBlock _targetBlock;
+  BOOL _targetDisabled;
   
   id<YKLayout> _layout;
   
@@ -43,6 +44,11 @@ typedef void (^UIControlTargetBlock)();
 @property (assign, nonatomic) id context;
 @property (copy, nonatomic) UIControlTargetBlock targetBlock;
 @property (retain, nonatomic) NSString *valueForCopy;
+
+/*!
+ If YES, then touching the button will not callTarget.
+ */
+@property (assign, nonatomic, getter=isTargetDisabled) BOOL targetDisabled;
 
 /*!
  This method gets called by both initWithFrame and initWithCoder. Subclasses taking advantage of
@@ -105,6 +111,11 @@ typedef void (^UIControlTargetBlock)();
  @param action
  */
 - (void)addTarget:(id)target action:(SEL)action;
+
+/*!
+ Call the target and targetBlock. This is what is called automatically on the touch up inside event.
+ */
+- (void)callTarget;
 
 /*!
  Force the layout, if using YKLayout.

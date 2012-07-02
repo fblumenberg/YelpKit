@@ -15,8 +15,9 @@
 @synthesize templateView=_templateView, viewDelegate=_viewDelegate;
 
 - (void)loadView {
-  [_templateView release];
-  _templateView = [[YKTUIInternalView alloc] init];
+  if (!_templateView) {
+    _templateView = [[YKTUIInternalView alloc] init];
+  }
   self.view = _templateView;
 }
 

@@ -159,7 +159,7 @@
   }
   
   if (_secondaryTitle) {
-    if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionRight) {
+    if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionDefault || _secondaryTitlePosition == YKUIButtonSecondaryTitlePositionRightAlign) {
       constrainedToSize.width -= roundf(titleSize.width);
       CGSize secondaryTitleSize = [_secondaryTitle sizeWithFont:(_secondaryTitleFont ? _secondaryTitleFont : _titleFont) constrainedToSize:constrainedToSize lineBreakMode:UILineBreakModeTailTruncation];
       titleSize.width += roundf(secondaryTitleSize.width);
@@ -367,6 +367,11 @@
   if (size.width < minSize.width) size.width = minSize.width;
   if (size.height < minSize.height) size.height = minSize.height;
   self.frame = YKCGRectSetSize(self.frame, size);
+}
+
+- (void)setBorderStyle:(YKUIBorderStyle)borderStyle {
+  _borderStyle = borderStyle;
+  [self didChangeValueForKey:@"borderStyle"];
 }
 
 - (void)setBorderStyle:(YKUIBorderStyle)borderStyle color:(UIColor *)color width:(CGFloat)width cornerRadius:(CGFloat)cornerRadius {
@@ -645,9 +650,12 @@
       titleSizeAdjusted = [title drawInRect:CGRectMake(x, y, titleSizeAdjusted.width, titleSizeAdjusted.height) withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:_titleAlignment];
       if (_secondaryTitleColor) [_secondaryTitleColor set];
       if (_secondaryTitleFont) font = _secondaryTitleFont;
-      if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionRight) {
+      if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionDefault) {
         x += titleSizeAdjusted.width;
         [_secondaryTitle drawAtPoint:CGPointMake(x, y) withFont:font];  
+      } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionRightAlign) {
+        x += titleSizeAdjusted.width;
+        [_secondaryTitle drawInRect:CGRectMake(x, y, size.width - x - _insets.right - _titleInsets.right, size.height) withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentRight];
       } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionBottom) {
         x = _insets.left + titleInsets.left;
         y += titleSizeAdjusted.height + titleInsets.bottom;
