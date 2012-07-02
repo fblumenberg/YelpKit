@@ -76,7 +76,7 @@
 }
 
 - (id)initWithContentView:(UIView *)contentView {
-  if ((self = [self initWithFrame:CGRectZero])) { 
+  if ((self = [self initWithFrame:CGRectZero])) {
     [self setContentView:contentView];
   }
   return self;
@@ -147,15 +147,15 @@
     CGSize lineSize = [@" " sizeWithFont:_titleFont];
     constrainedToSize.height = lineSize.height * _maxLineCount;
   }
-  
+
   CGSize titleSize = CGSizeZero;
-  
+
   if (title) {
     titleSize = [title sizeWithFont:_titleFont constrainedToSize:constrainedToSize lineBreakMode:UILineBreakModeTailTruncation];
     // TODO: Probably need this because sizeWithFont and draw methods produce different sizing
     titleSize.width += 2;
   }
-  
+
   if (_secondaryTitle) {
     if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionRight) {
       constrainedToSize.width -= roundf(titleSize.width);
@@ -179,19 +179,19 @@
     y += contentViewFrame.size.height;
     return CGSizeMake(size.width, y + _insets.bottom);
   }
-  
+
   CGFloat y = 0;
 
   y += _insets.top;
   UIEdgeInsets titleInsets = [self _titleInsets];
   y += titleInsets.top;
-  
+
   if (_title) {
     CGSize constrainedToSize = size;
     // Subtract insets
     constrainedToSize.width -= (titleInsets.left + titleInsets.right);
     constrainedToSize.width -= (_insets.left + _insets.right);
-    
+
     // Subtract icon width
     CGSize iconSize = _iconImageSize;
     if (_iconImageView.image && YKCGSizeIsZero(iconSize)) {
@@ -199,18 +199,18 @@
       iconSize.width += 2; // TODO(gabe): Set configurable
     }
     constrainedToSize.width -= iconSize.width;
-    
+
     if (_activityIndicatorView && _activityIndicatorView.isAnimating) {
       constrainedToSize.width -= _activityIndicatorView.frame.size.width;
     }
-    
+
     if (constrainedToSize.height == 0) {
       constrainedToSize.height = 9999;
     }
-    
+
     _titleSize = [self _sizeForTitle:_title constrainedToSize:constrainedToSize];
     _abbreviatedTitleSize = [self _sizeForTitle:_abbreviatedTitle constrainedToSize:constrainedToSize];
-    
+
     if (_activityIndicatorView) {
       if (_titleHidden) {
         CGPoint p = YKCGPointToCenter(_activityIndicatorView.frame.size, size);
@@ -221,10 +221,10 @@
         [layout setOrigin:p view:_activityIndicatorView];
       }
     }
-    
+
     y += _titleSize.height;
   }
-  
+
   y += titleInsets.bottom;
   y += _insets.bottom;
 
@@ -283,7 +283,7 @@
 - (void)didChangeValueForKey:(NSString *)key {
   [super didChangeValueForKey:key];
   [self setNeedsLayout];
-  [self setNeedsDisplay];  
+  [self setNeedsDisplay];
 }
 
 - (void)setTitleInsets:(UIEdgeInsets)titleInsets {
@@ -366,7 +366,7 @@
   self.borderColor = color;
   self.borderWidth = width;
   self.borderAlternateWidth = alternateWidth;
-  self.cornerRadius = cornerRadius;  
+  self.cornerRadius = cornerRadius;
 }
 
 - (void)setIconImage:(UIImage *)iconImage {
@@ -379,11 +379,11 @@
 }
 
 - (UIColor *)textColorForState:(UIControlState)state {
-  
+
   BOOL isSelected = self.isSelected;
   BOOL isHighlighted = (self.isHighlighted && self.userInteractionEnabled);
   BOOL isDisabled = !self.isEnabled;
-  
+
   if (_selectedTitleColor && isSelected) {
     return _selectedTitleColor;
   } else if (_highlightedTitleColor && isHighlighted) {
@@ -426,29 +426,29 @@
 - (void)drawInRect:(CGRect)rect {
   // Force layout if we never have
   if (YKCGSizeIsZero(_titleSize)) [self layoutView];
-  
+
   CGContextRef context = UIGraphicsGetCurrentContext();
-  
+
   UIControlState state = self.state;
   CGRect bounds = rect;
   bounds = UIEdgeInsetsInsetRect(bounds, _margin);
   CGSize size = bounds.size;
-  
+
   size.height -= _insets.top + _insets.bottom;
-  
+
   BOOL isHighlighted = (self.isHighlighted && self.userInteractionEnabled && self.isHighlightedEnabled);
   BOOL isSelected = self.isSelected;
   BOOL isDisabled = !self.isEnabled;
-  
+
   YKUIShadingType shadingType = _shadingType;
   UIColor *color = _color;
   UIColor *color2 = _color2;
   UIColor *color3 = _color3;
   UIColor *color4 = _color4;
   UIColor *borderColor = _borderColor;
-  
+
   UIImage *image = _image;
-  
+
   UIColor *borderShadowColor = _borderShadowColor;
   CGFloat borderShadowBlur = _borderShadowBlur;
 
@@ -456,7 +456,7 @@
   if (_cornerRadiusRatio > 0) {
     cornerRadius = roundf(bounds.size.height/2.0f) * _cornerRadiusRatio;
   }
-  
+
   UIColor *titleShadowColor = _titleShadowColor;
   CGSize titleShadowOffset = _titleShadowOffset;
   UIImage *icon = _iconImageView.image;
@@ -501,9 +501,9 @@
 
   // Set a sensible default
   if (borderShadowColor && borderShadowBlur == 0) borderShadowBlur = 3;
-  
+
   UIColor *fillColor = color;
-      
+
   CGFloat borderWidth = _borderWidth;
   CGFloat borderAlternateWidth = _borderAlternateWidth;
   if (borderAlternateWidth == 0) borderAlternateWidth = borderWidth;
@@ -511,33 +511,33 @@
   // Clip for border styles that support it (that form a cohesive path)
   BOOL clip = (_borderStyle != YKUIBorderStyleTopOnly && _borderStyle != YKUIBorderStyleBottomOnly && _borderStyle != YKUIBorderStyleTopBottom && _borderStyle != YKUIBorderStyleNone && _borderStyle != YKUIBorderStyleNormal);
 
-  if (color && shadingType != YKUIShadingTypeNone) {    
+  if (color && shadingType != YKUIShadingTypeNone) {
     if (clip) {
       CGContextSaveGState(context);
     }
-    
-    YKCGContextAddStyledRect(context, bounds, _borderStyle, borderWidth, borderAlternateWidth, cornerRadius);  
+
+    YKCGContextAddStyledRect(context, bounds, _borderStyle, borderWidth, borderAlternateWidth, cornerRadius);
     if (clip) {
       CGContextClip(context);
     }
-    
+
     YKCGContextDrawShading(context, color.CGColor, color2.CGColor, color3.CGColor, color4.CGColor, bounds.origin, CGPointMake(bounds.origin.x, CGRectGetMaxY(bounds)), shadingType, NO, NO);
-    fillColor = nil;    
-    
+    fillColor = nil;
+
     if (clip) {
       CGContextRestoreGState(context);
     }
   }
-  
+
   if (_borderWidth > 0 || cornerRadius > 0) {
     if (borderShadowColor) {
       CGContextSaveGState(context);
       // Need to clip without border width adjustment
       if (clip) {
-        YKCGContextAddStyledRect(context, bounds, _borderStyle, 0, 0, cornerRadius);  
+        YKCGContextAddStyledRect(context, bounds, _borderStyle, 0, 0, cornerRadius);
         CGContextClip(context);
       }
-      
+
       YKCGContextDrawBorderWithShadow(context, bounds, _borderStyle, fillColor.CGColor, borderColor.CGColor, borderWidth, borderAlternateWidth, cornerRadius, borderShadowColor.CGColor, borderShadowBlur, NO);
       CGContextRestoreGState(context);
     } else {
@@ -551,14 +551,14 @@
   if (image) {
     [image drawInRect:bounds];
   }
-  
+
   UIColor *textColor = [self textColorForState:state];
-  
+
   UIFont *font = self.titleFont;
-  
+
   NSString *title = _title;
   CGSize titleSize = _titleSize;
-  
+
   // Check if we need to use abbreviated title
   if (_abbreviatedTitle) {
     CGSize titleSizeAbbreviated = [_title sizeWithFont:_titleFont];
@@ -567,7 +567,7 @@
       titleSize = _abbreviatedTitleSize;
     }
   }
-  
+
   CGFloat y = bounds.origin.y + roundf(YKCGPointToCenter(titleSize, size).y) + _insets.top;
 
   BOOL showIcon = (icon != nil && !_iconImageView.hidden);
@@ -575,24 +575,24 @@
   if (icon && YKCGSizeIsZero(iconSize)) {
     iconSize = icon.size;
   }
-  
+
   UIEdgeInsets titleInsets = [self _titleInsets];
   if (!_titleHidden) {
     CGFloat lineWidth = titleSize.width + titleInsets.left + titleInsets.right;
     if (showIcon && _iconPosition == YKUIButtonIconPositionLeft) lineWidth += iconSize.width;
     CGFloat x = 0;
-    
+
     if (_titleAlignment == UITextAlignmentCenter) {
       CGFloat width = size.width - _insets.left - _insets.right;
       if (accessoryImage) width -= accessoryImage.size.width;
-      x = bounds.origin.x + roundf(width/2.0 - lineWidth/2.0) + _insets.left;      
+      x = bounds.origin.x + roundf(width/2.0 - lineWidth/2.0) + _insets.left;
     } else {
       x = _insets.left;
     }
     if (x < 0) x = 0;
 
     if (showIcon) {
-      if (_iconShadowColor) CGContextSetShadowWithColor(context, CGSizeZero, 5.0, _iconShadowColor.CGColor);      
+      if (_iconShadowColor) CGContextSetShadowWithColor(context, CGSizeZero, 5.0, _iconShadowColor.CGColor);
       switch (_iconPosition) {
         case YKUIButtonIconPositionLeft: {
           CGPoint iconTop = YKCGPointToCenter(iconSize, size);
@@ -624,7 +624,7 @@
         x += iconSize.width;
       }
     }
-    
+
     [textColor setFill];
     CGContextSetShadowWithColor(context, titleShadowOffset, 0.0, titleShadowColor.CGColor);
 
@@ -634,13 +634,13 @@
     if (!_secondaryTitle) {
       [title drawInRect:CGRectMake(x, y, titleSize.width, titleSize.height) withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:_titleAlignment];
     } else if (_secondaryTitle) {
-      CGSize titleSizeAdjusted = [title sizeWithFont:_titleFont constrainedToSize:titleSize lineBreakMode:UILineBreakModeTailTruncation];      
+      CGSize titleSizeAdjusted = [title sizeWithFont:_titleFont constrainedToSize:titleSize lineBreakMode:UILineBreakModeTailTruncation];
       titleSizeAdjusted = [title drawInRect:CGRectMake(x, y, titleSizeAdjusted.width, titleSizeAdjusted.height) withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:_titleAlignment];
       if (_secondaryTitleColor) [_secondaryTitleColor set];
       if (_secondaryTitleFont) font = _secondaryTitleFont;
       if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionRight) {
         x += titleSizeAdjusted.width;
-        [_secondaryTitle drawAtPoint:CGPointMake(x, y) withFont:font];  
+        [_secondaryTitle drawAtPoint:CGPointMake(x, y) withFont:font];
       } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionBottom) {
         x = _insets.left + titleInsets.left;
         y += titleSizeAdjusted.height;
@@ -661,10 +661,10 @@
   }
 
   if (showIcon) {
-    if (_iconShadowColor) CGContextSetShadowWithColor(context, CGSizeZero, 3.0, _iconShadowColor.CGColor);      
+    if (_iconShadowColor) CGContextSetShadowWithColor(context, CGSizeZero, 3.0, _iconShadowColor.CGColor);
     [icon drawInRect:YKCGRectToCenterInRect(iconSize, bounds)];
     CGContextSetShadowWithColor(context, CGSizeZero, 0.0, NULL);
-  }  
+  }
 }
 
 - (void)drawRect:(CGRect)rect {

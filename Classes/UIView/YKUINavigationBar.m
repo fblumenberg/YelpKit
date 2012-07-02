@@ -95,27 +95,32 @@
   return CGSizeMake(size.width, 44);
 }
 
+- (UILabel *)newTitleLabel {
+  UILabel *titleLabel = [[UILabel alloc] init];
+  titleLabel.font = [UIFont boldSystemFontOfSize:20];
+  titleLabel.minimumFontSize = 16;
+  titleLabel.numberOfLines = 1;
+  titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
+  titleLabel.adjustsFontSizeToFitWidth = YES;
+  titleLabel.shadowColor = [UIColor darkGrayColor];
+  titleLabel.textColor = [UIColor whiteColor];
+  titleLabel.textAlignment = UITextAlignmentCenter;
+  titleLabel.opaque = NO;
+  titleLabel.contentMode = UIViewContentModeCenter;
+  titleLabel.backgroundColor = [UIColor clearColor];
+  titleLabel.userInteractionEnabled = NO;
+  return titleLabel;
+}
+
 - (UILabel *)titleLabel {
   if (!_titleLabel) {
-    _titleLabel = [[UILabel alloc] init];
-    _titleLabel.font = [UIFont boldSystemFontOfSize:20];
-    _titleLabel.minimumFontSize = 16;
-    _titleLabel.numberOfLines = 1;
-    _titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
-    _titleLabel.adjustsFontSizeToFitWidth = YES;
-    _titleLabel.shadowColor = [UIColor darkGrayColor];
-    _titleLabel.textColor = [UIColor whiteColor];
-    _titleLabel.textAlignment = UITextAlignmentCenter;
-    _titleLabel.opaque = NO;
-    _titleLabel.contentMode = UIViewContentModeCenter;
-    _titleLabel.backgroundColor = [UIColor clearColor];
-    _titleLabel.userInteractionEnabled = NO;
+    _titleLabel = [self newTitleLabel];
   }
   return _titleLabel;
 }
 
 - (void)setTitle:(NSString *)title animated:(BOOL)animated {
-  UILabel *label = [self titleLabel];
+  UILabel *label = [[self newTitleLabel] autorelease];
   label.text = title;
   [label sizeToFit];
   [self setContentView:label animated:animated];
