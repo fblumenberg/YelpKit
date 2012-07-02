@@ -224,6 +224,7 @@ static NSMutableDictionary *gDebugStats = NULL;
 
 - (CGRect)setOrigin:(CGPoint)origin frame:(CGRect)frame view:(id)view {
   frame.origin = origin;
+  if (YKCGRectIsEqual(frame, [view frame])) return frame;
   return [self setFrame:frame view:view needsLayout:NO];
 }
 

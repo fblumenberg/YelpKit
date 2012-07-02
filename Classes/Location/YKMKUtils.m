@@ -284,10 +284,11 @@ BOOL YKCLLocationCoordinate2DIsInsideRegion(CLLocationCoordinate2D coordinate, M
 
 + (MKCoordinateRegion)regionThatCentersOnAnnotation:(id<MKAnnotation>)annotation location:(CLLocation *)location maxDistance:(CLLocationDistance)maxDistance coordinateSpan:(MKCoordinateSpan)coordinateSpan minCoordinateSpan:(MKCoordinateSpan)minCoordinateSpan {
   if (location) {
-    if (YKCLLocationCoordinate2DIsNull(location.coordinate) || (YKCLLocationCoordinateDistance(annotation.coordinate, location.coordinate, YES) > maxDistance))
+    if (YKCLLocationCoordinate2DIsNull(location.coordinate) || (YKCLLocationCoordinateDistance(annotation.coordinate, location.coordinate, YES) > maxDistance)) {
       return MKCoordinateRegionMake(annotation.coordinate, coordinateSpan);
-    else
-      return [self regionThatFits:[NSArray arrayWithObjects:annotation, [self annotationFromCLLocation:location title:NSLocalizedString(@"Current Location", nil)], nil] center:annotation.coordinate minCoordinateSpan:minCoordinateSpan maxCoordinateSpan:YKMKCoordinateSpanNull];  
+    } else {
+      return [self regionThatFits:[NSArray arrayWithObjects:annotation, [self annotationFromCLLocation:location title:NSLocalizedString(@"Current Location", nil)], nil] center:annotation.coordinate minCoordinateSpan:minCoordinateSpan maxCoordinateSpan:YKMKCoordinateSpanNull];
+    }
   } else {
     return MKCoordinateRegionMake(annotation.coordinate, coordinateSpan);
   }

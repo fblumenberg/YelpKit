@@ -56,11 +56,9 @@
   _disabledShadingType = YKUIShadingTypeUnknown;
   _margin = UIEdgeInsetsZero;
   _disabledAlpha = 1.0;
-
-  // Default style  
-  self.titleColor = [UIColor blackColor];
-  self.titleFont = [UIFont boldSystemFontOfSize:14.0];
-  self.titleShadowOffset = CGSizeZero;
+  _titleColor = [[UIColor blackColor] retain];
+  _titleFont = [[UIFont boldSystemFontOfSize:14.0] retain];
+  _titleShadowOffset = CGSizeZero;
   self.accessibilityTraits |= UIAccessibilityTraitButton;
 }
 

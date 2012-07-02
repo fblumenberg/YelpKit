@@ -209,17 +209,32 @@ static NSMutableDictionary *gNamedCaches = NULL;
   return [self ETagFromCacheWithKey:key];
 }
 
-- (void)storeData:(NSData *)data forURLString:(NSString *)URLString {
+- (void)storeData:(NSData *)data forURLString:(NSString *)URLString asynchronous:(BOOL)asynchronous {
   NSParameterAssert(URLString);
   NSString *key = [self keyForURLString:URLString];
-  [self storeData:data forKey:key];
+  [self storeData:data forKey:key asynchronous:asynchronous];
 }
 
-- (void)storeData:(NSData *)data forKey:(NSString *)key {
++ (dispatch_queue_t)defaultDispatchQueue {
+  YKAssertMainThread();
+  static dispatch_queue_t DefaultDispatchQueue = NULL;
+  if (!DefaultDispatchQueue) {
+    DefaultDispatchQueue = dispatch_queue_create("com.YelpKit.YKURLCache.defaultDispatchQueue", 0);
+  }
+  return DefaultDispatchQueue;
+}
+
+- (void)storeData:(NSData *)data forKey:(NSString *)key asynchronous:(BOOL)asynchronous {
   NSParameterAssert(key);
-  if (!_disableDiskCache) {
-    NSString *filePath = [self cachePathForKey:key];
-    NSFileManager *fm = [NSFileManager defaultManager];
+  if (_disableDiskCache) return;
+  
+  NSString *filePath = [self cachePathForKey:key];
+  NSFileManager *fm = [NSFileManager defaultManager];
+  if (asynchronous) {
+    dispatch_async([YKURLCache defaultDispatchQueue], ^{
+      [fm createFileAtPath:filePath contents:data attributes:nil];
+    });
+  } else {
     [fm createFileAtPath:filePath contents:data attributes:nil];
   }
 }

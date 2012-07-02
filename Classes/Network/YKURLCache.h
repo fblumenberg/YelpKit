@@ -163,16 +163,30 @@
 - (NSData *)dataForKey:(NSString *)key expires:(NSTimeInterval)expirationAge timestamp:(NSDate**)timestamp;
 
 /*!
+ Default dispatch queue.
+ */
++ (dispatch_queue_t)defaultDispatchQueue;
+
+/*!
  Get an ETag value for a given cache key.
  */
 - (NSString *)ETagForKey:(NSString *)key;
 
 /*!
- Stores a data on disk.
+ Stores a data on disk for URL string.
+ @param data
+ @param URLString
+ @param asynchronous
  */
-- (void)storeData:(NSData *)data forURLString:(NSString *)URLString;
+- (void)storeData:(NSData *)data forURLString:(NSString *)URLString asynchronous:(BOOL)asynchronous;
 
-- (void)storeData:(NSData *)data forKey:(NSString *)key;
+/*!
+ Stores a data on disk for key.
+ @param data
+ @param URLString
+ @param asynchronous
+ */
+- (void)storeData:(NSData *)data forKey:(NSString *)key asynchronous:(BOOL)asynchronous;
 
 /*!
  Stores an ETag value in the ETag cache.
