@@ -415,6 +415,8 @@ void YKTransformRGBHSV(float *components);
 
 void YKCGContextDrawLinearGradient(CGContextRef context, CGRect rect, CGColorRef startColor, CGColorRef  endColor);
 
+void YKCGContextDrawLinearGradientWithColors(CGContextRef context, CGRect rect, NSArray */*of CGColorRef*/colors, CGFloat *locations);
+
 UIImage *YKCreateVerticalGradientImage(CGFloat height, CGColorRef topColor, CGColorRef bottomColor);
 
 
