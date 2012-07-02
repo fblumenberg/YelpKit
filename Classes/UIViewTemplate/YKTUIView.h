@@ -16,6 +16,7 @@
   YKUINavigationBar *_navigationBar;
   
   UINavigationController *_navigationController;
+  YKTUIViewController *_viewController;
   
   BOOL _visible;
   BOOL _needsRefresh;
@@ -59,6 +60,20 @@
  @param animated
  */
 - (void)setView:(YKTUIView *)view animated:(BOOL)animated;
+
+/*!
+ Present modal view.
+ @param view
+ @param animated
+ */
+- (void)presentModalView:(YKTUIView *)view animated:(BOOL)animated;
+
+/*!
+ Dismiss modal view.
+ @param view
+ @param animated
+ */
+- (void)dismissModalViewAnimated:(BOOL)animated;
 
 /*!
  Swap the current view with transition.

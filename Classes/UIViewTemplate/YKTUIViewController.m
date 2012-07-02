@@ -73,6 +73,16 @@
   [_templateView viewDidDisappear:animated];
 }
 
+- (void)setCloseBlock:(UIControlTargetBlock)closeBlock {
+  [self view];  
+  YKUIButton *closeButton = [[YKUIButton alloc] init];
+  closeButton.title = NSLocalizedString(@"Close", nil);
+  closeButton.borderStyle = YKUIBorderStyleRounded;
+  [_templateView.view applyStyleForNavigationButton:closeButton style:YKUINavigationButtonStyleClose];
+  closeButton.targetBlock = closeBlock;
+  _templateView.view.navigationBar.leftButton = closeButton;
+}
+
 - (void)_back {
   [self.navigationController popViewControllerAnimated:YES];
 }

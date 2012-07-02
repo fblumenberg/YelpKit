@@ -29,6 +29,7 @@
 
 typedef enum {
   YKUINavigationButtonStyleDefault = 0,
+  YKUINavigationButtonStyleClose,
   YKUINavigationButtonStyleBack,
   YKUINavigationButtonStyleDone,
   YKUINavigationButtonStyleTranslucentBlack,

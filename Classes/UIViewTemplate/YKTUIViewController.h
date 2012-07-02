@@ -41,6 +41,11 @@
 
 - (BOOL)isContentView:(YKTUIView *)view;
 
+/*!
+ Set close block, for example, if displaying in a modal.
+ */
+- (void)setCloseBlock:(UIControlTargetBlock)closeBlock;
+
 @end
 
 

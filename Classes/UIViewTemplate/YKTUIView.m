@@ -53,6 +53,7 @@
   [self addSubview:_navigationBar];
 
   YKTUIViewController *viewController = [[self _viewControllerForView] retain];
+  _viewController = viewController;
   return viewController;
 }
 
@@ -130,16 +131,22 @@
   [navigationController popViewControllerAnimated:animated];
 }
 
-- (YKTUIViewController *)viewController {
+- (void)presentModalView:(YKTUIView *)view animated:(BOOL)animated {
   UINavigationController *navigationController = self.navigationController;
-  YKTUIViewController *viewController = nil;
-  for (YKTUIViewController *checkViewController in [navigationController viewControllers]) {
-    if ([checkViewController isContentView:self]) {
-      viewController = checkViewController;
-      break;
-    }
-  }
-  return viewController;
+  YKTUIViewController *viewController = [view newViewController:navigationController];  
+  [viewController setCloseBlock:^() {
+    [viewController dismissModalViewControllerAnimated:animated];
+  }];  
+  [navigationController presentModalViewController:viewController animated:animated];
+  [viewController release];
+}
+
+- (void)dismissModalViewAnimated:(BOOL)animated {
+  [self.viewController dismissModalViewControllerAnimated:animated];
+}
+
+- (YKTUIViewController *)viewController {
+  return _viewController;
 }
 
 - (void)popToView:(YKTUIView *)view animated:(BOOL)animated {
