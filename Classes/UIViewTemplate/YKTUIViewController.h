@@ -27,6 +27,9 @@
 @interface YKTUIViewController : UIViewController {
 @private
   YKTUIInternalView *_templateView;
+
+  YKUIButton *_backButton;
+  YKUIButton *_closeButton;
   
   id<YKTUIViewControllerViewDelegate> _viewDelegate;
 }

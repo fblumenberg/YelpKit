@@ -42,8 +42,8 @@
   return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-  if ((self = [super initWithCoder:aDecoder])) {
+- (id)initWithCoder:(NSCoder *)coder {
+  if ((self = [super initWithCoder:coder])) {
     [self sharedInit];
   }
   return self;

@@ -33,4 +33,6 @@
  */
 @interface YKUIScrollView : UIScrollView
 
+- (void)sharedInit;
+
 @end

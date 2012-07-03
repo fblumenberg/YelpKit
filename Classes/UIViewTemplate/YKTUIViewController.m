@@ -14,6 +14,14 @@
 
 @synthesize templateView=_templateView, viewDelegate=_viewDelegate;
 
+- (void)dealloc {
+  [_backButton setTarget:nil action:nil];
+  [_backButton release];
+  _closeButton.targetBlock = nil;
+  [_closeButton release];
+  [super dealloc];
+}
+
 - (void)loadView {
   if (!_templateView) {
     _templateView = [[YKTUIInternalView alloc] init];
@@ -37,13 +45,14 @@
         UIViewController *previousViewController = [[self.navigationController viewControllers] objectAtIndex:(index - 1)];
         NSString *backTitle = previousViewController.title;
         if (!backTitle || [backTitle length] > 8) backTitle = NSLocalizedString(@"Back", nil);
-        YKUIButton *backButton = [[YKUIButton alloc] init];
-        backButton.title = backTitle;
-        backButton.borderStyle = YKUIBorderStyleRoundedBack;
-        [_templateView.view applyStyleForNavigationButton:backButton style:YKUINavigationButtonStyleBack];
-        [backButton setTarget:self action:@selector(_back)];
-        _templateView.view.navigationBar.leftButton = backButton;
-        [backButton release];
+        [_backButton setTarget:nil action:nil];
+        [_backButton release];
+        _backButton = [[YKUIButton alloc] init];
+        _backButton.title = backTitle;
+        _backButton.borderStyle = YKUIBorderStyleRoundedBack;
+        [_templateView.view applyStyleForNavigationButton:_backButton style:YKUINavigationButtonStyleBack];
+        [_backButton setTarget:self action:@selector(_back)];
+        _templateView.view.navigationBar.leftButton = _backButton;
       }
     }
   }
@@ -59,6 +68,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
   [super viewWillDisappear:animated];
+  [_backButton removeAllTargets];
   if ([_viewDelegate respondsToSelector:@selector(viewController:viewWillDisappear:)]) {
     [_viewDelegate viewController:self viewWillDisappear:animated];
   }
@@ -74,13 +84,15 @@
 }
 
 - (void)setCloseBlock:(UIControlTargetBlock)closeBlock {
-  [self view];  
-  YKUIButton *closeButton = [[YKUIButton alloc] init];
-  closeButton.title = NSLocalizedString(@"Close", nil);
-  closeButton.borderStyle = YKUIBorderStyleRounded;
-  [_templateView.view applyStyleForNavigationButton:closeButton style:YKUINavigationButtonStyleClose];
-  closeButton.targetBlock = closeBlock;
-  _templateView.view.navigationBar.leftButton = closeButton;
+  [self view];
+  _closeButton.targetBlock = nil;
+  [_closeButton release];
+  _closeButton = [[YKUIButton alloc] init];
+  _closeButton.title = NSLocalizedString(@"Close", nil);
+  _closeButton.borderStyle = YKUIBorderStyleRounded;
+  [_templateView.view applyStyleForNavigationButton:_closeButton style:YKUINavigationButtonStyleClose];
+  _closeButton.targetBlock = closeBlock;
+  _templateView.view.navigationBar.leftButton = _closeButton;
 }
 
 - (void)_back {

@@ -115,19 +115,12 @@
   return [viewController isContentView:self];
 }
 
-- (void)popToRootViewAnimated:(BOOL)animated {
-  UINavigationController *navigationController = self.navigationController;
-  if (![self isRootView]) {
-    self.navigationController = nil;
-  }
-  [navigationController popToRootViewControllerAnimated:animated];
-}
-
 - (void)popViewAnimated:(BOOL)animated {
   if ([self isRootView]) return;
 
   UINavigationController *navigationController = self.navigationController;
   self.navigationController = nil;
+  _viewController = nil;
   [navigationController popViewControllerAnimated:animated];
 }
 
@@ -156,6 +149,7 @@
   UINavigationController *navigationController = self.navigationController;
   if (view != self) {
     self.navigationController = nil;
+    _viewController = nil;
   }
 
   if (currentViewController) {
@@ -187,6 +181,7 @@
 
 - (void)_viewWillAppear:(BOOL)animated { 
   _visible = YES;
+  [self refreshIfNeeded];
   [self viewWillAppear:animated];
 }
 
@@ -213,10 +208,17 @@
 
 - (void)refresh { }
 
+- (void)refreshIfNeeded {
+  if (_needsRefresh) {
+    _needsRefresh = NO;
+    [self refresh];
+  }
+}
+
 - (void)setNeedsRefresh {
   _needsRefresh = YES;
   if (_visible) {
-    [self refresh];
+    [self refreshIfNeeded];
   }
 }
 

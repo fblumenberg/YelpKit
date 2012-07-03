@@ -328,12 +328,13 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
     // This may be called in a callback from the connection, so use autorelease
     [oldConnection cancel];
     [oldConnection unscheduleFromRunLoop:(self.runLoop ? self.runLoop : [NSRunLoop mainRunLoop]) forMode:NSDefaultRunLoopMode];
-    [oldConnection autorelease];     
-    
-    // Delegates are retained only for the life of the connection
-    [__delegate release];
-    __delegate = nil;   
-  }   
+    [oldConnection autorelease];         
+  }
+  // Delegates are retained only for the life of the connection
+  [__delegate release];
+  __delegate = nil;
+  self.finishBlock = nil;
+  self.failBlock = nil;
 }
 
 - (void)setHTTPBodyFormData:(NSDictionary *)params {
