@@ -201,11 +201,19 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   
   // Check cache
   if ([self shouldAttemptLoadFromCache] && _URL.cacheableURLString) {
-    NSData *cachedData = [[self cache] dataForURLString:_URL.cacheableURLString expires:_expiresAge timestamp:nil];
-    if (cachedData) {
+    // Because this is asynchronous, there is a small chance that data might be removed after the hasData check,
+    // in which case the request will respond as if it errored.
+    YKURLCache *cache = [self cache];
+    if ([cache hasDataForURLString:_URL.cacheableURLString expires:_expiresAge]) {
       YKDebug(@"\n\nCache hit: %@\n\n", _URL.cacheableURLString);
-      _cacheHit = YES;
-      [[self gh_proxyAfterDelay:0] didLoadData:cachedData withResponse:nil cacheKey:nil];
+      [cache dataForURLString:_URL.cacheableURLString dataBlock:^(NSData *data) {
+        if (data) {
+          _cacheHit = YES;
+          [self didLoadData:data withResponse:nil cacheKey:nil];
+        } else {
+          [self didError:[YKError errorWithKey:YKErrorRequest]];
+        }
+      }];
       return YES;
     } else {
       YKDebug(@"Cache miss: %@, expiresAge=%.0f", _URL.cacheableURLString, _expiresAge);

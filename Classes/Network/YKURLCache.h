@@ -45,6 +45,8 @@
 // limitations under the License.
 //
 
+typedef void (^YKURLCacheDataBlock)(NSData *data);
+
 /*!
  A general purpose URL cache for caching data in memory and on disk.
  
@@ -134,13 +136,25 @@
 
 /*!
  Determines if there is a cache entry for a URL.
+ @param URLString
  */
 - (BOOL)hasDataForURLString:(NSString *)URLString;
 
 /*!
  Determines if there is a cache entry for a key.
+ @param URLString
+ @param expires
+ @result YES if exists and not expired
  */
-- (BOOL)hasDataForKey:(NSString *)key expires:(NSTimeInterval)expirationAge;
+ - (BOOL)hasDataForURLString:(NSString *)URLString expires:(NSTimeInterval)expires;
+
+/*!
+ Determines if there is a cache entry for a key.
+ @param key
+ @param expires
+ @result YES if exists and not expired
+ */
+- (BOOL)hasDataForKey:(NSString *)key expires:(NSTimeInterval)expires;
 
 /*!
  Gets the data for a URL from the cache if it exists.
@@ -156,10 +170,18 @@
  @param URLString URL as a string
  @param expires How long until resource expires
  @param timestamp If not nil will be set to the timestamp of the data
- @result nil if hthe URL is not cached or if the cache entry is older than the minimum.
+ @result nil if the URL is not cached or if the cache entry is older than the minimum.
  */
 - (NSData *)dataForURLString:(NSString *)URLString expires:(NSTimeInterval)expirationAge timestamp:(NSDate**)timestamp;
 
+/*!
+ Gets the data for a key from the cache if it exists and is newer than a minimum timestamp.
+ 
+ @param key Key
+ @param expires How long until resource expires
+ @param timestamp If not nil will be set to the timestamp of the data
+ @result nil if the URL is not cached or if the cache entry is older than the minimum.
+ */
 - (NSData *)dataForKey:(NSString *)key expires:(NSTimeInterval)expirationAge timestamp:(NSDate**)timestamp;
 
 /*!
@@ -192,6 +214,20 @@
  Stores an ETag value in the ETag cache.
  */
 - (void)storeETag:(NSString *)ETag forKey:(NSString *)key;
+
+/*!
+ Load data in dispatch queue.
+ @param key
+ @param dataBlock
+ */
+- (void)dataForKey:(NSString *)key dataBlock:(YKURLCacheDataBlock)dataBlock;
+
+/*!
+ Load data (for URL string) in dispatch queue.
+ @param URLString
+ @param dataBlock
+ */
+- (void)dataForURLString:(NSString *)URLString dataBlock:(YKURLCacheDataBlock)dataBlock;
 
 /*!
  Soves the data currently stored under one URL to another URL.

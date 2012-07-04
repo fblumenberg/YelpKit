@@ -124,4 +124,10 @@
  */
 + (BOOL)URLExists:(NSURL *)URL;
 
+/*!
+ Load image from bundle. This is not cached or uncompressed.
+ Only use this for large images used once.
+ */
++ (UIImage *)imageWithResource:(NSString *)resource;
+
 @end
