@@ -43,6 +43,7 @@ static NSTimeInterval gYKURLRequestDefaultTimeout = 90.0;
 static NSTimeInterval gYKURLRequestDefaultTimeout = 25.0;
 #endif
 static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
+static BOOL gYKURLRequestCacheAsyncEnabled = YES; // Defaults to ON
 
 
 @interface YKURLRequest ()
@@ -186,7 +187,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   _method = method;
   NSAssert(_method != YKHTTPMethodNone, @"Invalid method");
   
-#if YP_DEBUG || DEBUG
+#if DEBUG
   // Check mock
   if (_mockResponse) {
     YKDebug(@"Mock response for: %@", _URL);
@@ -206,14 +207,20 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
     YKURLCache *cache = [self cache];
     if ([cache hasDataForURLString:_URL.cacheableURLString expires:_expiresAge]) {
       YKDebug(@"\n\nCache hit: %@\n\n", _URL.cacheableURLString);
-      [cache dataForURLString:_URL.cacheableURLString dataBlock:^(NSData *data) {
-        if (data) {
-          _cacheHit = YES;
-          [self didLoadData:data withResponse:nil cacheKey:nil];
-        } else {
-          [self didError:[YKError errorWithKey:YKErrorRequest]];
-        }
-      }];
+      if (!gYKURLRequestCacheAsyncEnabled) {
+        NSData *data = [cache dataForURLString:_URL.cacheableURLString];
+        _cacheHit = YES;
+        [self didLoadData:data withResponse:nil cacheKey:nil];
+      } else {
+        [cache dataForURLString:_URL.cacheableURLString dataBlock:^(NSData *data) {
+          if (data) {
+            _cacheHit = YES;
+            [self didLoadData:data withResponse:nil cacheKey:nil];
+          } else {
+            [self didError:[YKError errorWithKey:YKErrorRequest]];
+          }
+        }];
+      }
       return YES;
     } else {
       YKDebug(@"Cache miss: %@, expiresAge=%.0f", _URL.cacheableURLString, _expiresAge);
@@ -534,6 +541,10 @@ static id<YKCompressor> gCompressor = NULL;
 
 + (void)setCacheEnabled:(BOOL)cacheEnabled {
   gYKURLRequestCacheEnabled = cacheEnabled;
+}
+
++ (void)setCacheAsyncEnabled:(BOOL)cacheAsyncEnabled {
+  gYKURLRequestCacheAsyncEnabled = cacheAsyncEnabled;
 }
 
 - (NSInteger)responseStatusCode {
