@@ -54,6 +54,6 @@
 #import "YKTableViewCell.h"
 #import "YKUIActivityCell.h"
 
-#import "YKTUIViewController.h"
-#import "YKTUIView.h"
+#import "YKSUIView.h"
+#import "YKSUIStack.h"
 
