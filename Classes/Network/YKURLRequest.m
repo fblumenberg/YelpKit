@@ -210,7 +210,7 @@ static BOOL gYKURLRequestCacheAsyncEnabled = YES; // Defaults to ON
       if (!gYKURLRequestCacheAsyncEnabled) {
         NSData *data = [cache dataForURLString:_URL.cacheableURLString];
         _cacheHit = YES;
-        [self didLoadData:data withResponse:nil cacheKey:nil];
+        [[self gh_proxyAfterDelay:0] didLoadData:data withResponse:nil cacheKey:nil];
       } else {
         [cache dataForURLString:_URL.cacheableURLString dataBlock:^(NSData *data) {
           if (data) {
