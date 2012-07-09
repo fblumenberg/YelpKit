@@ -417,6 +417,11 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
 + (void)setCacheEnabled:(BOOL)cacheEnabled;
 
 /*!
+ To disable the cache asynchronous loading globally. (For testing.)
+ */
++ (void)setCacheAsyncEnabled:(BOOL)cacheAsyncEnabled;
+
+/*!
  Response status code (If HTTP response, the HTTP response code.)
  */
 - (NSInteger)responseStatusCode;
