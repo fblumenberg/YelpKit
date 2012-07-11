@@ -31,34 +31,37 @@
 #import "YKUINavigationBar.h"
 #import "YKUIButton.h"
 
-@class YKSUIStack;
+@class YKUIViewStack;
 @class YKTUIViewController;
 
 enum {
-  YKSUIViewAnimationOptionCurveEaseInOut = 0 << 16,
-  YKSUIViewAnimationOptionCurveEaseIn = 1 << 16,
-  YKSUIViewAnimationOptionCurveEaseOut = 2 << 16,
-  YKSUIViewAnimationOptionCurveLinear = 3 << 16,
+  YKSUIViewAnimationOptionCurveEaseInOut = 1 << 0,
+  YKSUIViewAnimationOptionCurveEaseIn = 1 << 1,
+  YKSUIViewAnimationOptionCurveEaseOut = 1 << 2,
+  YKSUIViewAnimationOptionCurveLinear = 1 << 3,
   
-  YKSUIViewAnimationOptionSlide = 0 << 20,
-  YKSUIViewAnimationOptionFlipFromLeft = 1 << 20,
-  YKSUIViewAnimationOptionFlipFromRight = 2 << 20,
-  YKSUIViewAnimationOptionCurlUp = 3 << 20,
-  YKSUIViewAnimationOptionCurlDown = 4 << 20,
+  YKSUIViewAnimationOptionTransitionFlipFromLeft = 1 << 5,
+  YKSUIViewAnimationOptionTransitionFlipFromRight = 1 << 6,
+  YKSUIViewAnimationOptionTransitionCurlUp = 1 << 7,
+  YKSUIViewAnimationOptionTransitionCurlDown = 1 << 8,
+  YKSUIViewAnimationOptionTransitionCrossDissolve = 1 << 9,
+  YKSUIViewAnimationOptionTransitionFlipFromTop = 1 << 10,
+  YKSUIViewAnimationOptionTransitionFlipFromBottom = 1 << 11,
+  YKSUIViewAnimationOptionTransitionSlide = 1 << 12,
 };
 typedef NSUInteger YKSUIViewAnimationOptions;
 
 @interface YKSUIView : YKUILayoutView {
   YKUINavigationBar *_navigationBar;
     
-  YKSUIStack *_stack;
+  YKUIViewStack *_stack;
 
   BOOL _visible;
   BOOL _needsRefresh;
 }
 
 @property (readonly, nonatomic) YKUINavigationBar *navigationBar;
-@property (assign, nonatomic) YKSUIStack *stack;
+@property (assign, nonatomic) YKUIViewStack *stack;
 @property (readonly, nonatomic, getter=isVisible) BOOL visible;
 @property (assign, nonatomic) BOOL needsRefresh;
 

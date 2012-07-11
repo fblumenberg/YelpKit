@@ -28,7 +28,7 @@
 //
 
 #import "YKSUIView.h"
-#import "YKSUIStack.h"
+#import "YKUIViewStack.h"
 
 @implementation YKSUIView
 
@@ -69,11 +69,11 @@
 }
 
 - (void)pushView:(YKSUIView *)view animated:(BOOL)animated {
-  [self pushView:view duration:0.25 options:YKSUIViewAnimationOptionSlide|YKSUIViewAnimationOptionCurveLinear];
+  [self pushView:view duration:0.25 options:YKSUIViewAnimationOptionTransitionSlide|YKSUIViewAnimationOptionCurveLinear];
 }
 
 - (void)popViewAnimated:(BOOL)animated {
-  [self popViewWithDuration:0.25 options:YKSUIViewAnimationOptionSlide|YKSUIViewAnimationOptionCurveLinear];
+  [self popViewWithDuration:0.25 options:YKSUIViewAnimationOptionTransitionSlide|YKSUIViewAnimationOptionCurveLinear];
 }
 
 - (void)pushView:(YKSUIView *)view duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options {

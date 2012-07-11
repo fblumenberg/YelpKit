@@ -1,5 +1,5 @@
 //
-//  YKSUIInternalView.h
+//  YKUIViewStack.h
 //  YelpKit
 //
 //  Created by Gabriel Handford on 7/5/12.
@@ -27,21 +27,31 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "YKUILayoutView.h"
-@class YKSUIView;
+#import "YKSUIView.h"
 
-@interface YKSUIInternalView : YKUILayoutView {
-  YKSUIView *_view;
+@interface YKUIViewStack : NSObject {
+  NSMutableArray *_stack;
+  UIView *_parentView;
 }
 
-@property (retain, nonatomic) YKSUIView *view;
+- (id)initWithParentView:(UIView *)parentView;
 
-- (void)viewWillAppear:(BOOL)animated;
+- (void)pushView:(YKSUIView *)view duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options;
 
-- (void)viewDidAppear:(BOOL)animated;
+- (void)setView:(YKSUIView *)view duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options;
 
-- (void)viewWillDisappear:(BOOL)animated;
+- (void)popView:(YKSUIView *)view duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options;
 
-- (void)viewDidDisappear:(BOOL)animated;
+- (void)popToView:(YKSUIView *)view duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options;
+
+- (void)swapView:(YKSUIView *)view duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options;
+
+- (YKSUIView *)visibleView;
+
+- (BOOL)isRootView:(YKSUIView *)view;
+
+- (BOOL)isVisibleView:(YKSUIView *)view;
+
+- (NSInteger)indexOfView:(YKSUIView *)view;
 
 @end
