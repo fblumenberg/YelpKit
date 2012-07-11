@@ -32,7 +32,7 @@
 
 @implementation YKLBaseView
 
-@synthesize frame=_frame;
+@synthesize frame=_frame, hidden=_hidden;
 
 - (CGSize)sizeThatFits:(CGSize)size {
   return _frame.size;
@@ -58,6 +58,8 @@
 - (void)setOrigin:(CGPoint)origin {
   _frame = CGRectMake(origin.x, origin.y, _frame.size.width, _frame.size.height);
 }
+
+- (void)setNeedsLayout { }
 
 - (void)drawInRect:(CGRect)rect { }
 

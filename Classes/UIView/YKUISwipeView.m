@@ -81,6 +81,7 @@
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+  if (self.hidden) return [super hitTest:point withEvent:event];
   // Because the scroll view frame is smaller than the view frame we need to adjust the point and call hitTest again,
   // so the swipe works from the far right side.
   if ([self pointInside:point withEvent:event]) {

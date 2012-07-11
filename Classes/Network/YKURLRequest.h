@@ -132,8 +132,6 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
   
   NSTimer *_timer;
   
-  BOOL _detachOnThread; //! Experimental!
-  
   // Response data
   NSData *_responseData;
   
@@ -172,8 +170,6 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
 @property (readonly, nonatomic) NSTimeInterval sentInterval;
 @property (readonly, nonatomic) NSTimeInterval responseInterval;
 @property (readonly, nonatomic) NSUInteger bytesWritten;
-
-@property (assign, nonatomic) BOOL detachOnThread;
 
 @property (readonly, retain, nonatomic) NSData *responseData;
 
@@ -419,6 +415,11 @@ typedef void (^YKURLRequestFailBlock)(YKHTTPError *error);
  To disable the cache globally. (For testing.)
  */
 + (void)setCacheEnabled:(BOOL)cacheEnabled;
+
+/*!
+ To disable the cache asynchronous loading globally. (For testing.)
+ */
++ (void)setCacheAsyncEnabled:(BOOL)cacheAsyncEnabled;
 
 /*!
  Response status code (If HTTP response, the HTTP response code.)

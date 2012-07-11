@@ -50,3 +50,16 @@ NSString *YKNSStringFromNSTimeInterval(NSTimeInterval timeInterval);
 
  */
 NSString *YKNSStringFromCurrencyAmountInCentsAndCode(NSInteger cents, NSString *currencyCode);
+
+/*!
+ Dispatch block after current run loop.
+ @param block Block
+ */
+void YKDispatch(dispatch_block_t block);
+
+/*!
+ Dispatch block after delay.
+ @param seconds Seconds delay
+ @param block Block
+ */
+void YKDispatchAfter(NSTimeInterval seconds, dispatch_block_t block);

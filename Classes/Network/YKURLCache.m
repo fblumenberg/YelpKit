@@ -88,6 +88,15 @@ static NSMutableDictionary *gNamedCaches = NULL;
   [super dealloc];
 }
 
++ (dispatch_queue_t)defaultDispatchQueue {
+  YKAssertMainThread();
+  static dispatch_queue_t DefaultDispatchQueue = NULL;
+  if (!DefaultDispatchQueue) {
+    DefaultDispatchQueue = dispatch_queue_create("com.YelpKit.YKURLCache.defaultDispatchQueue", 0);
+  }
+  return DefaultDispatchQueue;
+}
+
 + (NSUInteger)getSysInfo:(uint)typeSpecifier {
   size_t size = sizeof(int);
   int results;
@@ -164,23 +173,28 @@ static NSMutableDictionary *gNamedCaches = NULL;
   return [fm fileExistsAtPath:filePath];
 }
 
+- (BOOL)hasDataForURLString:(NSString *)URLString expires:(NSTimeInterval)expires {
+  NSString *key = [self keyForURLString:URLString];
+  return [self hasDataForKey:key expires:expires];
+}
+
 - (NSData *)dataForURLString:(NSString *)URLString {
   return [self dataForURLString:URLString expires:YKTimeIntervalMax timestamp:nil];
 }
 
-- (NSData *)dataForURLString:(NSString *)URLString expires:(NSTimeInterval)expirationAge timestamp:(NSDate**)timestamp {
+- (NSData *)dataForURLString:(NSString *)URLString expires:(NSTimeInterval)expirationAge timestamp:(NSDate **)timestamp {
   if (!URLString) return nil;
   NSString *key = [self keyForURLString:URLString];
   return [self dataForKey:key expires:expirationAge timestamp:timestamp];
 }
 
-- (BOOL)hasDataForKey:(NSString *)key expires:(NSTimeInterval)expirationAge {
+- (BOOL)hasDataForKey:(NSString *)key expires:(NSTimeInterval)expires {
   NSString *filePath = [self cachePathForKey:key];
   NSFileManager *fm = [NSFileManager defaultManager];
   if ([fm fileExistsAtPath:filePath]) {
     NSDictionary *attrs = [fm attributesOfItemAtPath:filePath error:nil];
     NSDate *modified = [attrs objectForKey:NSFileModificationDate];
-    if ([modified timeIntervalSinceNow] < -expirationAge) {
+    if ([modified timeIntervalSinceNow] < -expires) {
       return NO;
     }
     return YES;
@@ -188,13 +202,13 @@ static NSMutableDictionary *gNamedCaches = NULL;
   return NO;
 }
 
-- (NSData *)dataForKey:(NSString*)key expires:(NSTimeInterval)expirationAge timestamp:(NSDate**)timestamp {
+- (NSData *)dataForKey:(NSString*)key expires:(NSTimeInterval)expires timestamp:(NSDate**)timestamp {
   NSString *filePath = [self cachePathForKey:key];
   NSFileManager *fm = [NSFileManager defaultManager];
   if ([fm fileExistsAtPath:filePath]) {
     NSDictionary *attrs = [fm attributesOfItemAtPath:filePath error:nil];
     NSDate *modified = [attrs objectForKey:NSFileModificationDate];
-    if ([modified timeIntervalSinceNow] < -expirationAge) {
+    if ([modified timeIntervalSinceNow] < -expires) {
       return nil;
     }
     if (timestamp) {
@@ -205,21 +219,41 @@ static NSMutableDictionary *gNamedCaches = NULL;
   return nil;
 }
 
+- (void)dataForURLString:(NSString *)URLString dataBlock:(YKURLCacheDataBlock)dataBlock {
+  NSString *key = [self keyForURLString:URLString];
+  [self dataForKey:key dataBlock:dataBlock];
+}
+
+- (void)dataForKey:(NSString *)key dataBlock:(YKURLCacheDataBlock)dataBlock {
+  dispatch_async([YKURLCache defaultDispatchQueue], ^{
+    NSData *data = [NSData dataWithContentsOfFile:[self cachePathForKey:key]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      dataBlock(data);
+    });
+  });
+}
+
 - (NSString *)ETagForKey:(NSString*)key {
   return [self ETagFromCacheWithKey:key];
 }
 
-- (void)storeData:(NSData *)data forURLString:(NSString *)URLString {
+- (void)storeData:(NSData *)data forURLString:(NSString *)URLString asynchronous:(BOOL)asynchronous {
   NSParameterAssert(URLString);
   NSString *key = [self keyForURLString:URLString];
-  [self storeData:data forKey:key];
+  [self storeData:data forKey:key asynchronous:asynchronous];
 }
 
-- (void)storeData:(NSData *)data forKey:(NSString *)key {
+- (void)storeData:(NSData *)data forKey:(NSString *)key asynchronous:(BOOL)asynchronous {
   NSParameterAssert(key);
-  if (!_disableDiskCache) {
-    NSString *filePath = [self cachePathForKey:key];
-    NSFileManager *fm = [NSFileManager defaultManager];
+  if (_disableDiskCache) return;
+  
+  NSString *filePath = [self cachePathForKey:key];
+  NSFileManager *fm = [NSFileManager defaultManager];
+  if (asynchronous) {
+    dispatch_async([YKURLCache defaultDispatchQueue], ^{
+      [fm createFileAtPath:filePath contents:data attributes:nil];
+    });
+  } else {
     [fm createFileAtPath:filePath contents:data attributes:nil];
   }
 }

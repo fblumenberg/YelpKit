@@ -61,9 +61,18 @@ typedef enum {
 
 
 /*!
- See YKLayout.
+ Informal protocol for views laid out by YKLayout.
  */
-@protocol YKLayout <NSObject>
+@protocol YKLView 
+
+@property (assign, nonatomic) CGRect frame;
+
+- (void)setNeedsLayout;
+
+@end
+
+
+@protocol YKLayout 
 
 /*!
  Layout the subviews.
@@ -85,21 +94,31 @@ typedef enum {
  If we are calculating sizeThatFits, this doesn't actually set the views frame.
  
  @param frame Frame
- @param view View
+ @param view View should conform to YKLView informal protocol.
  */
-- (CGRect)setFrame:(CGRect)frame view:(UIView *)view;
+- (CGRect)setFrame:(CGRect)frame view:(id)view;
+
+/*!
+ Set frame for the (sub)view.
+ If we are calculating sizeThatFits, this doesn't actually set the views frame.
+ 
+ @param frame Frame
+ @param view View should conform to YKLView informal protocol.
+ @param needsLayout If YES, calls setNeedsLayout on view.
+ */
+- (CGRect)setFrame:(CGRect)frame view:(id)view needsLayout:(BOOL)needsLayout;
 
 /*!
  Set the (sub)view frame, then size to fit the view.
  If we are calculating sizeThatFits, this doesn't actually set the views frame.
  Use this value instead of view.frame since the views frame might not have been set.
-
+ 
  @param frame Frame
- @param view View
+ @param view View should conform to YKLView informal protocol.
  @param sizeToFit Size to fit
  @result The view frame. 
  */
-- (CGRect)setFrame:(CGRect)frame view:(UIView *)view sizeToFit:(BOOL)sizeToFit;
+- (CGRect)setFrame:(CGRect)frame view:(id)view sizeToFit:(BOOL)sizeToFit;
 
 /*!
  Set the (sub)view frame.
@@ -107,11 +126,11 @@ typedef enum {
  Use this value instead of view.frame since the views frame might not have been set.
  
  @param frame Frame
- @param view View
+ @param view View should conform to YKLView informal protocol.
  @param options Options for setFrame; See YKLayoutOptions for more info
  @result The view frame. 
  */
-- (CGRect)setFrame:(CGRect)frame view:(UIView *)view options:(YKLayoutOptions)options;
+- (CGRect)setFrame:(CGRect)frame view:(id)view options:(YKLayoutOptions)options;
 
 /*!
  Set the (sub)view frame.
@@ -122,26 +141,26 @@ typedef enum {
  @param inRect Rect to optionally position in for YKLayoutOptionsCenter, YKLayoutOptionsCenterVertical, YKLayoutOptionsRightAlign, etc.
  @param view View
  @param options Options for setFrame; See YKLayoutOptions for more info
- @result The view frame. 
+ @result The view frame.
  */
-- (CGRect)setFrame:(CGRect)frame inRect:(CGRect)inRect view:(UIView *)view options:(YKLayoutOptions)options;
+- (CGRect)setFrame:(CGRect)frame inRect:(CGRect)inRect view:(id)view options:(YKLayoutOptions)options;
 
 /*!
  Set origin for the (sub)view (for views with fixed sizes).
  If we are calculating sizeThatFits, this doesn't actually set the views frame.
  Use this value instead of view.frame since the views frame might not have been set.
-
+ 
  @param origin Origin
  @param frame Frame
- @param view View
+ @param view View should conform to YKLView informal protocol.
  @result The view frame. 
  */
-- (CGRect)setOrigin:(CGPoint)origin frame:(CGRect)frame view:(UIView *)view;
+- (CGRect)setOrigin:(CGPoint)origin frame:(CGRect)frame view:(id)view;
 
 /*!
  @deprecated Use setOrigin:frame:view:
  */
-- (CGRect)setOrigin:(CGPoint)origin view:(UIView *)view;
+- (CGRect)setOrigin:(CGPoint)origin view:(id)view;
 
 /*!
  Set origin, x position.
@@ -149,11 +168,10 @@ typedef enum {
  
  @param x X position
  @param frame Frame
- @param view View
- @param frame Frame
+ @param view View should conform to YKLView informal protocol.
  @result The view frame. 
  */
-- (CGRect)setX:(CGFloat)x frame:(CGRect)frame view:(UIView *)view;
+- (CGRect)setX:(CGFloat)x frame:(CGRect)frame view:(id)view;
 
 /*!
  Set origin, y position.
@@ -162,11 +180,10 @@ typedef enum {
  
  @param y Y position
  @param frame Frame
- @param view View
- @param frame Frame
+ @param view View should conform to YKLView informal protocol.
  @result The view frame. 
  */
-- (CGRect)setY:(CGFloat)y frame:(CGRect)frame view:(UIView *)view;
+- (CGRect)setY:(CGFloat)y frame:(CGRect)frame view:(id)view;
 
 /*!
  @deprecated Use setY:frame:view:
@@ -182,7 +199,7 @@ typedef enum {
 /*!
  For subclasses, in rare cases, if they need to know whether the layout will
  be applied or not via setFrame:view:
-
+ 
  @result YES if we are only sizing, NO if we are setting frames
  */
 - (BOOL)isSizing;

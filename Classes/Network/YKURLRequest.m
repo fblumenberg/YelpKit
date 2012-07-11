@@ -37,8 +37,13 @@ NSString *const kYKURLRequestDefaultContentType = @"application/octet-stream";
 
 const double kYKURLRequestExpiresAgeMax = DBL_MAX;
 
+#if DEBUG
+static NSTimeInterval gYKURLRequestDefaultTimeout = 90.0;
+#else
 static NSTimeInterval gYKURLRequestDefaultTimeout = 25.0;
+#endif
 static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
+static BOOL gYKURLRequestCacheAsyncEnabled = YES; // Defaults to ON
 
 
 @interface YKURLRequest ()
@@ -52,7 +57,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 
 @implementation YKURLRequest
 
-@synthesize connection=_connection, timeout=_timeout, request=_request, response=_response, delegate=__delegate, finishSelector=_finishSelector, failSelector=_failSelector, cancelSelector=_cancelSelector, expiresAge=_expiresAge, URL=_URL, cacheName=_cacheName, cachePolicy=_cachePolicy, mockResponse=_mockResponse, mockResponseDelayInterval=_mockResponseDelayInterval, dataInterval=_dataInterval, totalInterval=_totalInterval, start=_start, downloadedData=_downloadedData, cacheHit=_cacheHit, inCache=_inCache, stopped=_stopped, error=_error, detachOnThread=_detachOnThread, started=_started, responseInterval=_responseInterval, runLoop=_runLoop, sentInterval=_sentInterval, bytesWritten=_bytesWritten;
+@synthesize connection=_connection, timeout=_timeout, request=_request, response=_response, delegate=__delegate, finishSelector=_finishSelector, failSelector=_failSelector, cancelSelector=_cancelSelector, expiresAge=_expiresAge, URL=_URL, cacheName=_cacheName, cachePolicy=_cachePolicy, mockResponse=_mockResponse, mockResponseDelayInterval=_mockResponseDelayInterval, dataInterval=_dataInterval, totalInterval=_totalInterval, start=_start, downloadedData=_downloadedData, cacheHit=_cacheHit, inCache=_inCache, stopped=_stopped, error=_error, started=_started, responseInterval=_responseInterval, runLoop=_runLoop, sentInterval=_sentInterval, bytesWritten=_bytesWritten;
 @synthesize responseData=_responseData, finishBlock=_finishBlock, failBlock=_failBlock; // Private properties
 
 
@@ -182,7 +187,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   _method = method;
   NSAssert(_method != YKHTTPMethodNone, @"Invalid method");
   
-#if YP_DEBUG || DEBUG
+#if DEBUG
   // Check mock
   if (_mockResponse) {
     YKDebug(@"Mock response for: %@", _URL);
@@ -197,11 +202,25 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
   
   // Check cache
   if ([self shouldAttemptLoadFromCache] && _URL.cacheableURLString) {
-    NSData *cachedData = [[self cache] dataForURLString:_URL.cacheableURLString expires:_expiresAge timestamp:nil];
-    if (cachedData) {
+    // Because this is asynchronous, there is a small chance that data might be removed after the hasData check,
+    // in which case the request will respond as if it errored.
+    YKURLCache *cache = [self cache];
+    if ([cache hasDataForURLString:_URL.cacheableURLString expires:_expiresAge]) {
       YKDebug(@"\n\nCache hit: %@\n\n", _URL.cacheableURLString);
-      _cacheHit = YES;
-      [[self gh_proxyAfterDelay:0] didLoadData:cachedData withResponse:nil cacheKey:nil];
+      if (!gYKURLRequestCacheAsyncEnabled) {
+        NSData *data = [cache dataForURLString:_URL.cacheableURLString];
+        _cacheHit = YES;
+        [[self gh_proxyAfterDelay:0] didLoadData:data withResponse:nil cacheKey:nil];
+      } else {
+        [cache dataForURLString:_URL.cacheableURLString dataBlock:^(NSData *data) {
+          if (data) {
+            _cacheHit = YES;
+            [self didLoadData:data withResponse:nil cacheKey:nil];
+          } else {
+            [self didError:[YKError errorWithKey:YKErrorRequest]];
+          }
+        }];
+      }
       return YES;
     } else {
       YKDebug(@"Cache miss: %@, expiresAge=%.0f", _URL.cacheableURLString, _expiresAge);
@@ -261,12 +280,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
     _timer = [NSTimer scheduledTimerWithTimeInterval:_timeout target:self selector:@selector(_timeout) userInfo:nil repeats:NO];
   }
   _connection = [[connectionClass alloc] initWithRequest:_request delegate:self startImmediately:NO];   
-  if (_detachOnThread) {
-    YKDebug(@"Request will detach on thread");
-    [[self gh_proxyDetachThreadWithCallback:nil action:NULL context:nil] _start];
-  } else {
-    [self _start];
-  }
+  [self _start];
   return YES;
 }
 
@@ -359,7 +373,7 @@ static BOOL gYKURLRequestCacheEnabled = YES; // Defaults to ON
 - (void)cacheDataIfEnabled:(NSData *)data cacheKey:(NSString *)cacheKey {
   if (cacheKey && [self shouldStoreInCache] && [self shouldCacheData:data forKey:cacheKey]) {
     YKDebug(@"Storing in cache with key: %@", cacheKey);
-    [[self cache] storeData:data forURLString:cacheKey];
+    [[self cache] storeData:data forURLString:cacheKey asynchronous:YES];
     _inCache = YES;
   } else {
     YKDebug(@"Response was not cached");
@@ -528,6 +542,10 @@ static id<YKCompressor> gCompressor = NULL;
 
 + (void)setCacheEnabled:(BOOL)cacheEnabled {
   gYKURLRequestCacheEnabled = cacheEnabled;
+}
+
++ (void)setCacheAsyncEnabled:(BOOL)cacheAsyncEnabled {
+  gYKURLRequestCacheAsyncEnabled = cacheAsyncEnabled;
 }
 
 - (NSInteger)responseStatusCode {

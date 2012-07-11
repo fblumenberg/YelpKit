@@ -160,6 +160,12 @@
 
 + (BOOL)URLExists:(NSURL *)URL {
   return [NSFileManager gh_exist:[self resolvedPathForURL:URL]];
-}  
+}
+
++ (UIImage *)imageWithResource:(NSString *)resource {
+  NSString *path = [YKResource pathToResource:resource];
+  NSData *imageData = [NSData dataWithContentsOfFile:path];
+  return [UIImage imageWithData:imageData];
+}
 
 @end

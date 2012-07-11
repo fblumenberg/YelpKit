@@ -91,3 +91,13 @@ NSString *YKNSStringFromCurrencyAmountInCentsAndCode(NSInteger cents, NSString *
 
   return [CurrencyFormatter stringForObjectValue:[NSNumber numberWithDouble:(double)cents/100.0]];
 }
+
+typedef void (^YKEmptyBlock)();
+
+void YKDispatch(dispatch_block_t block) {
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0), dispatch_get_current_queue(), block);
+}
+
+void YKDispatchAfter(NSTimeInterval seconds, dispatch_block_t block) {
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, seconds * NSEC_PER_SEC), dispatch_get_current_queue(), block);
+}

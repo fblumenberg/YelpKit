@@ -33,9 +33,11 @@
 @interface YKLText : YKLBaseView {
   NSString *_text;
   UIFont *_font;
-  UIColor *_color;
+  UIColor *_textColor;
   UILineBreakMode _lineBreakMode;
   UITextAlignment _textAlignment;
+  
+  CGSize _constrainedToSize;
   
   UIColor *_shadowColor;
   CGSize _shadowOffset;
@@ -49,13 +51,25 @@
 
 @property (retain, nonatomic) UIColor *shadowColor;
 @property (assign, nonatomic) CGSize shadowOffset;
+@property (retain, nonatomic) UIFont *font;
+@property (retain, nonatomic) NSString *text;
+@property (retain, nonatomic) UIColor *textColor;
+@property (assign, nonatomic) UILineBreakMode lineBreakMode;
+@property (assign, nonatomic) UITextAlignment textAlignment;
 
-- (id)initWithText:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode textAligment:(UITextAlignment)textAlignment;
+/*!
+ Constrained to size.
+ For unlimited height, set to CGSizeMake(0, FLT_MAX).
+ Defaults to CGSizeZero which means a single line.
+ */
+@property (assign, nonatomic) CGSize constrainedToSize;
+
+- (id)initWithText:(NSString *)text font:(UIFont *)font textColor:(UIColor *)textColor lineBreakMode:(UILineBreakMode)lineBreakMode textAligment:(UITextAlignment)textAlignment;
 
 + (YKLText *)text:(NSString *)text font:(UIFont *)font;
-+ (YKLText *)text:(NSString *)text font:(UIFont *)font color:(UIColor *)color;
-+ (YKLText *)text:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode;
-+ (YKLText *)text:(NSString *)text font:(UIFont *)font color:(UIColor *)color lineBreakMode:(UILineBreakMode)lineBreakMode textAligment:(UITextAlignment)textAlignment;
++ (YKLText *)text:(NSString *)text font:(UIFont *)font textColor:(UIColor *)textColor;
++ (YKLText *)text:(NSString *)text font:(UIFont *)font textColor:(UIColor *)textColor lineBreakMode:(UILineBreakMode)lineBreakMode;
++ (YKLText *)text:(NSString *)text font:(UIFont *)font textColor:(UIColor *)textColor lineBreakMode:(UILineBreakMode)lineBreakMode textAligment:(UITextAlignment)textAlignment;
 
 /*!
  Set image. The image is drawn on the left side of the text by default.
