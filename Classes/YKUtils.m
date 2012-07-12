@@ -95,7 +95,7 @@ NSString *YKNSStringFromCurrencyAmountInCentsAndCode(NSInteger cents, NSString *
 typedef void (^YKEmptyBlock)();
 
 void YKDispatch(dispatch_block_t block) {
-  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0), dispatch_get_current_queue(), block);
+  dispatch_async(dispatch_get_current_queue(), block);
 }
 
 void YKDispatchAfter(NSTimeInterval seconds, dispatch_block_t block) {

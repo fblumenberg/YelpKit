@@ -138,13 +138,22 @@
     toInternalView.frame = CGRectMake(0, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
     [toInternalView viewWillAppear:YES];
     [fromInternalView viewWillDisappear:YES];
-    [UIView transitionFromView:fromInternalView toView:toInternalView duration:duration options:[self _animationOptions:options motion:YES] completion:^(BOOL finished) {      
+    if (duration > 0) {
+      [UIView transitionFromView:fromInternalView toView:toInternalView duration:duration options:[self _animationOptions:options motion:YES] completion:^(BOOL finished) {      
+        [fromInternalView viewDidDisappear:YES];
+        fromInternalView.view.stack = nil;
+        [toInternalView viewDidAppear:YES];
+        if (completion) completion(YES);
+        [_stack removeObject:fromInternalView];
+      }];
+    } else {
+      [_parentView addSubview:toInternalView];
       [fromInternalView viewDidDisappear:YES];
       fromInternalView.view.stack = nil;
       [toInternalView viewDidAppear:YES];
       if (completion) completion(YES);
       [_stack removeObject:fromInternalView];
-    }];
+    }
   } else if (fromInternalView) {
     [fromInternalView viewWillDisappear:YES];
     [fromInternalView removeFromSuperview];
