@@ -66,27 +66,30 @@
     _scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
     
   } else {
-    CGFloat x = _insets.left;
+    CGFloat width = self.frame.size.width - _insets.left - _insets.right - _peekWidth;
+    CGFloat x = 0;
     for (UIView *view in _views) {
-      CGFloat width = self.frame.size.width - _insets.left - _insets.right - _peekWidth;
-      
       view.frame = CGRectMake(x, _insets.top, width, self.frame.size.height - _insets.top - _insets.bottom);
       x += width + _insets.right;
     }
 
     _scrollView.alwaysBounceHorizontal = YES;
-    _scrollView.frame = CGRectMake(0, 0, self.frame.size.width - _peekWidth + _insets.right, self.frame.size.height);
-    _scrollView.contentSize = CGSizeMake(x - _peekWidth + _insets.right, self.frame.size.height);
+    // ScrollView frame width defines the page width, so it must be view width + separation.
+    _scrollView.frame = CGRectMake(_insets.left, 0, width + _insets.right, self.frame.size.height);
+    // Subtract peekWidth so the last page doesn't leave room to peek a nonexistant view.
+    _scrollView.contentSize = CGSizeMake(x - _peekWidth, self.frame.size.height);
   }
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
   if (self.hidden) return [super hitTest:point withEvent:event];
   // Because the scroll view frame is smaller than the view frame we need to adjust the point and call hitTest again,
-  // so the swipe works from the far right side.
+  // so the swipe works from the far left and right sides.
   if ([self pointInside:point withEvent:event]) {
     if (point.x > CGRectGetMaxX(_scrollView.frame)) {
       point.x = CGRectGetMaxX(_scrollView.frame) - 1;
+    } else if (point.x < CGRectGetMinX(_scrollView.frame)) {
+      point.x = CGRectGetMinX(_scrollView.frame) + 1;
     }
     return [_scrollView hitTest:[_scrollView convertPoint:point fromView:self] withEvent:event];
   }
