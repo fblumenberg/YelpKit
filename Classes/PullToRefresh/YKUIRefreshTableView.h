@@ -32,7 +32,7 @@
 @class YKUIRefreshTableView;
 
 @protocol YKUIRefreshTableViewDelegate <NSObject>
-- (void)refreshTableViewShouldRefresh:(YKUIRefreshTableView *)refreshScrollView;
+- (void)refreshTableViewShouldRefresh:(YKUIRefreshTableView *)refreshTableView;
 @end
 
 /*!

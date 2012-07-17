@@ -13,6 +13,10 @@
 @synthesize button=_button, switchControl=_switchControl;
 
 - (void)sharedInit {
+  [super sharedInit];
+  self.layout = [YKLayout layoutForView:self];
+  self.backgroundColor = [UIColor whiteColor];
+
   _button = [[YKUIButton alloc] init];
   [self addSubview:_button];
   [_button release];
@@ -28,24 +32,14 @@
   [_button addTarget:self action:@selector(_didTouchUpInside)];
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-  if ((self = [super initWithCoder:aDecoder])) {
-    [self sharedInit];
-  }
-  return self;
-}
-
-- (id)initWithFrame:(CGRect)frame {
-  if ((self = [super initWithFrame:frame])) {
-    [self sharedInit];
-  }
-  return self;
-}
-
-- (void)layoutSubviews {
-  [super layoutSubviews];
-  _button.frame = YKCGRectZeroOrigin(self.bounds);
-  _switchControl.frame = CGRectMake(self.frame.size.width - _switchControl.frame.size.width - 10, roundf(self.frame.size.height/2.0f - _switchControl.frame.size.height/2.0f), _switchControl.frame.size.width, _switchControl.frame.size.height);
+- (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size {
+  [layout setFrame:CGRectMake(0, 0, size.width, size.height) view:_button];
+  CGFloat x = size.width - _switchControl.frame.size.width - 10;
+  if (x < 0) x = 0;
+  CGFloat y = roundf(size.height/2.0f - _switchControl.frame.size.height/2.0f);
+  if (y < 0) y = 0;
+  [layout setOrigin:CGPointMake(x, y) view:_switchControl];
+  return size;
 }
 
 - (void)_switchChanged {

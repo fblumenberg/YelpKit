@@ -41,20 +41,6 @@
   self.layout = [YKLayout layoutForView:self];  
 }
 
-- (id)initWithCoder:(NSCoder *)coder {
-  if ((self = [super initWithCoder:coder])) {
-    [self sharedInit];
-  }
-  return self;
-}
-
-- (id)initWithFrame:(CGRect)frame {
-  if ((self = [super initWithFrame:frame])) {
-    [self sharedInit];
-  }
-  return self;
-}
-
 - (void)dealloc {
   [_navigationBar release];
   [super dealloc];

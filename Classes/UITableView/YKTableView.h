@@ -29,19 +29,35 @@
 
 #import "YKTableViewDataSource.h"
 #import "YKUIActivityCell.h"
+#import "YKUIRefreshHeaderView.h"
 
-@interface YKTableView : UITableView {
+@class YKTableView;
+
+@protocol YKRefreshTableViewDelegate <NSObject>
+- (void)refreshTableViewShouldRefresh:(YKTableView *)tableView;
+@end
+
+
+@interface YKTableView : UITableView <UIScrollViewDelegate, YKUIRefreshHeaderViewDelegate> {
   YKTableViewDataSource *dataSource_;
   
   // For activity
   YKUIActivityCell *_activityCell;
   BOOL _activitySection;
+  
+  // Refresh header
+  YKUIRefreshHeaderView *_refreshHeaderView;
+  
+  id<YKRefreshTableViewDelegate> _refreshDelegate;
 }
 
 @property (assign, nonatomic) YKTableViewDataSource *dataSource; // Has to match superclass dataSource assign property
 @property (readonly, nonatomic) YKUIActivityCell *activityCell;
 @property (assign, nonatomic) BOOL touchesShouldCancelInContentView;
 
+/*!
+ Shared init.
+ */
 - (void)sharedInit;
 
 /*!
@@ -71,5 +87,33 @@
  Set empty section footer of height.
  */
 - (void)setEmptySectionFooterWithHeight:(CGFloat)height;
+
+#pragma mark Refresh
+
+/*!
+ Set refreshing indicator.
+ 
+ @param refreshing YES if refreshing
+ */
+- (void)setRefreshing:(BOOL)refreshing;
+
+/*!
+ Enable or disable the header.
+ 
+ @param enabled YES to enable
+ */
+- (void)setRefreshHeaderEnabled:(BOOL)enabled;
+
+/*!
+ Check if refresh header is enabled.
+ */
+- (BOOL)isRefreshHeaderEnabled;
+
+/*!
+ Expand the refresh header view.
+ 
+ @param expand If YES, expand
+ */
+- (void)expandRefreshHeaderView:(BOOL)expand;
 
 @end

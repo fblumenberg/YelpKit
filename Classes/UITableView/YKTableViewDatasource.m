@@ -398,6 +398,12 @@
   _scrollDidNotify = NO;
 }
 
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+  if ([_scrollViewDelegate respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+    [_scrollViewDelegate scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+  }
+}
+
 @end
 
 

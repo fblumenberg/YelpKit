@@ -6,9 +6,10 @@
 //  Copyright (c) 2012 Yelp. All rights reserved.
 //
 
+#import "YKUILayoutView.h"
 #import "YKUIButton.h"
 
-@interface YKUISwitchButton : UIView {
+@interface YKUISwitchButton : YKUILayoutView {
   YKUIButton *_button;
   UISwitch *_switchControl;
 }
