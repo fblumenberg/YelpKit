@@ -83,6 +83,12 @@
   [self setNeedsLayout];
 }
 
+- (void)addViews:(NSArray *)views {
+  for (UIView *view in views) {
+    [self addView:view];
+  }
+}
+
 - (NSArray *)viewsWithTag:(NSInteger)tag {
   NSMutableArray *views = [[NSMutableArray alloc] init];
   for (UIView *view in _views) {

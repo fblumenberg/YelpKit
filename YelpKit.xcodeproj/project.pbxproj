@@ -730,14 +730,15 @@
 		006371F9156D8E9400DEC4B5 /* Tests.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
-			path = Tests.app;
+			path = GHKitTests.app;
 			remoteRef = 006371F8156D8E9400DEC4B5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		006371FB156D8E9400DEC4B5 /* TestsFramework.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
-			path = TestsFramework.app;
+			name = TestsFramework.app;
+			path = GHKitTestsFramework.app;
 			remoteRef = 006371FA156D8E9400DEC4B5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -817,7 +818,10 @@
 		005592F0140B0085001E9C43 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					"$(ARCHS_STANDARD_32_BIT)",
+					armv6,
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -833,7 +837,10 @@
 		005592F1140B0085001E9C43 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					"$(ARCHS_STANDARD_32_BIT)",
+					armv6,
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;

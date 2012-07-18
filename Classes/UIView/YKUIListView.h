@@ -69,6 +69,11 @@
 - (void)addView:(UIView *)view;
 
 /*!
+ Add view.
+ */
+- (void)addViews:(NSArray *)views;
+
+/*!
  Remove views with tag.
  @param tag
  */
