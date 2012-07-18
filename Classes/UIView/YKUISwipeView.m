@@ -47,7 +47,7 @@
     [self addSubview:_scrollView];
     [_scrollView release];
     
-    _peekWidth = 40;
+    _peekWidth = 20;
     _insets = UIEdgeInsetsMake(0, 10, 0, 10);
   }
   return self;
@@ -68,7 +68,7 @@
   } else {
     CGFloat x = _insets.left;
     for (UIView *view in _views) {
-      CGFloat width = self.frame.size.width - _peekWidth;
+      CGFloat width = self.frame.size.width - _insets.left - _insets.right - _peekWidth;
       
       view.frame = CGRectMake(x, _insets.top, width, self.frame.size.height - _insets.top - _insets.bottom);
       x += width + _insets.right;
