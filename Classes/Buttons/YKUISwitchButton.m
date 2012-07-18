@@ -15,7 +15,7 @@
 - (void)sharedInit {
   [super sharedInit];
   self.layout = [YKLayout layoutForView:self];
-  self.backgroundColor = [UIColor whiteColor];
+  self.backgroundColor = [UIColor clearColor];
 
   _button = [[YKUIButton alloc] init];
   [self addSubview:_button];
