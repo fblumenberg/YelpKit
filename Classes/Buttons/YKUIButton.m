@@ -164,6 +164,9 @@
     } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionBottom) {
       CGSize secondaryTitleSize = [_secondaryTitle sizeWithFont:(_secondaryTitleFont ? _secondaryTitleFont : _titleFont) constrainedToSize:constrainedToSize lineBreakMode:UILineBreakModeTailTruncation];
       titleSize.height += roundf(secondaryTitleSize.height);
+    } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionBottomLeftSingle) {
+      CGSize secondaryTitleSize = [_secondaryTitle sizeWithFont:(_secondaryTitleFont ? _secondaryTitleFont : _titleFont)];
+      titleSize.height += roundf(secondaryTitleSize.height);
     }
   }
   return titleSize;
@@ -644,6 +647,11 @@
         // TODO(gabe): Needed to put "+ _insets.bottom" so secondary text would wrap
         CGRect secondaryTitleRect = CGRectMake(x, y, size.width - x - _insets.right - titleInsets.right, size.height - y + _insets.bottom);
         [_secondaryTitle drawInRect:secondaryTitleRect withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];  
+      } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionBottomLeftSingle) {
+        x = _insets.left + titleInsets.left;
+        y += titleSizeAdjusted.height;
+        CGRect secondaryTitleRect = CGRectMake(x, y, size.width - x - _insets.right - titleInsets.right, 0);
+        [_secondaryTitle drawAtPoint:secondaryTitleRect.origin forWidth:secondaryTitleRect.size.width withFont:font lineBreakMode:UILineBreakModeTailTruncation];  
       }
     }
   }
