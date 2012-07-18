@@ -206,6 +206,11 @@ extern NSString *const YKErrorServerUnauthorized; // Server returned 401
  */
 - (NSArray */*of NSDictionary*/)fields;
 
+/*!
+ @result If HTTP error, returns the status code. Otherwise returns 0.
+ */
+- (NSInteger)HTTPStatus;
+
 @end
 
 /*!
