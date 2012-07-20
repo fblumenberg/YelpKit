@@ -277,6 +277,11 @@ CGRect YKCGRectToCenterY(CGRect rect, CGRect inRect) {
   return YKCGRectSetY(rect, centeredPoint.y);
 }
 
+CGRect YKCGRectToCenterYInRect(CGRect rect, CGRect inRect) {
+  CGPoint p = YKCGPointToCenterY(rect.size, inRect.size);
+  return YKCGRectSetY(rect, p.y + inRect.origin.y);
+}
+
 CGFloat YKCGFloatToCenter(CGFloat length, CGFloat inLength, CGFloat min) {
   CGFloat pos = roundf(inLength / 2.0 - length / 2.0);
   if (pos < min) pos = min;

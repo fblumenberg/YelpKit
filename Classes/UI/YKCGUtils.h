@@ -201,6 +201,14 @@ BOOL YKCGRectIsEqual(CGRect rect1, CGRect rect2);
  @param rect The inner rect
  @param inRect The rect to center inside of
  */
+CGRect YKCGRectToCenterYInRect(CGRect rect, CGRect inRect);
+
+/*!
+ @deprecated Behavior of YKCGRectToCenterYInRect is more intuitive
+ Returns a rect that is centered vertically in a region with the same size as inRect but horizontally unchanged
+ @param rect The inner rect
+ @param inRect The rect with the size to center inside of
+ */
 CGRect YKCGRectToCenterY(CGRect rect, CGRect inRect);
 
 /*!
