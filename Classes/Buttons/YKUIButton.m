@@ -580,14 +580,14 @@
   if (!_titleHidden) {
     CGFloat lineWidth = titleSize.width + titleInsets.left + titleInsets.right;
     if (showIcon && _iconPosition == YKUIButtonIconPositionLeft) lineWidth += iconSize.width;
-    CGFloat x = 0;
+    CGFloat x = bounds.origin.x;
 
     if (_titleAlignment == UITextAlignmentCenter) {
       CGFloat width = size.width - _insets.left - _insets.right;
       if (accessoryImage) width -= accessoryImage.size.width;
-      x = bounds.origin.x + roundf(width/2.0 - lineWidth/2.0) + _insets.left;
+      x += roundf(width/2.0 - lineWidth/2.0) + _insets.left;
     } else {
-      x = _insets.left;
+      x += _insets.left;
     }
     if (x < 0) x = 0;
 
