@@ -473,7 +473,7 @@
 			children = (
 				006371F5156D8E9400DEC4B5 /* libGHKit.a */,
 				006371F7156D8E9400DEC4B5 /* GHKit.framework */,
-				006371F9156D8E9400DEC4B5 /* Tests.app */,
+				006371F9156D8E9400DEC4B5 /* GHKitTests.app */,
 				006371FB156D8E9400DEC4B5 /* TestsFramework.app */,
 			);
 			name = Products;
@@ -727,7 +727,7 @@
 			remoteRef = 006371F6156D8E9400DEC4B5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		006371F9156D8E9400DEC4B5 /* Tests.app */ = {
+		006371F9156D8E9400DEC4B5 /* GHKitTests.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
 			path = GHKitTests.app;
