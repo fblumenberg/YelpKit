@@ -277,6 +277,11 @@ CGRect YKCGRectToCenterY(CGRect rect, CGRect inRect) {
   return YKCGRectSetY(rect, centeredPoint.y);
 }
 
+CGRect YKCGRectToCenterYInRect(CGRect rect, CGRect inRect) {
+  CGPoint p = YKCGPointToCenterY(rect.size, inRect.size);
+  return YKCGRectSetY(rect, p.y + inRect.origin.y);
+}
+
 CGFloat YKCGFloatToCenter(CGFloat length, CGFloat inLength, CGFloat min) {
   CGFloat pos = roundf(inLength / 2.0 - length / 2.0);
   if (pos < min) pos = min;
@@ -903,25 +908,20 @@ CGRect YKCGRectScaleFromCenter(CGRect rect, CGFloat scale) {
   return YKCGRectToCenterInRect(newRectSize, rect);
 }
 
-// Linear gradient function from Ray Wenderlich
+// Linear gradient function based on code by Ray Wenderlich
 // http://www.raywenderlich.com/2033/core-graphics-101-lines-rectangles-and-gradients
-void YKCGContextDrawLinearGradient(CGContextRef context, CGRect rect, CGColorRef startColor, CGColorRef  endColor) {
-  CGColorSpaceRef startColorSpace = CGColorGetColorSpace(startColor);
-  CGColorSpaceRef endColorSpace = CGColorGetColorSpace(endColor);
-  // Cannot draw a gradient if the color spaces are not the same
-  if (startColorSpace != endColorSpace) {
-    return;
+void YKCGContextDrawLinearGradientWithColors(CGContextRef context, CGRect rect, NSArray */*of CGColorRef*/colors, CGFloat *locations) {
+  CGColorSpaceRef startColorSpace = CGColorGetColorSpace((CGColorRef)[colors objectAtIndex:0]);
+  for (NSInteger i = 1; i < [colors count]; i++) {
+    CGColorSpaceRef colorSpace = CGColorGetColorSpace((CGColorRef)[colors objectAtIndex:i]);
+    if (colorSpace != startColorSpace) return;
   }
-  
-  CGFloat locations[] = { 0.0, 1.0 };
-  
-  NSArray *colors = [NSArray arrayWithObjects:(id)startColor, (id)endColor, nil];
-  
-  CGGradientRef gradient = CGGradientCreateWithColors(startColorSpace, (CFArrayRef) colors, locations);
-  
+
+  CGGradientRef gradient = CGGradientCreateWithColors(startColorSpace, (CFArrayRef)colors, locations);
+
   CGPoint startPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect));
   CGPoint endPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect));
-  
+
   CGContextSaveGState(context);
   CGContextAddRect(context, rect);
   CGContextClip(context);
@@ -929,6 +929,12 @@ void YKCGContextDrawLinearGradient(CGContextRef context, CGRect rect, CGColorRef
   CGContextRestoreGState(context);
   
   CGGradientRelease(gradient);
+}
+
+void YKCGContextDrawLinearGradient(CGContextRef context, CGRect rect, CGColorRef startColor, CGColorRef  endColor) {
+  NSArray *colors = [NSArray arrayWithObjects:(id)startColor, (id)endColor, nil];
+  CGFloat locations[] = { 0.0, 1.0 };
+  YKCGContextDrawLinearGradientWithColors(context, rect, colors, locations);
 }
 
 UIImage *YKCreateVerticalGradientImage(CGFloat height, CGColorRef topColor, CGColorRef bottomColor) {

@@ -177,6 +177,9 @@ NSString *const YKErrorServerUnauthorized = @"YPErrorServerUnauthorized";
 // Abstract
 - (NSArray *)fields { return nil; }
 
+// Abstract
+- (NSInteger)HTTPStatus { return 0; }
+
 @end
 
 

@@ -69,10 +69,28 @@
 - (void)addView:(UIView *)view;
 
 /*!
+ Add view at index.
+ @param view
+ @param index
+ */
+- (void)insertView:(UIView *)view atIndex:(NSInteger)index;
+
+/*!
+ Add view.
+ */
+- (void)addViews:(NSArray *)views;
+
+/*!
  Remove views with tag.
  @param tag
  */
 - (void)removeViewsWithTag:(NSInteger)tag;
+
+/*!
+ Remove view.
+ @param view
+ */
+- (void)removeView:(UIView *)view;
 
 /*!
  @result Views with tag

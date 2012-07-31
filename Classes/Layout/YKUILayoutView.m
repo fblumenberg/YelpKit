@@ -100,11 +100,6 @@
   [_layout layoutSubviews:self.frame.size];
 }
 
-- (void)drawRect:(CGRect)rect {
-  [super drawRect:rect];
-  [_layout drawSubviewsInRect:self.bounds];
-}
-
 - (void)drawInRect:(CGRect)rect {
   [_layout drawSubviewsInRect:rect];
 }

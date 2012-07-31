@@ -42,7 +42,8 @@ typedef enum {
 typedef enum {
   YKUIButtonSecondaryTitlePositionDefault = 0, // Default, next to title
   YKUIButtonSecondaryTitlePositionBottom, // Underneath the title
-  YKUIButtonSecondaryTitlePositionRightAlign // Next to title, right aligned
+  YKUIButtonSecondaryTitlePositionRightAlign, // Next to title, right aligned
+  YKUIButtonSecondaryTitlePositionBottomLeftSingle, // Bottom left, single line
 } YKUIButtonSecondaryTitlePosition;
 
 /*!

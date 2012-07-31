@@ -85,6 +85,20 @@
   [self setNeedsLayout];
 }
 
+- (void)insertView:(UIView *)view atIndex:(NSInteger)index {
+  if (!_views) _views = [[NSMutableArray alloc] init];
+  [_views insertObject:view atIndex:index];
+  [self addSubview:view];
+  [self setNeedsDisplay];
+  [self setNeedsLayout];
+}
+
+- (void)addViews:(NSArray *)views {
+  for (UIView *view in views) {
+    [self addView:view];
+  }
+}
+
 - (NSArray *)viewsWithTag:(NSInteger)tag {
   NSMutableArray *views = [[NSMutableArray alloc] init];
   for (UIView *view in _views) {
@@ -108,6 +122,13 @@
     [self removeViewsWithTag:tag];
     _tagRemovalAnimating = NSNotFound;
   }];
+}
+
+- (void)removeView:(UIView *)view {
+  [view removeFromSuperview];
+  [_views removeObject:view];
+  [self setNeedsDisplay];
+  [self setNeedsLayout];
 }
 
 - (void)removeViewsWithTag:(NSInteger)tag {

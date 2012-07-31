@@ -53,7 +53,7 @@ static NSMutableDictionary *gDebugStats = NULL;
     
     _cachedSize = CGSizeZero;
     _accessibleElements = [[NSMutableArray alloc] init];
-    _view = view; // weak reference
+    _view = view;
     _sizeThatFits = CGSizeZero;
     _needsLayout = YES;
     _needsSizing = YES;
@@ -208,7 +208,7 @@ static NSMutableDictionary *gDebugStats = NULL;
   }
   
   if ((options & YKLayoutOptionsCenterVertical) == YKLayoutOptionsCenterVertical) {
-    frame = YKCGRectToCenterY(CGRectMake(frame.origin.x, frame.origin.y, sizeForAlign.width, sizeForAlign.height), rect);
+    frame = YKCGRectToCenterYInRect(frame, originalFrame);
   }
 
   if ((options & YKLayoutOptionsRightAlign) == YKLayoutOptionsRightAlign) {

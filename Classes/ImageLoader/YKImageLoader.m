@@ -115,6 +115,16 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
 }
 
 - (void)setURL:(YKURL *)URL queue:(YKImageLoaderQueue *)queue {  
+  if (![NSThread isMainThread]) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [self _setURL:URL queue:queue];
+    });
+  } else {
+    [self _setURL:URL queue:queue];
+  }
+}
+  
+- (void)_setURL:(YKURL *)URL queue:(YKImageLoaderQueue *)queue {  
   YKAssertMainThread();
   [self cancel];
   [URL retain];
