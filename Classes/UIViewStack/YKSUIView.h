@@ -48,6 +48,7 @@ enum {
   YKSUIViewAnimationOptionTransitionFlipFromTop = 1 << 10,
   YKSUIViewAnimationOptionTransitionFlipFromBottom = 1 << 11,
   YKSUIViewAnimationOptionTransitionSlide = 1 << 12,
+  YKSUIViewAnimationOptionTransitionSlideOver = 1 << 13,
 };
 typedef NSUInteger YKSUIViewAnimationOptions;
 
@@ -55,15 +56,45 @@ typedef NSUInteger YKSUIViewAnimationOptions;
   YKUINavigationBar *_navigationBar;
     
   YKUIViewStack *_stack;
-
+  
   BOOL _visible;
   BOOL _needsRefresh;
+  
+  UIView *_view; // Optional content view
 }
 
+/*!
+ Navigation bar.
+ */
 @property (readonly, nonatomic) YKUINavigationBar *navigationBar;
+
+/*!
+ View stack.
+ */
 @property (assign, nonatomic) YKUIViewStack *stack;
+
+/*!
+ @result YES if visible
+ */
 @property (readonly, nonatomic, getter=isVisible) BOOL visible;
+
+/*!
+ Set if needs refresh.
+ If visible, will immediately trigger refresh. Otherwise will call refresh when becoming visible.
+ */
 @property (assign, nonatomic) BOOL needsRefresh;
+
+/*!
+ View (content). Optional.
+ */
+@property (retain, nonatomic) UIView *view;
+
+/*!
+ Create stack view with sub view.
+ @param view
+ @result View for stack
+ */
++ (YKSUIView *)viewWithView:(UIView *)view;
 
 /*!
  Push view.

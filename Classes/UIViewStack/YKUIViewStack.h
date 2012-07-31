@@ -32,9 +32,26 @@
 @interface YKUIViewStack : NSObject {
   NSMutableArray *_stack;
   UIView *_parentView;
+  
+  YKSUIViewAnimationOptions _defaultOptions;
+  NSTimeInterval _defaultDuration;
 }
 
+/*!
+ Default options for push and pop, for pushView:animated: and popViewAnimated:.
+ */
+@property (assign, nonatomic) YKSUIViewAnimationOptions defaultOptions;
+
+/*!
+ Default duration.
+ */
+@property (assign, nonatomic) NSTimeInterval defaultDuration;
+
 - (id)initWithParentView:(UIView *)parentView;
+
+- (void)pushView:(YKSUIView *)view animated:(BOOL)animated;
+
+- (void)popView:(YKSUIView *)view animated:(BOOL)animated;
 
 - (void)pushView:(YKSUIView *)view duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options;
 

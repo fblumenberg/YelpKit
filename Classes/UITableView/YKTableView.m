@@ -72,10 +72,6 @@
   _refreshHeaderView.frame = CGRectMake(0, 0 - self.frame.size.height, self.frame.size.width, self.frame.size.height);
 }
 
-- (YKTableViewDataSource *)tableViewDataSource {
-  return dataSource_;
-}
-
 - (BOOL)activityEnabled {
   return _activityCell.view.isAnimating;
 }

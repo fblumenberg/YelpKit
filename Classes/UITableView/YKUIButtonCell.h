@@ -1,8 +1,8 @@
 //
-//  YKUIActivityCell.m
+//  YKUIButtonCell.h
 //  YelpKit
 //
-//  Created by Gabriel Handford on 6/15/12.
+//  Created by Gabriel Handford on 7/23/12.
 //  Copyright (c) 2012 Yelp. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person
@@ -27,25 +27,13 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#import "YKUIActivityCell.h"
+#import "YKTableViewCell.h"
+#import "YKUIButton.h"
 
-@implementation YKUIActivityCell
+@interface YKUIButtonCell : YKTableViewCell
 
-@synthesize view=_view;
+@property (readonly, nonatomic) YKUIButton *button;
 
-- (id)initWithFrame:(CGRect)frame {
-  YKUIActivityView *view = [[YKUIActivityView alloc] init];
-  view.backgroundColor = [UIColor clearColor];
-	if ((self = [super initWithView:view reuseIdentifier:nil])) {
-    self.backgroundColor = [UIColor clearColor];
-    _view = view;
-	}
-	return self;
-}
-
-- (void)dealloc {
-  [_view release];
-  [super dealloc];
-}
+- (id)initWithButton:(YKUIButton *)button;
 
 @end

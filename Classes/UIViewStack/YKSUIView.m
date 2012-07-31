@@ -32,10 +32,11 @@
 
 @implementation YKSUIView
 
-@synthesize navigationBar=_navigationBar, visible=_visible, needsRefresh=_needsRefresh, stack=_stack;
+@synthesize navigationBar=_navigationBar, visible=_visible, needsRefresh=_needsRefresh, stack=_stack, view=_view;
 
 - (void)sharedInit {
   [super sharedInit];
+  self.layout = [YKLayout layoutForView:self];
   self.backgroundColor = [UIColor blackColor];
   self.opaque = YES;
   self.layout = [YKLayout layoutForView:self];  
@@ -44,6 +45,27 @@
 - (void)dealloc {
   [_navigationBar release];
   [super dealloc];
+}
+
+- (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size {
+  _view.frame = CGRectMake(0, 0, size.width, size.height);
+  return size;
+}
+
++ (YKSUIView *)viewWithView:(UIView *)view {
+  YKSUIView *viewForStack = [[[YKSUIView alloc] init] autorelease];
+  viewForStack.view = view;
+  return viewForStack;
+}
+
+- (void)setView:(UIView *)view {
+  [view retain];
+  [_view removeFromSuperview];
+  _view = view;
+  if (_view) {
+    [self addSubview:_view];
+  }
+  [view release];
 }
 
 - (YKUINavigationBar *)navigationBar {
@@ -55,11 +77,11 @@
 }
 
 - (void)pushView:(YKSUIView *)view animated:(BOOL)animated {
-  [self pushView:view duration:0.25 options:YKSUIViewAnimationOptionTransitionSlide|YKSUIViewAnimationOptionCurveLinear];
+  [_stack pushView:view animated:animated];
 }
 
 - (void)popViewAnimated:(BOOL)animated {
-  [self popViewWithDuration:0.25 options:YKSUIViewAnimationOptionTransitionSlide|YKSUIViewAnimationOptionCurveLinear];
+  [_stack popView:self animated:animated];
 }
 
 - (void)pushView:(YKSUIView *)view duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options {

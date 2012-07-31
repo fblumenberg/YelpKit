@@ -33,9 +33,13 @@
 
 @implementation YKUIViewStack
 
+@synthesize defaultOptions=_defaultOptions, defaultDuration=_defaultDuration;
+
 - (id)init {
   if ((self = [super init])) {
     _stack = [[NSMutableArray alloc] init];
+    _defaultOptions = YKSUIViewAnimationOptionTransitionSlide|YKSUIViewAnimationOptionCurveLinear;
+    _defaultDuration = 0.25;
   }
   return self;
 }
@@ -50,6 +54,14 @@
 - (void)dealloc {
   [_stack release];
   [super dealloc];
+}
+
+- (void)pushView:(YKSUIView *)view animated:(BOOL)animated {
+  [self pushView:view duration:(animated ? _defaultDuration : 0) options:(animated ? _defaultOptions : 0)];
+}
+
+- (void)popView:(YKSUIView *)view animated:(BOOL)animated {
+  [self popView:view duration:(animated ? _defaultDuration : 0) options:(animated ? _defaultOptions : 0)];
 }
 
 - (void)pushView:(YKSUIView *)view duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options {
@@ -117,23 +129,38 @@
   }
 }
 
+- (void)_removeAnimationsFromInternalView:(YKSUIInternalView *)fromInternalView toInternalView:(YKSUIInternalView *)toInternalView duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options animations:(void (^)())animations completion:(void (^)(BOOL finished))completion {
+  [fromInternalView viewWillDisappear:YES];
+  [toInternalView viewWillAppear:YES];
+  if (![toInternalView superview]) [_parentView addSubview:toInternalView];
+  [UIView animateWithDuration:duration delay:0 options:[self _animationOptions:options motion:NO] animations:animations completion:^(BOOL finished) {
+    [fromInternalView removeFromSuperview];
+    [fromInternalView viewDidDisappear:YES];
+    [toInternalView viewDidAppear:YES];
+    fromInternalView.view.stack = nil;
+    if (completion) completion(finished);
+    if (fromInternalView) [_stack removeObject:fromInternalView];
+  }];
+}
+
+- (void)_showInternalView:(YKSUIInternalView *)internalView {
+  internalView.frame = CGRectMake(0, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
+  CATransform3D transform = CATransform3DMakeScale(1.0, 1.0, 1.0);
+  internalView.layer.transform = transform;
+}
+
 - (void)_removeInternalView:(YKSUIInternalView *)fromInternalView toInternalView:(YKSUIInternalView *)toInternalView duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options completion:(void (^)(BOOL finished))completion {
   
   if ((options & YKSUIViewAnimationOptionTransitionSlide) == YKSUIViewAnimationOptionTransitionSlide) {
-    [fromInternalView viewWillDisappear:YES];
-    [toInternalView viewWillAppear:YES];
-    if (![toInternalView superview]) [_parentView addSubview:toInternalView];
-    [UIView animateWithDuration:duration delay:0 options:[self _animationOptions:options motion:NO] animations:^{
+    [self _removeAnimationsFromInternalView:fromInternalView toInternalView:toInternalView duration:duration options:options animations:^{
       fromInternalView.frame = CGRectMake(_parentView.frame.size.width, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
-      toInternalView.frame = CGRectMake(0, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
-    } completion:^(BOOL finished) {
-      [fromInternalView removeFromSuperview];
-      [fromInternalView viewDidDisappear:YES];
-      [toInternalView viewDidAppear:YES];
-      fromInternalView.view.stack = nil;
-      if (completion) completion(finished);
-      if (fromInternalView) [_stack removeObject:fromInternalView];
-    }];
+      [self _showInternalView:toInternalView];
+    } completion:completion];
+  } else if ((options & YKSUIViewAnimationOptionTransitionSlideOver) == YKSUIViewAnimationOptionTransitionSlideOver) {
+    [self _removeAnimationsFromInternalView:fromInternalView toInternalView:toInternalView duration:duration options:options animations:^{
+      fromInternalView.frame = CGRectMake(_parentView.frame.size.width, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);                  
+      [self _showInternalView:toInternalView];
+    } completion:completion];
   } else if (fromInternalView && toInternalView) {    
     toInternalView.frame = CGRectMake(0, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
     [toInternalView viewWillAppear:YES];
@@ -164,6 +191,20 @@
   }
 }
 
+                                                                                                                                                                                                                            
+- (void)_addAnimationsForView:(YKSUIView *)view fromInternalView:(YKSUIInternalView *)fromInternalView toInternalView:(YKSUIInternalView *)toInternalView duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options animations:(void (^)())animations {
+  
+  toInternalView.frame = CGRectMake(_parentView.frame.size.width, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
+  [toInternalView viewWillAppear:YES];
+  [_parentView addSubview:toInternalView];
+  [fromInternalView viewWillDisappear:YES];
+  [UIView animateWithDuration:duration delay:0 options:[self _animationOptions:options motion:NO] animations:animations completion:^(BOOL finished) {
+    [fromInternalView viewDidDisappear:YES];
+    [toInternalView viewDidAppear:YES];  
+  }];
+  
+}
+                                                                                                                                                                                                                            
 - (void)_addView:(YKSUIView *)view fromInternalView:(YKSUIInternalView *)fromInternalView duration:(NSTimeInterval)duration options:(YKSUIViewAnimationOptions)options {
   YKSUIInternalView *toInternalView = [[[YKSUIInternalView alloc] init] autorelease];
   [toInternalView setView:view];
@@ -172,16 +213,16 @@
   
   if ((options & YKSUIViewAnimationOptionTransitionSlide) == YKSUIViewAnimationOptionTransitionSlide) {
     toInternalView.frame = CGRectMake(_parentView.frame.size.width, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
-    [toInternalView viewWillAppear:YES];
-    [_parentView addSubview:toInternalView];
-    [fromInternalView viewWillDisappear:YES];
-    [UIView animateWithDuration:duration delay:0 options:[self _animationOptions:options motion:NO] animations:^{
-      // TODO(gabe): Handle status bar dynamically
-      toInternalView.frame = CGRectMake(0, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
-      fromInternalView.frame = CGRectMake(-_parentView.frame.size.width, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
-    } completion:^(BOOL finished) {
-      [fromInternalView viewDidDisappear:YES];
-      [toInternalView viewDidAppear:YES];  
+    [self _addAnimationsForView:view fromInternalView:fromInternalView toInternalView:toInternalView duration:duration options:options animations:^{
+      fromInternalView.frame = CGRectMake(-_parentView.frame.size.width, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);      
+      [self _showInternalView:toInternalView];      
+    }];
+  } else if ((options & YKSUIViewAnimationOptionTransitionSlideOver) == YKSUIViewAnimationOptionTransitionSlideOver) {
+    toInternalView.frame = CGRectMake(_parentView.frame.size.width, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
+    [self _addAnimationsForView:view fromInternalView:fromInternalView toInternalView:toInternalView duration:duration options:options animations:^{
+      CATransform3D transform = CATransform3DMakeScale(0.9, 0.9, 0.9);
+      fromInternalView.layer.transform = transform;
+      [self _showInternalView:toInternalView];
     }];
   } else {
     toInternalView.frame = CGRectMake(0, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);

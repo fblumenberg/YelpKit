@@ -60,6 +60,8 @@
  */
 - (void)sharedInit;
 
+#pragma mark Activity
+
 /*!
  Set activity enabled.
  @param section
