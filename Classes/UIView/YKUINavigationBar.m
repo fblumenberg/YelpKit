@@ -30,6 +30,7 @@
 #import "YKUINavigationBar.h"
 #import "YKCGUtils.h"
 #import "YKUIButton.h"
+#import "UILabel+YKUtils.h"
 
 @implementation YKUINavigationBar
 
@@ -113,35 +114,36 @@
   return CGSizeMake(size.width, 44);
 }
 
-- (UILabel *)newTitleLabel {
-  UILabel *titleLabel = [[UILabel alloc] init];
-  titleLabel.font = [UIFont boldSystemFontOfSize:20];
-  titleLabel.minimumFontSize = 16;
-  titleLabel.numberOfLines = 1;
-  titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
-  titleLabel.adjustsFontSizeToFitWidth = YES;
-  titleLabel.shadowColor = [UIColor darkGrayColor];
-  titleLabel.textColor = [UIColor whiteColor];
-  titleLabel.textAlignment = UITextAlignmentCenter;
-  titleLabel.opaque = NO;
-  titleLabel.contentMode = UIViewContentModeCenter;
-  titleLabel.backgroundColor = [UIColor clearColor];
-  titleLabel.userInteractionEnabled = NO;
-  return titleLabel;
-}
-
 - (UILabel *)titleLabel {
   if (!_titleLabel) {
-    _titleLabel = [self newTitleLabel];
+    _titleLabel = [[UILabel alloc] init];
+    _titleLabel.font = [UIFont boldSystemFontOfSize:20];
+    _titleLabel.minimumFontSize = 16;
+    _titleLabel.numberOfLines = 1;
+    _titleLabel.lineBreakMode = UILineBreakModeMiddleTruncation;
+    _titleLabel.adjustsFontSizeToFitWidth = YES;
+    _titleLabel.shadowColor = [UIColor darkGrayColor];
+    _titleLabel.textColor = [UIColor whiteColor];
+    _titleLabel.textAlignment = UITextAlignmentCenter;
+    _titleLabel.opaque = NO;
+    _titleLabel.contentMode = UIViewContentModeCenter;
+    _titleLabel.backgroundColor = [UIColor clearColor];
+    _titleLabel.userInteractionEnabled = NO;
   }
   return _titleLabel;
 }
 
 - (void)setTitle:(NSString *)title animated:(BOOL)animated {
-  UILabel *label = [self titleLabel];
-  label.text = title;
-  [label sizeToFit];
-  [self setContentView:label animated:animated];
+  // For animated title transitions, we need to create a new titleLabel
+  // so we can crossfade it with the old one
+  if (animated) {
+    UILabel *titleLabel = [self.titleLabel copy];
+    [_titleLabel release];
+    _titleLabel = titleLabel;
+  }
+  self.titleLabel.text = title;
+  [self.titleLabel sizeToFit];
+  [self setContentView:self.titleLabel animated:animated];
 }
 
 - (void)setContentView:(UIView *)contentView {
