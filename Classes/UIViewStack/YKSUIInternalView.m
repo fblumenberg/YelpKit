@@ -60,6 +60,10 @@
   [super dealloc];
 }
 
+- (NSString *)description {
+  return GHDescription(@"view");
+}
+
 - (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size {
   CGFloat y = 0;
   CGSize contentSize = size;

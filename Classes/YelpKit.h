@@ -39,6 +39,7 @@
 
 #import "YKUIActivityLabel.h"
 #import "YKUIButton.h"
+#import "YKUIButtons.h"
 #import "YKUILayoutView.h"
 #import "YKUIActivityView.h"
 #import "YKUIListView.h"

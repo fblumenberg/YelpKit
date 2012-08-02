@@ -31,6 +31,26 @@
 
 typedef void (^YKUIViewSubviewNeedsLayoutBlock)(UIView *view, BOOL animated);
 
+/*!
+ View with custom, programatic layout (via YKLayout).
+ 
+ Instead of subclassing UIView, you can subclass YKUILayoutView and implement
+ sharedInit and layout:size:. See YKLayout for more details.
+ 
+
+    - (void)sharedInit {
+      [super sharedInit];
+      self.layout = [YKLayout layoutForView:self];
+      self.backgroundColor = [UIColor whiteColor];
+    }
+ 
+    - (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size {
+      [layout setFrame:CGRectMake(0, 0, size.width, 30)];
+      return CGSizeMake(size.width, 30);
+    }
+ 
+ 
+ */
 @interface YKUILayoutView : UIView {
   YKLayout *_layout;
   

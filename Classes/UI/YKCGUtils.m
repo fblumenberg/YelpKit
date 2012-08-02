@@ -415,7 +415,7 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
     return YKCGPathCreateRoundedRect(rect, strokeWidth, cornerRadius);
   }
   
-  CGFloat strokeInset = strokeWidth/2.0;
+  CGFloat strokeInset = strokeWidth/2.0f;
   
   // Need to adjust path rect to inset (since the stroke is drawn from the middle of the path)
   CGRect insetBounds;
@@ -480,7 +480,7 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
   
   switch(style) {
     case YKUIBorderStyleRoundedBottom:
-      CGPathMoveToPoint(path, &transform, -1, 0); // Fill in missing line end cap
+      CGPathMoveToPoint(path, &transform, -strokeInset, 0); // Fill in missing line end cap
       CGPathAddLineToPoint(path, &transform, fw, 0);
       CGPathAddLineToPoint(path, &transform, fw, fh/2);
       CGPathAddArcToPoint(path, &transform, fw, fh, fw/2, fh, 1);
@@ -555,7 +555,7 @@ CGPathRef YKCGPathCreateStyledRect(CGRect rect, YKUIBorderStyle style, CGFloat s
       break;
       
     case YKUIBorderStyleNormal:
-      CGPathMoveToPoint(path, &transform, 0, fh);
+      CGPathMoveToPoint(path, &transform, 0, fh + strokeInset); // Fill in missing line end cap
       CGPathAddLineToPoint(path, &transform, 0, 0);
       CGPathAddLineToPoint(path, &transform, fw, 0);      
       CGPathAddLineToPoint(path, &transform, fw, fh);

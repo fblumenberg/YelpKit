@@ -47,6 +47,10 @@
   [super dealloc];
 }
 
+- (NSString *)description {
+  return GHDescription(@"view");
+}
+
 - (CGSize)layout:(id<YKLayout>)layout size:(CGSize)size {
   _view.frame = CGRectMake(0, 0, size.width, size.height);
   return size;
