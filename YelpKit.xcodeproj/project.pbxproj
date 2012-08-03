@@ -137,7 +137,7 @@
 		420E62B8153F44FF00F114DC /* NSDictionary+YKValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 420E62B6153F44FF00F114DC /* NSDictionary+YKValidation.m */; };
 		4227623E150FFDC1002E177D /* UIColor+YKUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 4227623C150FFDC1002E177D /* UIColor+YKUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4227623F150FFDC1002E177D /* UIColor+YKUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4227623D150FFDC1002E177D /* UIColor+YKUtils.m */; };
-		423C14B715C9EB3F0080E08D /* UILabel+YKUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 423C14B515C9EB3F0080E08D /* UILabel+YKUtils.h */; };
+		423C14B715C9EB3F0080E08D /* UILabel+YKUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 423C14B515C9EB3F0080E08D /* UILabel+YKUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		423C14B815C9EB3F0080E08D /* UILabel+YKUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 423C14B615C9EB3F0080E08D /* UILabel+YKUtils.m */; };
 		423C14B915C9EB3F0080E08D /* UILabel+YKUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 423C14B615C9EB3F0080E08D /* UILabel+YKUtils.m */; };
 		428B755F155B4A1B0010864A /* UIImage+YKUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 428B755D155B4A1B0010864A /* UIImage+YKUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -802,9 +802,9 @@
 				0085A686159AB5620032E7BB /* YKUISwitchButton.h in Headers */,
 				00C9CC5C15A6C4360045CBE7 /* YKSUIInternalView.h in Headers */,
 				00C9CC5E15A6C4360045CBE7 /* YKUIViewStack.h in Headers */,
+				423C14B715C9EB3F0080E08D /* UILabel+YKUtils.h in Headers */,
 				00C9CC6015A6C4360045CBE7 /* YKSUIView.h in Headers */,
 				00DB568A15BE1D1500E247FA /* YKUIButtonCell.h in Headers */,
-				423C14B715C9EB3F0080E08D /* UILabel+YKUtils.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

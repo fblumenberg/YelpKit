@@ -54,4 +54,12 @@
   return label;
 }
 
+- (CGSize)multilineSizeThatFits:(CGSize)size {
+  return [self.text sizeWithFont:self.font constrainedToSize:size lineBreakMode:self.lineBreakMode];
+}
+
+- (void)draw {
+  [self.text drawInRect:self.frame withFont:self.font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
+}
+
 @end
