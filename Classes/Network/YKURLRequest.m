@@ -373,7 +373,7 @@ static BOOL gYKURLRequestCacheAsyncEnabled = YES; // Defaults to ON
 - (void)cacheDataIfEnabled:(NSData *)data cacheKey:(NSString *)cacheKey {
   if (cacheKey && [self shouldStoreInCache] && [self shouldCacheData:data forKey:cacheKey]) {
     YKDebug(@"Storing in cache with key: %@", cacheKey);
-    [[self cache] storeData:data forURLString:cacheKey asynchronous:YES];
+    [[self cache] storeData:data forURLString:cacheKey asynchronous:gYKURLRequestCacheAsyncEnabled];
     _inCache = YES;
   } else {
     YKDebug(@"Response was not cached");
