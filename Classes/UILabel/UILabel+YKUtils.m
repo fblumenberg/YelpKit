@@ -31,8 +31,8 @@
 
 @implementation UILabel (YKUtils)
 
-- (id)copyWithZone:(NSZone *)zone {
-  UILabel *label = [[[UILabel class] allocWithZone:zone] initWithFrame:self.frame];
+- (UILabel *)yk_copy {
+  UILabel *label = [[UILabel alloc] initWithFrame:self.frame];
   label.font = self.font;
   label.minimumFontSize = self.minimumFontSize;
   label.numberOfLines = self.numberOfLines;
@@ -54,11 +54,11 @@
   return label;
 }
 
-- (CGSize)multilineSizeThatFits:(CGSize)size {
+- (CGSize)yk_multilineSizeThatFits:(CGSize)size {
   return [self.text sizeWithFont:self.font constrainedToSize:size lineBreakMode:self.lineBreakMode];
 }
 
-- (void)draw {
+- (void)yk_draw {
   [self.text drawInRect:self.frame withFont:self.font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
 }
 

@@ -30,13 +30,13 @@
 @interface UILabel (YKUtils)
 
 /*!
- By default, UILabel does not conform to NSCopying. This category adds copyWithZone: so that
- labels can be copied using [label copy].
+ By default, UILabel does not conform to NSCopying. This category adds a copy method
+ so you can copy the label using [label yk_copy]. We don't use copyWithZone: in case
+ Apple decides to implement copyWithZone: in the future.
 
- @param zone Memory management zone in which to allocate the copy
  @result UILabel with the same properties as self
  */
-- (id)copyWithZone:(NSZone *)zone;
+- (UILabel *)yk_copy;
 
 /*!
  Returns the size that will fit this label. This method respects the label's numberOfLines property.
@@ -44,11 +44,11 @@
  @param size Size in which to fit the label. The height may extend beyond size.
  @result Size in which the label will draw.
  */
-- (CGSize)multilineSizeThatFits:(CGSize)size;
+- (CGSize)yk_multilineSizeThatFits:(CGSize)size;
 
 /*!
  Draws the label in its frame.
  */
-- (void)draw;
+- (void)yk_draw;
 
 @end

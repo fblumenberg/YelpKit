@@ -137,7 +137,7 @@
   // For animated title transitions, we need to create a new titleLabel
   // so we can crossfade it with the old one
   if (animated) {
-    UILabel *titleLabel = [self.titleLabel copy];
+    UILabel *titleLabel = [self.titleLabel yk_copy];
     [_titleLabel release];
     _titleLabel = titleLabel;
   }
