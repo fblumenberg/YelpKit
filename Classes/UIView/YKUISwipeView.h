@@ -27,6 +27,16 @@
 //  OTHER DEALINGS IN THE SOFTWARE.
 //
 
+@class YKUISwipeView;
+
+/*!
+ Block to be called when the currently visible view of a YKUISwipeView changes.
+
+ @param swipeView YKUISwipeView whose currently visible view changed
+ @param swiped Whether the change was caused by the user swiping
+ */
+typedef void (^YKUISwipeViewDidChangeBlock)(YKUISwipeView *swipeView, BOOL swiped);
+
 /*!
  Swipe view.
  */
@@ -34,6 +44,9 @@
   UIScrollView *_scrollView;
   
   NSArray *_views;
+
+  NSUInteger _currentViewIndex;
+  YKUISwipeViewDidChangeBlock _changeBlock;
   
   CGFloat _peekWidth;
   UIEdgeInsets _insets;
@@ -55,5 +68,38 @@
  Subviews.
  */
 @property (retain, nonatomic) NSArray *views;
+
+/*!
+ Currently visible subview.
+ */
+@property (readonly, nonatomic) UIView *currentView;
+
+/*!
+ Block to be called when the currently visible subview changes.
+ */
+@property (copy, nonatomic) YKUISwipeViewDidChangeBlock currentViewDidChangeBlock;
+
+/*!
+ Index of the currently visible subview in the views array.
+ */
+@property (assign, nonatomic) NSUInteger currentViewIndex;
+
+/*!
+ Sets the currently visible subview.
+
+ @param index Index of the view in the views array
+ @param animated Whether to animate the transition
+ */
+- (void)setCurrentViewIndex:(NSUInteger)index animated:(BOOL)animated;
+
+/*!
+ Called when the currently visible subview changes.
+
+ Subclasses can override this method to perform custom tasks when the change occurs.
+ If you override this method, you must call super at some point in your implementation.
+
+ @param swiped Whether the change was caused by the user swiping
+ */
+- (void)currentViewDidChangeSwiped:(BOOL)swiped;
 
 @end

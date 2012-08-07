@@ -28,22 +28,36 @@
 //
 
 #import "YKUISwipeView.h"
+#import "YKDefines.h"
+
+@interface YKUISwipeScrollView : UIScrollView
+@end
+
+@implementation YKUISwipeScrollView
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+  // Since the scroll view won't clip to its bounds, it should contain any point in its superview;
+  // otherwise it won't receive touches outside of its bounds although its content may be visible.
+  return [self.superview pointInside:[self.superview convertPoint:point fromView:self] withEvent:event];
+}
+
+@end
 
 @implementation YKUISwipeView
 
-@synthesize peekWidth=_peekWidth, insets=_insets, scrollView=_scrollView, views=_views;
+@synthesize peekWidth=_peekWidth, insets=_insets, scrollView=_scrollView, views=_views,
+currentViewIndex=_currentViewIndex, currentViewDidChangeBlock=_changeBlock;
 
 - (id)initWithFrame:(CGRect)frame {
   if ((self = [super initWithFrame:frame])) {
-    self.userInteractionEnabled = NO;
-    
-    _scrollView = [[UIScrollView alloc] init];
+    _scrollView = [[YKUISwipeScrollView alloc] init];
     _scrollView.pagingEnabled = YES;
     _scrollView.clipsToBounds = NO;
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.showsVerticalScrollIndicator = NO;
     _scrollView.scrollsToTop = NO;
     _scrollView.directionalLockEnabled = YES;
+    _scrollView.delegate = self;
     [self addSubview:_scrollView];
     [_scrollView release];
     
@@ -51,6 +65,12 @@
     _insets = UIEdgeInsetsMake(0, 10, 0, 10);
   }
   return self;
+}
+
+- (void)dealloc {
+  _scrollView.delegate = nil;
+  Block_release(_changeBlock);
+  [super dealloc];
 }
 
 - (void)layoutSubviews {
@@ -81,21 +101,6 @@
   }
 }
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-  if (self.hidden) return [super hitTest:point withEvent:event];
-  // Because the scroll view frame is smaller than the view frame we need to adjust the point and call hitTest again,
-  // so the swipe works from the far left and right sides.
-  if ([self pointInside:point withEvent:event]) {
-    if (point.x > CGRectGetMaxX(_scrollView.frame)) {
-      point.x = CGRectGetMaxX(_scrollView.frame) - 1;
-    } else if (point.x < CGRectGetMinX(_scrollView.frame)) {
-      point.x = CGRectGetMinX(_scrollView.frame) + 1;
-    }
-    return [_scrollView hitTest:[_scrollView convertPoint:point fromView:self] withEvent:event];
-  }
-  return nil;
-}
-
 - (void)setViews:(NSArray *)views {
   [views retain];
   for (UIView *view in _views) {
@@ -107,8 +112,62 @@
   for (UIView *view in _views) {
     [_scrollView addSubview:view];
   }
+  // Reset scroll view content offset
+  _scrollView.contentOffset = CGPointZero;
+  _currentViewIndex = 0;
   [self setNeedsDisplay];
   [self setNeedsLayout];
+}
+
+- (UIView *)currentView {
+  return (UIView *)[_views gh_objectAtIndex:self.currentViewIndex];
+}
+
+- (void)setCurrentViewIndex:(NSUInteger)index {
+  [self setCurrentViewIndex:index animated:NO];
+}
+
+- (void)setCurrentViewIndex:(NSUInteger)index animated:(BOOL)animated {
+  if (index >= _views.count || index == _currentViewIndex) return;
+
+  CGFloat offsetX = index * _scrollView.frame.size.width;
+  // Account for peekwidth if this is the last view (and not the only view)
+  if (_views.count > 1 && index == _views.count - 1) {
+    offsetX -= _peekWidth;
+  }
+  CGPoint offset = CGPointMake(offsetX, _scrollView.contentOffset.y);
+
+  if (animated) {
+    [UIView animateWithDuration:0.5 animations:^{
+      _scrollView.contentOffset = offset;
+    } completion:^(BOOL finished){
+      _currentViewIndex = index;
+      [self currentViewDidChangeSwiped:NO];
+    }];
+  } else {
+    _scrollView.contentOffset = offset;
+    _currentViewIndex = index;
+    [self currentViewDidChangeSwiped:NO];
+  }
+}
+
+- (void)currentViewDidChangeSwiped:(BOOL)swiped {
+  if (_changeBlock) _changeBlock(self, swiped);
+}
+
+#pragma mark Delegates (UIScrollView)
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+  CGFloat nearIndex = _scrollView.contentOffset.x / _scrollView.frame.size.width;
+  // Round up to an integer, or if nearly integral round to the nearest integer.
+  nearIndex = YKIsEqualWithAccuracy(fmodf(nearIndex, 1), 0, 0.01) ? roundf(nearIndex) : ceilf(nearIndex);
+  if (nearIndex >= 0 && nearIndex < _views.count) {
+    NSUInteger index = (NSUInteger)nearIndex;
+    if (index != _currentViewIndex) {
+      _currentViewIndex = index;
+      [self currentViewDidChangeSwiped:YES];
+    }
+  }
 }
 
 @end
