@@ -144,7 +144,6 @@
 }
 
 - (void)_setupToShowInternalView:(YKSUIInternalView *)internalView {
-  internalView.layer.transform = CATransform3DMakeScale(1.0, 1.0, 1.0);
   internalView.frame = CGRectMake(_parentView.frame.size.width, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
 }
 
@@ -217,17 +216,19 @@
   if ((options & YKSUIViewAnimationOptionTransitionSlide) == YKSUIViewAnimationOptionTransitionSlide) {
     [self _setupToShowInternalView:toInternalView];
     [self _addAnimationsForView:view fromInternalView:fromInternalView toInternalView:toInternalView duration:duration options:options animations:^{
-      fromInternalView.frame = CGRectMake(-_parentView.frame.size.width, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);      
+      fromInternalView.frame = CGRectMake(-_parentView.frame.size.width, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
       [self _showInternalView:toInternalView];      
     }];
   } else if ((options & YKSUIViewAnimationOptionTransitionSlideOver) == YKSUIViewAnimationOptionTransitionSlideOver) {
     [self _setupToShowInternalView:toInternalView];
     [self _addAnimationsForView:view fromInternalView:fromInternalView toInternalView:toInternalView duration:duration options:options animations:^{
-      fromInternalView.layer.transform = CATransform3DMakeScale(0.9, 0.9, 0.9);
+      if (CATransform3DIsIdentity(fromInternalView.layer.transform)) {
+        fromInternalView.layer.transform = CATransform3DMakeScale(0.9, 0.9, 1.0);
+      }
       [self _showInternalView:toInternalView];
     }];
   } else {
-    [self _showInternalView:toInternalView];
+    toInternalView.frame = CGRectMake(0, 20, _parentView.frame.size.width, _parentView.frame.size.height - 20);
     [toInternalView viewWillAppear:YES];
     [fromInternalView viewWillDisappear:YES];
     [UIView transitionWithView:_parentView duration:duration options:[self _animationOptions:options motion:YES] animations:^{

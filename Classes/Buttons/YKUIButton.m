@@ -40,6 +40,7 @@
 }
 
 - (void)sharedInit {
+  [super sharedInit];
   self.userInteractionEnabled = YES;
   self.layout = [YKLayout layoutForView:self];
   self.opaque = YES;

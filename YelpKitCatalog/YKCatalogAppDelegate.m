@@ -22,7 +22,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-  self.window.backgroundColor = [UIColor blackColor];
+  self.window.backgroundColor = [UIColor colorWithWhite:0.1 alpha:1.0];
   
   _viewStack = [[YKUIViewStack alloc] initWithParentView:self.window];
   

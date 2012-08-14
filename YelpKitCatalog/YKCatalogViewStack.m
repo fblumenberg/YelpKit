@@ -84,12 +84,20 @@
   [tableView.dataSource addCellDataSource:cell9 section:0];
   
   YKUIButtonCell *cell10 = [[[YKUIButtonCell alloc] init] autorelease];
-  cell10.button.title = @"Double Push (Slide Over)";
+  cell10.button.title = @"Multi Push (Slide Over)";
   cell10.button.targetBlock = ^() {
-    [blockSelf pushView:[YKCatalogTestView testStackViewWithName:@"View 1"] duration:0 options:0];
+    [blockSelf pushView:[YKCatalogTestView testStackViewWithName:@"View 1"] duration:0.25 options:YKSUIViewAnimationOptionTransitionSlideOver];
     [blockSelf pushView:[YKCatalogTestView testStackViewWithName:@"View 2"] duration:0.25 options:YKSUIViewAnimationOptionTransitionSlideOver];
   };
   [tableView.dataSource addCellDataSource:cell10 section:0];
+  
+  YKUIButtonCell *cell11 = [[[YKUIButtonCell alloc] init] autorelease];
+  cell11.button.title = @"Multi Push (Slide)";
+  cell11.button.targetBlock = ^() {
+    [blockSelf pushView:[YKCatalogTestView testStackViewWithName:@"View 1"] duration:0.25 options:YKSUIViewAnimationOptionTransitionSlide];
+    [blockSelf pushView:[YKCatalogTestView testStackViewWithName:@"View 2"] duration:0.25 options:YKSUIViewAnimationOptionTransitionSlide];
+  };
+  [tableView.dataSource addCellDataSource:cell11 section:0];
 }
 
 @end

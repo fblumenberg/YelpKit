@@ -83,6 +83,13 @@
   return size;
 }
 
+- (void)setFrame:(CGRect)frame {
+  [super setFrame:frame];
+  // This causes the subview frame changes to occur when the internal frame changes
+  // which is important for animatable properties
+  if (self.layout) [self layoutView];
+}
+
 - (void)setView:(YKSUIView *)view {
   [_view removeFromSuperview];
   [view retain];
