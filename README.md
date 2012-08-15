@@ -5,6 +5,8 @@ YelpKit is a iOS framework for Objective-C, and contains some basics for image l
 
 - [API documentation](http://yelp.github.com/YelpKit/).
 
+YelpKit includes [GHKit](http://github.com/gabriel/gh-kit), which is a set of extensions and utilities for Objective-C.
+
 Install
 -------
 
@@ -13,6 +15,7 @@ via the "File" menu > "Project Settings...". On the "Build" tab within the sheet
 button and confirm that your "Build Location" is the "Derived Data Location".
 
 1. Add Git submodule to your project: `git submodule add git://github.com/Yelp/YelpKit.git YelpKit`
+1. Pull YelpKit submodule dependencies: `git submodule update --recursive --init`
 1. Add cross-project reference by dragging **YelpKit.xcodeproj** to your project
 1. Open Build Settings for your project
 1. Add the following **Header Search Paths** (including the quotes): `"$(BUILT_PRODUCTS_DIR)/../../Headers"`
