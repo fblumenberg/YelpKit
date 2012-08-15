@@ -26,5 +26,6 @@ button and confirm that your "Build Location" is the "Derived Data Location".
     1. **libYelpKit.a** on iOS
     1. **YelpKit.framework** on OS X
 1. Import the YelpKit headers via `#import <YelpKit/YelpKit.h>`
+1. If you want to use GHKit, you can `#import <GHKit/GHKit.h>`
 1. Build the project to verify installation is successful.
 
