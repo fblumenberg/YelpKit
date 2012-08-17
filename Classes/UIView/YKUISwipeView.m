@@ -81,6 +81,7 @@ currentViewIndex=_currentViewIndex, currentViewDidChangeBlock=_changeBlock;
   if ([_views count] == 1) {
     UIView *view = [_views objectAtIndex:0];
     view.frame = CGRectMake(_insets.left, _insets.top, self.frame.size.width - _insets.left - _insets.right, self.frame.size.height - _insets.top - _insets.bottom);
+    [view setNeedsLayout];
     _scrollView.alwaysBounceHorizontal = NO;    
     _scrollView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
     _scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
@@ -90,6 +91,7 @@ currentViewIndex=_currentViewIndex, currentViewDidChangeBlock=_changeBlock;
     CGFloat x = 0;
     for (UIView *view in _views) {
       view.frame = CGRectMake(x, _insets.top, width, self.frame.size.height - _insets.top - _insets.bottom);
+      [view setNeedsLayout];
       x += width + _insets.right;
     }
 
