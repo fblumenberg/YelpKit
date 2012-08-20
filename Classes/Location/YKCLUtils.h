@@ -91,7 +91,7 @@ static inline BOOL YKLatitudeIsNull(CLLocationDegrees latitude) { return latitud
 static inline BOOL YKLongitudeIsNull(CLLocationDegrees latitude) { return latitude == YKCLLongitudeNull; }
 
 static inline BOOL YKCLLocationCoordinate2DIsEqual(CLLocationCoordinate2D c1, CLLocationCoordinate2D c2, CLLocationDegrees accuracy) {
-  return (YKIsEqualWithAccuracy(c1.latitude, c2.latitude, accuracy) && YKIsEqualWithAccuracy(c1.longitude, c1.longitude, accuracy));
+  return (YKIsEqualWithAccuracy(c1.latitude, c2.latitude, accuracy) && YKIsEqualWithAccuracy(c1.longitude, c2.longitude, accuracy));
 }
 
 
