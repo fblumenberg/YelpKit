@@ -31,21 +31,17 @@
 
 @implementation YKUIActivityCell
 
-@synthesize view=_view;
-
 - (id)initWithFrame:(CGRect)frame {
-  YKUIActivityView *view = [[YKUIActivityView alloc] init];
+  YKUIActivityView *view = [[[YKUIActivityView alloc] init] autorelease];
   view.backgroundColor = [UIColor clearColor];
 	if ((self = [super initWithView:view reuseIdentifier:nil])) {
     self.backgroundColor = [UIColor clearColor];
-    _view = view;
 	}
 	return self;
 }
 
-- (void)dealloc {
-  [_view release];
-  [super dealloc];
+- (YKUIActivityView *)view {
+  return (YKUIActivityView *)self.cellView;
 }
 
 @end

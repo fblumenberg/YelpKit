@@ -31,12 +31,8 @@
 
 @implementation YKUIButtonCell
 
-@synthesize button=_button;
-
 - (id)initWithButton:(YKUIButton *)button {
-  if ((self = [super initWithView:button reuseIdentifier:nil])) {
-    _button = button;
-	}
+  if ((self = [super initWithView:button reuseIdentifier:nil])) {}
 	return self;
 }
 
@@ -47,9 +43,8 @@
 	return self;
 }
 
-- (void)dealloc {
-  [_button release];
-  [super dealloc];
+- (YKUIButton *)button {
+  return (YKUIButton *)self.cellView;
 }
 
 @end
