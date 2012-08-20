@@ -41,7 +41,7 @@
 }
 
 - (id)initWithFrame:(CGRect)frame {
-  YKUIButton *button = [[YKUIButton alloc] init];
+  YKUIButton *button = [[[YKUIButton alloc] init] autorelease];
   button.insets = UIEdgeInsetsMake(10, 10, 10, 10);
   if ((self = [self initWithButton:button])) { }
 	return self;
