@@ -104,8 +104,6 @@ typedef void (^YKTableViewDidScrollToBottomBlock)(YKTableViewDataSource *dataSou
  */
 - (NSInteger)count;
 
-- (void)clearSection:(NSInteger)section indexPaths:(NSMutableArray **)indexPaths;
-
 - (void)setSectionHeaderTitle:(NSString *)title section:(NSInteger)section;
 
 - (void)setSectionHeaderTitles:(NSArray *)titles;

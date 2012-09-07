@@ -343,7 +343,7 @@
   if (_shadingType == YKUIShadingTypeUnknown) {
     _shadingType = YKUIShadingTypeNone;
   }
-  [self didChangeValueForKey:@"contentView"];
+  [self didChangeValueForKey:@"color"];
 }
 
 - (void)_cornerRadiusChanged {

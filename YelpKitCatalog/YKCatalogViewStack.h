@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Yelp. All rights reserved.
 //
 
-@interface YKCatalogViewStack : YKSUIView
+@interface YKCatalogViewStack : YKSUIView {
+  YKTableView *_tableView;
+}
 
 @end

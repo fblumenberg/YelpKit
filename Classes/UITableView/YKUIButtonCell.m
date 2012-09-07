@@ -39,6 +39,7 @@
 - (id)initWithFrame:(CGRect)frame {
   YKUIButton *button = [[[YKUIButton alloc] init] autorelease];
   button.insets = UIEdgeInsetsMake(10, 10, 10, 10);
+  button.highlightedColor = [UIColor colorWithWhite:0.96 alpha:1.0];
   if ((self = [self initWithButton:button])) { }
 	return self;
 }

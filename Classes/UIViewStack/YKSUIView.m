@@ -57,8 +57,13 @@
 }
 
 + (YKSUIView *)viewWithView:(UIView *)view {
+  return [self viewWithView:view title:nil];
+}
+
++ (YKSUIView *)viewWithView:(UIView *)view title:(NSString *)title {
   YKSUIView *viewForStack = [[[YKSUIView alloc] init] autorelease];
   viewForStack.view = view;
+  [viewForStack.navigationBar setTitle:title animated:NO];
   return viewForStack;
 }
 

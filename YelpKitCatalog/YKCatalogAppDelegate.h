@@ -10,6 +10,8 @@
 
 @interface YKCatalogAppDelegate : UIResponder <UIApplicationDelegate> {
   YKUIViewStack *_viewStack;
+  
+  YKTableView *_tableView;
 }
 
 @property (strong, nonatomic) UIWindow *window;

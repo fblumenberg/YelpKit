@@ -97,6 +97,14 @@ typedef NSUInteger YKSUIViewAnimationOptions;
 + (YKSUIView *)viewWithView:(UIView *)view;
 
 /*!
+ Create stack view with sub view.
+ @param view
+ @param title Navigation title
+ @result View for stack
+ */
++ (YKSUIView *)viewWithView:(UIView *)view title:(NSString *)title;
+
+/*!
  Push view.
  @param view
  @param duration

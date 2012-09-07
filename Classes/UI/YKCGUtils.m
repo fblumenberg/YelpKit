@@ -28,7 +28,6 @@
 //
 
 #import "YKCGUtils.h"
-#import "YKDefines.h"
 
 void _YKCGContextDrawStyledRect(CGContextRef context, CGRect rect, YKUIBorderStyle style, CGColorRef fillColor, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat cornerRadius);
 void _YKCGContextDrawImage(CGContextRef context, CGImageRef image, CGSize imageSize, CGRect rect, CGColorRef strokeColor, CGFloat strokeWidth, CGFloat cornerRadius, UIViewContentMode contentMode, CGColorRef backgroundColor, CGColorRef shadowColor, CGFloat shadowBlur);
@@ -216,12 +215,14 @@ CGRect YKCGRectScaleAspectAndCenter(CGSize size, CGSize inSize, BOOL fill) {
   return rect;
 }
 
+#define YKCGIsEqualWithAccuracy(n1, n2, accuracy) (n1 >= (n2-accuracy) && n1 <= (n2+accuracy))
+
 BOOL YKCGPointIsZero(CGPoint p) {
-  return (YKIsEqualWithAccuracy(p.x, 0, 0.0001) && YKIsEqualWithAccuracy(p.y, 0, 0.0001));
+  return (YKCGIsEqualWithAccuracy(p.x, 0, 0.0001) && YKCGIsEqualWithAccuracy(p.y, 0, 0.0001));
 }
 
 BOOL YKCGPointIsEqual(CGPoint p1, CGPoint p2) {
-  return (YKIsEqualWithAccuracy(p1.x, p2.x, 0.0001) && YKIsEqualWithAccuracy(p1.y, p2.y, 0.0001));
+  return (YKCGIsEqualWithAccuracy(p1.x, p2.x, 0.0001) && YKCGIsEqualWithAccuracy(p1.y, p2.y, 0.0001));
 }
 
 BOOL YKCGRectIsEqual(CGRect rect1, CGRect rect2) {
@@ -251,7 +252,7 @@ CGPoint YKCGPointToRight(CGSize size, CGSize inSize) {
 }
 
 BOOL YKCGSizeIsEqual(CGSize size1, CGSize size2) {
-  return (YKIsEqualWithAccuracy(size1.height, size2.height, 0.0001) && YKIsEqualWithAccuracy(size1.width, size2.width, 0.0001));
+  return (YKCGIsEqualWithAccuracy(size1.height, size2.height, 0.0001) && YKCGIsEqualWithAccuracy(size1.width, size2.width, 0.0001));
 }
 
 BOOL YKCGSizeIsZero(CGSize size) {
@@ -259,7 +260,7 @@ BOOL YKCGSizeIsZero(CGSize size) {
 }
 
 BOOL YKCGSizeIsEmpty(CGSize size) {
-  return (YKIsEqualWithAccuracy(size.height, 0, 0.0001) && YKIsEqualWithAccuracy(size.width, 0, 0.0001));
+  return (YKCGIsEqualWithAccuracy(size.height, 0, 0.0001) && YKCGIsEqualWithAccuracy(size.width, 0, 0.0001));
 }
 
 CGRect YKCGRectToCenter(CGSize size, CGSize inSize) {
