@@ -132,10 +132,11 @@ static BOOL gYKUIImageViewDisableRenderInBackground = NO;
 
   if (_renderInBackground && !gYKUIImageViewDisableRenderInBackground) {
     if (image) {
+      id<YKUIImageViewDelegate> blockDelegate = self.delegate;
       [self renderInBackgroundWithCompletion:^{
         [self didLoadImage:image];
-        if ([self.delegate respondsToSelector:@selector(imageView:didLoadImage:)])
-          [self.delegate imageView:self didLoadImage:image];
+        if ([blockDelegate respondsToSelector:@selector(imageView:didLoadImage:)])
+          [blockDelegate imageView:self didLoadImage:image];
         if (_statusBlock) _statusBlock(self, _status, image);
         [self setNeedsDisplay];
       }];
