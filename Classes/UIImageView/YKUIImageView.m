@@ -33,6 +33,7 @@
 #import "YKDefines.h"
 #import "UIImage+YKUtils.h"
 #import "YKImageMemoryCache.h"
+#import <GHKit/GH_MAZeroingWeakRef.h>
 
 static BOOL gYKUIImageViewDisableRenderInBackground = NO;
 
@@ -132,12 +133,15 @@ static BOOL gYKUIImageViewDisableRenderInBackground = NO;
 
   if (_renderInBackground && !gYKUIImageViewDisableRenderInBackground) {
     if (image) {
-      id<YKUIImageViewDelegate> blockDelegate = self.delegate;
+      GH_MAZeroingWeakRef *blockSelf = [GH_MAZeroingWeakRef refWithTarget:self];
       [self renderInBackgroundWithCompletion:^{
         [self didLoadImage:image];
-        if ([blockDelegate respondsToSelector:@selector(imageView:didLoadImage:)])
-          [blockDelegate imageView:self didLoadImage:image];
-        if (_statusBlock) _statusBlock(self, _status, image);
+        id delegate = [blockSelf.target delegate];
+        if ([delegate respondsToSelector:@selector(imageView:didLoadImage:)]) {
+          [delegate imageView:self didLoadImage:image];
+        }
+        YKUIImageViewStatusBlock statusBlock = [blockSelf.target statusBlock];
+        if (statusBlock) statusBlock(self, [blockSelf.target status], image);
         [self setNeedsDisplay];
       }];
     }
