@@ -33,6 +33,7 @@
 @property (readonly, nonatomic) NSInteger index;
 @property (assign, nonatomic, getter=isSelected) BOOL selected;
 - (UIImage *)annotationImageForSelected:(BOOL)selected; // If nil uses default
+- (UIColor *)textColorForSelected:(BOOL)selected;
 @end
 
 

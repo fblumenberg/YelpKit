@@ -49,6 +49,10 @@
   return nil;
 }
 
+- (UIColor *)textColorForSelected:(BOOL)selected {
+  return nil;
+}
+
 - (id<YKMKAnnotation>)annotationForCallout {
   return self;
 }
