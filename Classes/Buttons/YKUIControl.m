@@ -45,6 +45,8 @@
 
 - (void)dealloc {
   [_context release];
+  [_layout release];
+  [_valueForCopy release];
   Block_release(_targetBlock);
   [super dealloc];
 }

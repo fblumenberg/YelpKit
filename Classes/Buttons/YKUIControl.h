@@ -41,7 +41,7 @@ typedef void (^UIControlTargetBlock)();
 @property (assign, nonatomic, getter=isSelectedEnabled) BOOL selectedEnabled; // If YES, will set selected state when touch (ended); Default is NO
 @property (assign, nonatomic, getter=isDelayActionEnabled) BOOL delayActionEnabled; // If YES, the action on the control is delayed in order to display the highlighted state
 @property (retain, nonatomic) id<YKLayout> layout;
-@property (assign, nonatomic) id context;
+@property (retain, nonatomic) id context;
 @property (copy, nonatomic) UIControlTargetBlock targetBlock;
 @property (retain, nonatomic) NSString *valueForCopy;
 

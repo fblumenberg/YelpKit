@@ -72,7 +72,7 @@ typedef enum {
 @end
 
 
-@protocol YKLayout 
+@protocol YKLayout <NSObject>
 
 /*!
  Layout the subviews.
