@@ -12,6 +12,8 @@
 		0013505515003C1900B0976D /* YKUISwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 0013505315003C1900B0976D /* YKUISwitch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		00149F2D1521040800321DF4 /* YKUISwipeView.h in Headers */ = {isa = PBXBuildFile; fileRef = 00149F2B1521040800321DF4 /* YKUISwipeView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		00149F2E1521040800321DF4 /* YKUISwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00149F2C1521040800321DF4 /* YKUISwipeView.m */; };
+		001E5219161A27AB00D5C211 /* libGHKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 006371F5156D8E9400DEC4B5 /* libGHKit.a */; };
+		001E523F161A29AA00D5C211 /* YelpKit-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 001E523E161A29AA00D5C211 /* YelpKit-Prefix.pch */; };
 		002629AF151BABB800F840DB /* YKUIButtons.h in Headers */ = {isa = PBXBuildFile; fileRef = 002629AD151BABB800F840DB /* YKUIButtons.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		002629B0151BABB800F840DB /* YKUIButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 002629AE151BABB800F840DB /* YKUIButtons.m */; };
 		0041271215366FAB0090F268 /* YKLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = 0041270E15366FAB0090F268 /* YKLayout.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -88,7 +90,6 @@
 		00A4D93D15CB27BE0035E64B /* button_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 00A4D93715CB27BE0035E64B /* button_icon@2x.png */; };
 		00B1B13A15CB11F60021140B /* YKCatalogViewStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 00B1B13915CB11F60021140B /* YKCatalogViewStack.m */; };
 		00B1B13D15CB13430021140B /* YKCatalogTestView.m in Sources */ = {isa = PBXBuildFile; fileRef = 00B1B13C15CB13430021140B /* YKCatalogTestView.m */; };
-		00B8B6BD156DACFC009248A2 /* libGHKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 006371F5156D8E9400DEC4B5 /* libGHKit.a */; };
 		00BE005D14A148A8006B733B /* YKCLSortDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 00BE005514A148A8006B733B /* YKCLSortDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		00BE005E14A148A8006B733B /* YKCLSortDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 00BE005614A148A8006B733B /* YKCLSortDescriptor.m */; };
 		00BE005F14A148A8006B733B /* YKCLUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 00BE005714A148A8006B733B /* YKCLUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -201,6 +202,7 @@
 		0013505315003C1900B0976D /* YKUISwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUISwitch.h; sourceTree = "<group>"; };
 		00149F2B1521040800321DF4 /* YKUISwipeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUISwipeView.h; sourceTree = "<group>"; };
 		00149F2C1521040800321DF4 /* YKUISwipeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKUISwipeView.m; sourceTree = "<group>"; };
+		001E523E161A29AA00D5C211 /* YelpKit-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "YelpKit-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		002629AD151BABB800F840DB /* YKUIButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKUIButtons.h; sourceTree = "<group>"; };
 		002629AE151BABB800F840DB /* YKUIButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKUIButtons.m; sourceTree = "<group>"; };
 		0041270E15366FAB0090F268 /* YKLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKLayout.h; sourceTree = "<group>"; };
@@ -217,7 +219,6 @@
 		0046284F1593969C00C8E3C1 /* YKImageLoaderQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKImageLoaderQueue.m; sourceTree = "<group>"; };
 		005592E8140B0085001E9C43 /* libYelpKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libYelpKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		005592EB140B0085001E9C43 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		005592FD140B00E2001E9C43 /* YelpKit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "YelpKit-Prefix.pch"; sourceTree = "<group>"; };
 		00559300140B00F6001E9C43 /* YKImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKImageLoader.h; sourceTree = "<group>"; };
 		00559301140B00F6001E9C43 /* YKImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YKImageLoader.m; sourceTree = "<group>"; };
 		00559306140B00F6001E9C43 /* YKCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YKCompressor.h; sourceTree = "<group>"; };
@@ -353,7 +354,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00B8B6BD156DACFC009248A2 /* libGHKit.a in Frameworks */,
+				001E5219161A27AB00D5C211 /* libGHKit.a in Frameworks */,
 				00D5757B1457C65200DE6487 /* QuartzCore.framework in Frameworks */,
 				005592EC140B0085001E9C43 /* Foundation.framework in Frameworks */,
 			);
@@ -399,7 +400,6 @@
 			children = (
 				005592FE140B00F6001E9C43 /* Classes */,
 				0055934B140B0102001E9C43 /* Libraries */,
-				005592FD140B00E2001E9C43 /* YelpKit-Prefix.pch */,
 				00DB563F15BE198600E247FA /* YelpKitCatalog */,
 				00DB564015BE198600E247FA /* Supporting Files */,
 				005592EA140B0085001E9C43 /* Frameworks */,
@@ -560,7 +560,7 @@
 				006371F5156D8E9400DEC4B5 /* libGHKit.a */,
 				006371F7156D8E9400DEC4B5 /* GHKit.framework */,
 				006371F9156D8E9400DEC4B5 /* GHKitTests.app */,
-				006371FB156D8E9400DEC4B5 /* TestsFramework.app */,
+				006371FB156D8E9400DEC4B5 /* GHKitTestsFramework.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -691,6 +691,7 @@
 		00DB564015BE198600E247FA /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				001E523E161A29AA00D5C211 /* YelpKit-Prefix.pch */,
 				00DB564115BE198600E247FA /* YelpKitCatalog-Info.plist */,
 				00DB564215BE198600E247FA /* InfoPlist.strings */,
 				00DB564515BE198600E247FA /* main.m */,
@@ -805,6 +806,7 @@
 				423C14B715C9EB3F0080E08D /* UILabel+YKUtils.h in Headers */,
 				00C9CC6015A6C4360045CBE7 /* YKSUIView.h in Headers */,
 				00DB568A15BE1D1500E247FA /* YKUIButtonCell.h in Headers */,
+				001E523F161A29AA00D5C211 /* YelpKit-Prefix.pch in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -854,7 +856,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = YK;
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = Yelp;
 			};
 			buildConfigurationList = 005592E2140B0085001E9C43 /* Build configuration list for PBXProject "YelpKit" */;
@@ -903,10 +905,9 @@
 			remoteRef = 006371F8156D8E9400DEC4B5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		006371FB156D8E9400DEC4B5 /* TestsFramework.app */ = {
+		006371FB156D8E9400DEC4B5 /* GHKitTestsFramework.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
-			name = TestsFramework.app;
 			path = GHKitTestsFramework.app;
 			remoteRef = 006371FA156D8E9400DEC4B5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1046,6 +1047,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -1062,6 +1064,7 @@
 					armv6,
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
@@ -1074,16 +1077,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					"$(ARCHS_STANDARD_32_BIT)",
-					armv6,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "YelpKit-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)/../../Headers\"";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OBJROOT = "$(SRCROOT)/Build";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1100,17 +1098,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					"$(ARCHS_STANDARD_32_BIT)",
-					armv6,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"GCC_OPTIMIZATION_LEVEL[sdk=iphonesimulator*][arch=*]" = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "YelpKit-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "\"$(BUILT_PRODUCTS_DIR)/../../Headers\"";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OBJROOT = "$(SRCROOT)/Build";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1136,6 +1129,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "YelpKitCatalog/YelpKitCatalog-Info.plist";
@@ -1158,6 +1152,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "YelpKitCatalog/YelpKitCatalog-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "YelpKitCatalog/YelpKitCatalog-Info.plist";

@@ -259,9 +259,12 @@ typedef enum {
 
 
 /*!
- YKLayout is a way to size and layout dynamic (sub)views.
+ YKLayout is a way to size and layout views without having to implement layoutSubview and 
+ sizeToFit separately.
  
- YKLayout is designed to calculate and return a size that best fits the receiver’s subviews,
+ It also provides a basic cache to avoid layout when the view is unchanged.
+ 
+ YKLayout calculates a size that best fits the receiver’s subviews,
  without altering the subviews frames, or affecting layoutSubviews call hierarchy.
  
  Instead of defining both sizeThatFits: and layoutSubviews, you define a single method called:
