@@ -665,13 +665,13 @@
         x += titleSizeAdjusted.width;
         [_secondaryTitle drawInRect:CGRectMake(x, y, size.width - x - _insets.right - _titleInsets.right, size.height) withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentRight];
       } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionBottom) {
-        x = _insets.left + titleInsets.left;
+        x = _insets.left + titleInsets.left + iconSize.width;
         y += titleSizeAdjusted.height + titleInsets.bottom;
         // TODO(gabe): Needed to put "+ _insets.bottom" so secondary text would wrap
         CGRect secondaryTitleRect = CGRectMake(x, y, size.width - x - _insets.right - titleInsets.right, size.height - y + _insets.bottom);
         [_secondaryTitle drawInRect:secondaryTitleRect withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentCenter];  
       } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionBottomLeftSingle) {
-        x = _insets.left + titleInsets.left;
+        x = _insets.left + titleInsets.left + iconSize.width;
         y += titleSizeAdjusted.height;
         CGRect secondaryTitleRect = CGRectMake(x, y, size.width - x - _insets.right - titleInsets.right, 0);
         [_secondaryTitle drawAtPoint:secondaryTitleRect.origin forWidth:secondaryTitleRect.size.width withFont:font lineBreakMode:UILineBreakModeTailTruncation];  
