@@ -1076,7 +1076,6 @@
 		005592F3140B0085001E9C43 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "YelpKit-Prefix.pch";
@@ -1090,6 +1089,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = "$(PUBLIC_HEADERS_FOLDER_PATH)/Private";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = ../../Headers/YelpKit;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SYMROOT = "$(SRCROOT)/Build/Products";
 			};
 			name = Debug;
@@ -1097,7 +1097,6 @@
 		005592F4140B0085001E9C43 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"GCC_OPTIMIZATION_LEVEL[sdk=iphonesimulator*][arch=*]" = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1112,6 +1111,7 @@
 				PRIVATE_HEADERS_FOLDER_PATH = "$(PUBLIC_HEADERS_FOLDER_PATH)/Private";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = ../../Headers/YelpKit;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SYMROOT = "$(SRCROOT)/Build/Products";
 			};
 			name = Release;
