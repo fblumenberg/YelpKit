@@ -432,6 +432,7 @@
   else [activityIndicatorView stopAnimating];
   self.userInteractionEnabled = !animating;
   [self setNeedsLayout];
+  [self setNeedsDisplay];
 }
 
 - (BOOL)isAnimating {
