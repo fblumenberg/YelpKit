@@ -207,7 +207,9 @@
       iconSize = _iconImageView.image.size;
       iconSize.width += 2; // TODO(gabe): Set configurable
     }
-    constrainedToSize.width -= iconSize.width;
+    if (_iconPosition == YKUIButtonIconPositionLeft) {
+      constrainedToSize.width -= iconSize.width;
+    }
 
     if (_activityIndicatorView && _activityIndicatorView.isAnimating) {
       constrainedToSize.width -= _activityIndicatorView.frame.size.width;
