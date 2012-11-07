@@ -184,7 +184,7 @@ static BOOL gYKUIImageViewDisableRenderInBackground = NO;
 
 - (void)renderInBackgroundWithCompletion:(void (^)())completion { }
 
-#pragma mark Delegates (YKImageLoader)
+#pragma mark YKImageLoaderDelegate
 
 - (void)imageLoaderDidStart:(YKImageLoader *)imageLoader {
   if ([self.delegate respondsToSelector:@selector(imageViewDidStart:)])

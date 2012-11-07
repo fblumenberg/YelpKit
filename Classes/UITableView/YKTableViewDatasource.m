@@ -375,7 +375,7 @@
 	return index;
 }
 
-#pragma mark Delegates (YKTableScrollViewDelegate/UIScrollView)
+#pragma mark YKTableScrollViewDelegate/UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
   if ([_scrollViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {

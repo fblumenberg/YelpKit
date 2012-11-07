@@ -81,7 +81,7 @@
   }
 }
 
-#pragma mark Delegates (UIScrollView)
+#pragma mark UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
   [_refreshHeaderView scrollViewDidScroll:scrollView];

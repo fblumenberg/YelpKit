@@ -556,7 +556,7 @@ static id<YKCompressor> gCompressor = NULL;
   return status;
 }
 
-#pragma mark Delegates (NSURLConnection)
+#pragma mark NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
   if (bytesWritten >= totalBytesExpectedToWrite) {

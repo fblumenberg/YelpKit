@@ -157,7 +157,7 @@ currentViewIndex=_currentViewIndex, currentViewDidChangeBlock=_changeBlock;
   if (_changeBlock) _changeBlock(self, swiped);
 }
 
-#pragma mark Delegates (UIScrollView)
+#pragma mark UIScrollViewDelegate
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
   CGFloat nearIndex = _scrollView.contentOffset.x / _scrollView.frame.size.width;

@@ -243,7 +243,7 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
     [_delegate imageLoader:self didError:error];  
 }
 
-#pragma mark Delegates (YKURLRequest)
+#pragma mark YKURLRequestDelegate
 
 - (void)requestDidFinish:(YKURLRequest *)request {
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

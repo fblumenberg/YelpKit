@@ -197,7 +197,7 @@
   }
 }
 
-#pragma mark Delegates (UIScrollView)
+#pragma mark UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
   if (scrollView.isDragging) {    
