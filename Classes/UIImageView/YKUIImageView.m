@@ -133,16 +133,16 @@ static BOOL gYKUIImageViewDisableRenderInBackground = NO;
 
   if (_renderInBackground && !gYKUIImageViewDisableRenderInBackground) {
     if (image) {
-      GH_MAZeroingWeakRef *blockSelf = [GH_MAZeroingWeakRef refWithTarget:self];
+      GH_MAZeroingWeakRef *selfRef = [GH_MAZeroingWeakRef refWithTarget:self];
       [self renderInBackgroundWithCompletion:^{
-        [blockSelf.target didLoadImage:image];
-        id delegate = [blockSelf.target delegate];
+        [selfRef.target didLoadImage:image];
+        id delegate = [selfRef.target delegate];
         if ([delegate respondsToSelector:@selector(imageView:didLoadImage:)]) {
-          [delegate imageView:blockSelf.target didLoadImage:image];
+          [delegate imageView:selfRef.target didLoadImage:image];
         }
-        YKUIImageViewStatusBlock statusBlock = [blockSelf.target statusBlock];
-        if (statusBlock) statusBlock(blockSelf.target, [blockSelf.target status], image);
-        [blockSelf.target setNeedsDisplay];
+        YKUIImageViewStatusBlock statusBlock = [selfRef.target statusBlock];
+        if (statusBlock) statusBlock(selfRef.target, [selfRef.target status], image);
+        [selfRef.target setNeedsDisplay];
       }];
     }
   } else {
