@@ -47,12 +47,14 @@
 
   UIColor *_lineSeparatorColor;
   UIColor *_topBorderColor;
+  UIColor *_bottomBorderColor;
   UIEdgeInsets _lineInsets;
   
   NSInteger _tagRemovalAnimating;
 }
 
 @property (retain, nonatomic) UIColor *topBorderColor;
+@property (retain, nonatomic) UIColor *bottomBorderColor;
 @property (retain, nonatomic) UIColor *lineSeparatorColor;
 @property (assign, nonatomic) UIEdgeInsets insets;
 @property (assign, nonatomic) UIEdgeInsets lineInsets;

@@ -32,7 +32,7 @@
 
 @implementation YKUIListView
 
-@synthesize lineSeparatorColor=_lineSeparatorColor, topBorderColor=_topBorderColor, lineInsets=_lineInsets, insets=_insets;
+@synthesize lineSeparatorColor=_lineSeparatorColor, topBorderColor=_topBorderColor, bottomBorderColor=_bottomBorderColor, lineInsets=_lineInsets, insets=_insets;
 
 - (void)sharedInit {
   [super sharedInit];
@@ -50,6 +50,8 @@
 - (void)dealloc {
   [_views release];
   [_lineSeparatorColor release];
+  [_topBorderColor release];
+  [_bottomBorderColor release];
   [super dealloc];
 }
 
@@ -187,6 +189,11 @@
 
       y += 1;
     }
+  }
+
+  if (_bottomBorderColor) {
+    CGFloat bottomBorderY = self.frame.size.height - 0.5 - _lineInsets.bottom;
+    YKCGContextDrawLine(context, _lineInsets.left, bottomBorderY, self.frame.size.width - _lineInsets.right, bottomBorderY, _bottomBorderColor.CGColor, 1.0);
   }
 }
 
