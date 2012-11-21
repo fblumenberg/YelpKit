@@ -30,7 +30,7 @@
 @interface UIImage (YKUtils)
 
 /*!
- Renders an image from a any Core Graphics rendering operations that are passed in via a block.
+ Renders an image from Core Graphics rendering operations that are passed in via a block.
 
  @param drawOperations Block containing core graphics calls to be drawn to the image
  @param size Size of the output image
@@ -38,6 +38,14 @@
  @result UIImage containing any of the drawing that occurred in drawOperations
  */
 + (UIImage *)imageFromDrawOperations:(void(^)(CGContextRef context))drawOperations size:(CGSize)size opaque:(BOOL)opaque;
+
+/*!
+ Renders an image from a UIView subclass.
+
+ @param view View to render to an image
+ @result UIImage containing the contents of view
+ */
++ (UIImage *)imageFromView:(UIView *)view;
 
 /*!
  Resizes an image based on a given content mode

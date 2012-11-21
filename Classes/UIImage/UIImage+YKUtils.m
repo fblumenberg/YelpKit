@@ -44,6 +44,17 @@
   return renderedImage;
 }
 
++ (UIImage *)imageFromView:(UIView *)view {
+  [view setNeedsDisplay];
+  UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [[UIScreen mainScreen] scale]);
+  CALayer *layer = view.layer;
+  CGContextRef context = UIGraphicsGetCurrentContext();
+  [layer renderInContext:context];
+  UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  return viewImage;
+}
+
 - (UIImage *)resizedImageInSize:(CGSize)size contentMode:(UIViewContentMode)contentMode opaque:(BOOL)opaque {
   CGRect imageRect = YKCGRectConvert(CGRectMake(0, 0, size.width, size.height), self.size, contentMode);
 
