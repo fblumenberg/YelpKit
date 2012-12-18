@@ -212,8 +212,15 @@ static dispatch_queue_t gYKImageLoaderDiskCacheQueue = NULL;
   
   _request = [[YKURLRequest alloc] init];
   _request.expiresAge = kExpiresAge;
-    
-  [_request requestWithURL:_URL headers:nil delegate:self 
+
+  static NSDictionary *headers = nil;
+  if (!headers) {
+    // Set the x-screen-scale header
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    headers = [@{@"x-screen-scale": [NSString stringWithFormat:@"%0.1f", scale]} retain];
+  }
+
+  [_request requestWithURL:_URL headers:headers delegate:self
             finishSelector:@selector(requestDidFinish:)
               failSelector:@selector(request:failedWithError:)
             cancelSelector:@selector(requestDidCancel:)];  
