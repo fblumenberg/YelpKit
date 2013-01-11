@@ -663,7 +663,9 @@
       if (_secondaryTitleFont) font = _secondaryTitleFont;
       if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionDefault) {
         x += titleSizeAdjusted.width;
-        [_secondaryTitle drawAtPoint:CGPointMake(x, y) withFont:font];  
+        CGFloat secondaryTitleWidth = size.width - x - _insets.right - titleInsets.right;
+        CGSize secondaryTitleSize = [_secondaryTitle sizeWithFont:font forWidth:secondaryTitleWidth lineBreakMode:NSLineBreakByTruncatingTail];
+        [_secondaryTitle drawInRect:CGRectMake(x, y, secondaryTitleSize.width, secondaryTitleSize.height) withFont:font lineBreakMode:NSLineBreakByTruncatingTail];
       } else if (_secondaryTitlePosition == YKUIButtonSecondaryTitlePositionRightAlign) {
         x += titleSizeAdjusted.width;
         [_secondaryTitle drawInRect:CGRectMake(x, y, size.width - x - _insets.right - _titleInsets.right, size.height) withFont:font lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentRight];
