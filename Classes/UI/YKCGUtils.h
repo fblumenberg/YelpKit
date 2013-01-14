@@ -304,6 +304,11 @@ CGRect YKCGRectAddY(CGRect rect, CGFloat add);
  */
 CGPoint YKCGPointBottomRight(CGRect rect);
 
+/*!
+ Center point in rect. (x + width / 2, y + height / 2).
+ */
+CGPoint YKCGPointCenter(CGRect rect);
+
 CGFloat YKCGDistanceBetween(CGPoint pointA, CGPoint pointB);
 
 /*!

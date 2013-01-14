@@ -378,6 +378,10 @@ CGPoint YKCGPointBottomRight(CGRect rect) {
   return CGPointMake(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
 }
 
+CGPoint YKCGPointCenter(CGRect rect) {
+  return CGPointMake(roundf(rect.origin.x + rect.size.width / 2), roundf(rect.origin.y + rect.size.height / 2));
+}
+
 CGFloat YKCGDistanceBetween(CGPoint pointA, CGPoint pointB) {
   CGFloat dx = pointB.x - pointA.x;
   CGFloat dy = pointB.y - pointA.y;
