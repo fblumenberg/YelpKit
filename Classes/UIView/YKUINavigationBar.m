@@ -194,6 +194,7 @@
 - (void)setLeftButton:(UIView *)leftButton style:(YKUINavigationButtonStyle)style animated:(BOOL)animated {
   if (animated) {
     UIView *oldLeftButton = _leftButton;
+    CGFloat startAlpha = leftButton.alpha;
     _leftButton = leftButton;
     if (_leftButton) {
       _leftButton.alpha = 0.0;
@@ -202,7 +203,7 @@
     }
     [UIView animateWithDuration:0.5 animations:^{
       oldLeftButton.alpha = 0.0;
-      _leftButton.alpha = 1.0;
+      _leftButton.alpha = startAlpha;
     } completion:^(BOOL finished) {
       [oldLeftButton removeFromSuperview];
       oldLeftButton.alpha = 1.0;
@@ -226,6 +227,7 @@
 - (void)setRightButton:(UIView *)rightButton style:(YKUINavigationButtonStyle)style animated:(BOOL)animated {
   if (animated) {
     UIView *oldRightButton = _rightButton;
+    CGFloat startAlpha = rightButton.alpha;
     _rightButton = rightButton;
     if (_rightButton) {
       _rightButton.alpha = 0.0;
@@ -234,7 +236,7 @@
     }
     [UIView animateWithDuration:0.5 animations:^{
       oldRightButton.alpha = 0.0;
-      _rightButton.alpha = 1.0;
+      _rightButton.alpha = startAlpha;
     } completion:^(BOOL finished) {
       [oldRightButton removeFromSuperview];
       oldRightButton.alpha = 1.0;
