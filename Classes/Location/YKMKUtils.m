@@ -6,6 +6,8 @@
 //  Copyright 2009 Yelp. All rights reserved.
 //
 
+#import <float.h>
+
 #import "YKMKUtils.h"
 #import "YKCLUtils.h"
 #import "YKCGUtils.h"
