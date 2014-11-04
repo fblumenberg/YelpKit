@@ -14,7 +14,4 @@ Pod::Spec.new do |s|
   s.source_files          = 'Classes/**/*.{h,m}'
   s.prefix_header_file    = 'YelpKit-Prefix.pch'
   s.ios.deployment_target = '5.0'
-  s.documentation         = {
-    :html => 'http://yelp.github.com/YelpKit/'
-  }
 end
